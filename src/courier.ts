@@ -1,0 +1,195 @@
+// @deno-types="npm:@types/nodemailer@^6.4.14"
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
+import Handlebars from "handlebars";
+import type {
+  CourierConfig,
+  EmailAddress,
+  EmailMessage,
+  ICloudSMTPConfig,
+  SendResult,
+  TemplateData,
+} from "./types.ts";
+
+/**
+ * Courier - Email utility for sending branded transactional emails
+ * Integrates iCloud SMTP, Nodemailer, and Handlebars templating
+ */
+export class Courier {
+  private transporter: Transporter;
+  private config: CourierConfig;
+  private templates: Map<string, HandlebarsTemplateDelegate>;
+
+  /**
+   * Create a new Courier instance
+   * @param config - Courier configuration including iCloud SMTP settings
+   */
+  constructor(config: CourierConfig) {
+    this.config = config;
+    this.templates = new Map();
+    this.transporter = this.createTransporter(config.smtp);
+  }
+
+  /**
+   * Create Nodemailer transporter with iCloud SMTP configuration
+   */
+  private createTransporter(smtp: ICloudSMTPConfig): Transporter {
+    const transportConfig = {
+      host: smtp.host || "smtp.mail.me.com",
+      port: smtp.port || 587,
+      secure: smtp.secure || false, // Use STARTTLS
+      auth: {
+        user: smtp.user,
+        pass: smtp.pass,
+      },
+    };
+
+    return nodemailer.createTransport(transportConfig);
+  }
+
+  /**
+   * Format email address for Nodemailer
+   */
+  private formatAddress(address: string | EmailAddress): string {
+    if (typeof address === "string") {
+      return address;
+    }
+    return address.name ? `${address.name} <${address.email}>` : address.email;
+  }
+
+  /**
+   * Format email addresses array for Nodemailer
+   */
+  private formatAddresses(
+    addresses: string | EmailAddress | Array<string | EmailAddress>,
+  ): string | string[] {
+    if (Array.isArray(addresses)) {
+      return addresses.map((addr) => this.formatAddress(addr));
+    }
+    return this.formatAddress(addresses);
+  }
+
+  /**
+   * Register a Handlebars template
+   * @param name - Template name/identifier
+   * @param template - Handlebars template string
+   */
+  registerTemplate(name: string, template: string): void {
+    const compiled = Handlebars.compile(template);
+    this.templates.set(name, compiled);
+  }
+
+  /**
+   * Load a template from a file
+   * @param name - Template name/identifier
+   * @param filepath - Path to template file
+   */
+  async loadTemplate(name: string, filepath: string): Promise<void> {
+    const template = await Deno.readTextFile(filepath);
+    this.registerTemplate(name, template);
+  }
+
+  /**
+   * Render a template with data
+   * @param templateName - Name of registered template
+   * @param data - Data to pass to template
+   * @returns Rendered template string
+   */
+  renderTemplate(templateName: string, data: TemplateData): string {
+    const template = this.templates.get(templateName);
+    if (!template) {
+      throw new Error(`Template "${templateName}" not found`);
+    }
+    return template(data);
+  }
+
+  /**
+   * Send an email
+   * @param message - Email message configuration
+   * @returns Send result with success status and message ID
+   */
+  async send(message: EmailMessage): Promise<SendResult> {
+    try {
+      // Prepare mail options
+      const mailOptions: Record<string, unknown> = {
+        from: this.formatAddress(
+          message.from || this.config.defaultFrom || this.config.smtp.user,
+        ),
+        to: this.formatAddresses(message.to),
+        subject: message.subject,
+      };
+
+      // Add optional fields
+      if (message.cc) {
+        mailOptions.cc = this.formatAddresses(message.cc);
+      }
+      if (message.bcc) {
+        mailOptions.bcc = this.formatAddresses(message.bcc);
+      }
+      if (message.replyTo) {
+        mailOptions.replyTo = this.formatAddress(message.replyTo);
+      }
+      if (message.text) {
+        mailOptions.text = message.text;
+      }
+      if (message.html) {
+        mailOptions.html = message.html;
+      }
+      if (message.attachments) {
+        mailOptions.attachments = message.attachments;
+      }
+
+      // Send email
+      const info = await this.transporter.sendMail(mailOptions);
+
+      return {
+        success: true,
+        messageId: info.messageId,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  /**
+   * Send an email using a template
+   * @param templateName - Name of registered template
+   * @param data - Data to pass to template
+   * @param message - Email message configuration (without html)
+   * @returns Send result with success status and message ID
+   */
+  sendWithTemplate(
+    templateName: string,
+    data: TemplateData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    const html = this.renderTemplate(templateName, data);
+    return this.send({
+      ...message,
+      html,
+    });
+  }
+
+  /**
+   * Verify SMTP connection
+   * @returns Promise that resolves to true if connection is successful
+   */
+  async verify(): Promise<boolean> {
+    try {
+      await this.transporter.verify();
+      return true;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  /**
+   * Close the transporter connection
+   */
+  close(): void {
+    this.transporter.close();
+  }
+}

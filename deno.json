@@ -1,0 +1,40 @@
+{
+  "name": "@rivescloud/courier",
+  "version": "1.0.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
+    "example": "deno run --allow-net --allow-read --allow-env example.ts"
+  },
+  "imports": {
+    "nodemailer": "npm:nodemailer@^6.9.7",
+    "handlebars": "npm:handlebars@^4.7.8"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "semiColons": true
+  },
+  "publish": {
+    "include": [
+      "mod.ts",
+      "src/**/*.ts",
+      "templates/**/*.hbs",
+      "README.md",
+      "LICENSE"
+    ],
+    "exclude": [
+      "example.ts",
+      "test.ts"
+    ]
+  }
+}
