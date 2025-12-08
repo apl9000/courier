@@ -49,8 +49,8 @@ export interface TemplateData {
  * Email message configuration
  */
 export interface EmailMessage {
-  /** Sender email address */
-  from: string | EmailAddress;
+  /** Sender email address (optional, uses defaultFrom or SMTP user if not provided) */
+  from?: string | EmailAddress;
   /** Recipient email address(es) */
   to: string | EmailAddress | Array<string | EmailAddress>;
   /** Optional CC recipients */

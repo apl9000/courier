@@ -24,10 +24,23 @@ export class Courier {
    * Create a new Courier instance
    * @param config - Courier configuration including iCloud SMTP settings
    */
-  constructor(config: CourierConfig) {
+  private constructor(config: CourierConfig) {
     this.config = config;
     this.templates = new Map();
     this.transporter = this.createTransporter(config.smtp);
+  }
+
+  /**
+   * Initialize Courier with automatic template loading
+   * @param config - Courier configuration including optional templatesDir
+   * @returns Promise resolving to initialized Courier instance
+   */
+  static async initialize(config: CourierConfig): Promise<Courier> {
+    const courier = new Courier(config);
+    if (config.templatesDir) {
+      await courier.loadTemplatesFromDirectory(config.templatesDir);
+    }
+    return courier;
   }
 
   /**
@@ -87,6 +100,30 @@ export class Courier {
   async loadTemplate(name: string, filepath: string): Promise<void> {
     const template = await Deno.readTextFile(filepath);
     this.registerTemplate(name, template);
+  }
+
+  /**
+   * Load all templates from a directory
+   * Templates in the custom directory take precedence over built-in templates
+   * @param dirPath - Path to directory containing template files
+   */
+  async loadTemplatesFromDirectory(dirPath: string): Promise<void> {
+    try {
+      for await (const entry of Deno.readDir(dirPath)) {
+        if (entry.isFile) {
+          // Extract template name from filename (remove extension)
+          const templateName = entry.name.split(".").slice(0, -1).join(".");
+          const templatePath = `${dirPath}/${entry.name}`;
+
+          // Load template, overwriting any defaults
+          await this.loadTemplate(templateName, templatePath);
+        }
+      }
+    } catch (error) {
+      throw new Error(
+        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**

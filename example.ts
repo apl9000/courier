@@ -3,27 +3,32 @@
  *
  * To run this example:
  * 1. Set up environment variables:
- *    - ICLOUD_EMAIL: Your iCloud email address
- *    - ICLOUD_APP_PASSWORD: App-specific password from iCloud
+ *    - SMTP_HOST: Optional SMTP host (default smtp.mail.me.com)
+ *    - SMTP_FROM: Optional default from address (falls back to SMTP_USER)
+ *    - SMTP_USER: Your iCloud email address
+ *    - SMTP_PASS: App-specific password from iCloud
  * 2. Run: deno run --allow-net --allow-read --allow-env example.ts
  */
 
 import { Courier } from "./mod.ts";
 
+const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.mail.me.com";
+const smtpUser = Deno.env.get("SMTP_USER") || "your-email@icloud.com";
+const smtpPass = Deno.env.get("SMTP_PASS") || "your-app-specific-password";
+const smtpFrom = Deno.env.get("SMTP_FROM") || smtpUser;
+
 // Example 1: Basic email sending
-async function _sendBasicEmail() {
+async function sendBasicEmail() {
   console.log("Example 1: Sending a basic email...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
-    defaultFrom: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
+    defaultFrom: smtpFrom,
   });
 
   const result = await courier.send({
     to: "recipient@example.com",
+    from: smtpFrom,
     subject: "Hello from Courier!",
     text: "This is a plain text email",
     html: "<p>This is an <strong>HTML</strong> email</p>",
@@ -33,20 +38,15 @@ async function _sendBasicEmail() {
   courier.close();
 }
 
-// Example 2: Using templates
-async function _sendTemplatedEmail() {
+// Example 2: Using templates with automatic loading
+async function sendTemplatedEmail() {
   console.log("\nExample 2: Sending an email with a template...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
-    defaultFrom: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
+    defaultFrom: smtpFrom,
+    templatesDir: "./templates",
   });
-
-  // Load and use the welcome template
-  await courier.loadTemplate("welcome", "./templates/welcome.hbs");
 
   const result = await courier.sendWithTemplate(
     "welcome",
@@ -59,6 +59,7 @@ async function _sendTemplatedEmail() {
     {
       to: "alice@example.com",
       subject: "Welcome to Acme Inc.!",
+      from: smtpFrom,
     },
   );
 
@@ -67,18 +68,14 @@ async function _sendTemplatedEmail() {
 }
 
 // Example 3: Using notification template
-async function _sendNotification() {
+async function sendNotification() {
   console.log("\nExample 3: Sending a notification...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
-    defaultFrom: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
+    defaultFrom: smtpFrom,
+    templatesDir: "./templates",
   });
-
-  await courier.loadTemplate("notification", "./templates/notification.hbs");
 
   const result = await courier.sendWithTemplate(
     "notification",
@@ -92,6 +89,7 @@ async function _sendNotification() {
     {
       to: "developer@example.com",
       subject: "Deployment Notification",
+      from: smtpFrom,
     },
   );
 
@@ -100,18 +98,14 @@ async function _sendNotification() {
 }
 
 // Example 4: Password reset email
-async function _sendPasswordReset() {
+async function sendPasswordReset() {
   console.log("\nExample 4: Sending a password reset email...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
-    defaultFrom: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
+    defaultFrom: smtpFrom,
+    templatesDir: "./templates",
   });
-
-  await courier.loadTemplate("password-reset", "./templates/password-reset.hbs");
 
   const result = await courier.sendWithTemplate(
     "password-reset",
@@ -123,6 +117,7 @@ async function _sendPasswordReset() {
       companyName: "Acme Inc.",
     },
     {
+      from: smtpFrom,
       to: "bob@example.com",
       subject: "Password Reset Request",
     },
@@ -133,19 +128,17 @@ async function _sendPasswordReset() {
 }
 
 // Example 5: Email with attachments
-async function _sendEmailWithAttachments() {
+async function sendEmailWithAttachments() {
   console.log("\nExample 5: Sending an email with attachments...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
-    defaultFrom: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
+    defaultFrom: smtpFrom,
   });
 
   const result = await courier.send({
     to: "recipient@example.com",
+    from: smtpFrom,
     subject: "Document Attached",
     text: "Please find the attached document.",
     html: "<p>Please find the attached <strong>document</strong>.</p>",
@@ -166,11 +159,8 @@ async function _sendEmailWithAttachments() {
 async function verifyConnection() {
   console.log("\nExample 6: Verifying SMTP connection...");
 
-  const courier = new Courier({
-    smtp: {
-      user: Deno.env.get("ICLOUD_EMAIL") || "your-email@icloud.com",
-      pass: Deno.env.get("ICLOUD_APP_PASSWORD") || "your-app-specific-password",
-    },
+  const courier = await Courier.initialize({
+    smtp: { host: smtpHost, user: smtpUser, pass: smtpPass },
   });
 
   const isValid = await courier.verify();
@@ -184,8 +174,6 @@ if (import.meta.main) {
   console.log("=====================================\n");
 
   // Uncomment the examples you want to run:
-  // Note: Make sure to set ICLOUD_EMAIL and ICLOUD_APP_PASSWORD environment variables
-
   // await sendBasicEmail();
   // await sendTemplatedEmail();
   // await sendNotification();

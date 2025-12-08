@@ -4,7 +4,14 @@
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
-    "example": "deno run --allow-net --allow-read --allow-env example.ts"
+    "example": "deno run --allow-net --allow-read --allow-env example.ts",
+    "test": "deno test --allow-read --allow-env tests/",
+    "test:unit": "deno test --allow-read --allow-env tests/unit/",
+    "test:integration": "deno test --allow-net --allow-read --allow-env tests/integration/",
+    "coverage": "deno coverage tests/ --lcov",
+    "lint": "deno lint",
+    "fmt": "deno fmt",
+    "check": "deno check mod.ts src/** tests/**"
   },
   "imports": {
     "nodemailer": "npm:nodemailer@^6.9.7",
@@ -32,9 +39,6 @@
       "README.md",
       "LICENSE"
     ],
-    "exclude": [
-      "example.ts",
-      "test.ts"
-    ]
+    "exclude": ["example.ts", "test.ts"]
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Courier - Node.js email utility for iCloud SMTP with Handlebars templating
+ * Courier - Deno email utility for iCloud SMTP with Handlebars templating
  *
  * @module
  *
@@ -7,7 +7,7 @@
  * ```ts
  * import { Courier } from "@rivescloud/courier";
  *
- * const courier = new Courier({
+ * const courier = await Courier.initialize({
  *   smtp: {
  *     user: "your-email@icloud.com",
  *     pass: "your-app-specific-password",
@@ -23,12 +23,14 @@
  *   html: "<p>This is a <strong>test</strong> email</p>",
  * });
  *
- * // Use a template
- * courier.registerTemplate("welcome", "<h1>Welcome {{name}}!</h1>");
+ * // Use a template with directory loading
+ * // Templates auto-load from config.templatesDir during initialize()
  * await courier.sendWithTemplate("welcome", { name: "Alice" }, {
  *   to: "alice@example.com",
  *   subject: "Welcome to our service",
  * });
+ *
+ * courier.close();
  * ```
  */
 
