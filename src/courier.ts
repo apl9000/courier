@@ -24,7 +24,7 @@ import type {
 
  * Courier - Email utility for sending branded transactional emails
  * Supports iCloud SMTP and Microsoft Outlook SMTP with Handlebars templating
- * 
+ *
  * @module
  */
 export class Courier {
@@ -134,7 +134,8 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load partials from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -160,7 +161,8 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load layouts from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -208,7 +210,8 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load templates from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
