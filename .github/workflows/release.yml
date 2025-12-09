@@ -109,23 +109,4 @@ jobs:
           fi
 
       - name: Publish to JSR
-        env:
-          JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
-        run: |
-          if [ -z "$JSR_TOKEN" ]; then
-            echo "JSR_TOKEN secret not set; cannot publish." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-          deno publish
-          echo "Published @rives/courier v${{ steps.next.outputs.next }}" >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload release artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-files
-          path: |
-            deno.json
-            coverage.lcov
-            artifacts/template-snapshots
-          if-no-files-found: ignore
+        run: npx jsr publish
