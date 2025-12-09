@@ -148,7 +148,7 @@ export class Courier {
           const layoutName = entry.name.split(".").slice(0, -1).join(".");
           const layoutPath = `${dirPath}/${entry.name}`;
           const layoutContent = await Deno.readTextFile(layoutPath);
-          Handlebars.registerPartial(`layout-${layoutName}`, layoutContent);
+          Handlebars.registerPartial(`layouts-${layoutName}`, layoutContent);
         }
       }
     } catch (error) {
