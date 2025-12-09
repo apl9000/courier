@@ -35,10 +35,10 @@
     "include": [
       "mod.ts",
       "src/**/*.ts",
-      "templates/**/*.hbs",
+      "src/emails/**/*.hbs",
       "README.md",
       "LICENSE"
     ],
-    "exclude": ["example.ts", "test.ts"]
+    "exclude": ["tests/**/*"]
   }
 }
