@@ -3,10 +3,7 @@
  * Tests basic email sending functionality
  */
 
-import {
-  assertEquals,
-  assertExists,
-} from "https://deno.land/std/assert/mod.ts";
+import { assertEquals, assertExists } from "https://deno.land/std/assert/mod.ts";
 import { Courier } from "../../mod.ts";
 import type { EmailMessage, SendResult } from "../../mod.ts";
 

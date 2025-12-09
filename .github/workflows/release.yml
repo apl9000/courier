@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: 'Version bump type (patch|minor|major)'
+        description: "Version bump type (patch|minor|major)"
         required: false
-        default: 'patch'
+        default: "patch"
       confirm:
         description: "Type 'yes' to confirm publishing this version"
         required: false
-        default: 'no'
+        default: "no"
 
 permissions:
   contents: write
