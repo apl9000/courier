@@ -42,16 +42,14 @@ export type {
   CourierConfig,
   EmailAddress,
   EmailMessage,
-  SendResult,
-  SMTPConfig,
-  TemplateData,
-} from "./src/types.ts";
-export { SMTPProviders } from "./src/types.ts";
-export type {
   EmailVerificationData,
   NewsletterData,
   NotificationData,
   PasswordResetData,
+  SendResult,
+  SMTPConfig,
+  TemplateData,
   UnsubscribeData,
   WelcomeEmailData,
-} from "./src/template-types.ts";
+} from "./src/types.ts";
+export { SMTPProviders } from "./src/types.ts";

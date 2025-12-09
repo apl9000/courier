@@ -7,18 +7,16 @@ import type {
   CourierConfig,
   EmailAddress,
   EmailMessage,
-  SendResult,
-  SMTPConfig,
-  TemplateData,
-} from "./types.ts";
-import type {
   EmailVerificationData,
   NewsletterData,
   NotificationData,
   PasswordResetData,
+  SendResult,
+  SMTPConfig,
+  TemplateData,
   UnsubscribeData,
   WelcomeEmailData,
-} from "./template-types.ts";
+} from "./types.ts";
 
 /**
 

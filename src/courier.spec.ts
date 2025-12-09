@@ -4,8 +4,8 @@
  */
 
 import { assertEquals, assertExists } from "https://deno.land/std/assert/mod.ts";
-import { Courier } from "../../mod.ts";
-import type { EmailMessage, SendResult } from "../../mod.ts";
+import { Courier } from "../mod.ts";
+import type { EmailMessage, SendResult } from "../mod.ts";
 
 // Test SMTP configuration (using valid structure but won't actually connect)
 const testConfig = {
