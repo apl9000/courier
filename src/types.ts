@@ -1,18 +1,35 @@
 /**
- * Configuration for iCloud SMTP
+ * SMTP Provider configuration
+ * Supports iCloud (smtp.mail.me.com) and Microsoft Outlook (smtp-mail.outlook.com)
  */
-export interface ICloudSMTPConfig {
-  /** iCloud email address */
+export interface SMTPConfig {
+  /** Email address */
   user: string;
-  /** App-specific password for iCloud */
+  /** App-specific password or account password */
   pass: string;
-  /** Optional custom SMTP host (defaults to smtp.mail.me.com) */
+  /** SMTP host (defaults to smtp.mail.me.com for iCloud) */
   host?: string;
-  /** Optional custom SMTP port (defaults to 587) */
+  /** SMTP port (defaults to 587) */
   port?: number;
   /** Enable secure connection (defaults to false for STARTTLS) */
   secure?: boolean;
 }
+
+/**
+ * Predefined SMTP providers
+ */
+export const SMTPProviders = {
+  iCloud: {
+    host: "smtp.mail.me.com",
+    port: 587,
+    secure: false,
+  },
+  Microsoft: {
+    host: "smtp-mail.outlook.com",
+    port: 587,
+    secure: false,
+  },
+} as const;
 
 /**
  * Email address with optional name
@@ -22,20 +39,6 @@ export interface EmailAddress {
   email: string;
   /** Optional display name */
   name?: string;
-}
-
-/**
- * Email attachment configuration
- */
-export interface EmailAttachment {
-  /** Filename for the attachment */
-  filename: string;
-  /** Content of the attachment (string, buffer, or stream) */
-  content?: string | Uint8Array;
-  /** Path to file to attach */
-  path?: string;
-  /** Content type (MIME type) */
-  contentType?: string;
 }
 
 /**
@@ -63,8 +66,6 @@ export interface EmailMessage {
   text?: string;
   /** HTML version of email */
   html?: string;
-  /** Optional email attachments */
-  attachments?: EmailAttachment[];
   /** Optional reply-to address */
   replyTo?: string | EmailAddress;
 }
@@ -73,8 +74,8 @@ export interface EmailMessage {
  * Courier configuration
  */
 export interface CourierConfig {
-  /** iCloud SMTP configuration */
-  smtp: ICloudSMTPConfig;
+  /** SMTP configuration */
+  smtp: SMTPConfig;
   /** Optional default sender address */
   defaultFrom?: string | EmailAddress;
   /** Optional template directory path */

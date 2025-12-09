@@ -6,14 +6,14 @@ import type {
   CourierConfig,
   EmailAddress,
   EmailMessage,
-  ICloudSMTPConfig,
+  SMTPConfig,
   SendResult,
   TemplateData,
 } from "./types.ts";
 
 /**
  * Courier - Email utility for sending branded transactional emails
- * Integrates iCloud SMTP, Nodemailer, and Handlebars templating
+ * Supports iCloud SMTP and Microsoft Outlook SMTP with Handlebars templating
  */
 export class Courier {
   private transporter: Transporter;
@@ -22,7 +22,7 @@ export class Courier {
 
   /**
    * Create a new Courier instance
-   * @param config - Courier configuration including iCloud SMTP settings
+   * @param config - Courier configuration including SMTP settings
    */
   private constructor(config: CourierConfig) {
     this.config = config;
@@ -44,9 +44,9 @@ export class Courier {
   }
 
   /**
-   * Create Nodemailer transporter with iCloud SMTP configuration
+   * Create Nodemailer transporter with SMTP configuration
    */
-  private createTransporter(smtp: ICloudSMTPConfig): Transporter {
+  private createTransporter(smtp: SMTPConfig): Transporter {
     const transportConfig = {
       host: smtp.host || "smtp.mail.me.com",
       port: smtp.port || 587,
@@ -244,9 +244,6 @@ export class Courier {
       }
       if (message.html) {
         mailOptions.html = message.html;
-      }
-      if (message.attachments) {
-        mailOptions.attachments = message.attachments;
       }
 
       // Send email
