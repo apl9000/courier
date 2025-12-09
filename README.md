@@ -19,12 +19,33 @@ notifications, and automated messages with minimal setup.
 
 ## Installation
 
+### Using Deno
+
 ```bash
-# Using Deno
+# Add to your Deno project
 deno add @rivescloud/courier
 
 # Or import directly from JSR
 import { Courier } from "jsr:@rivescloud/courier";
+```
+
+### Using npm/Node.js
+
+```bash
+# Using npm
+npm install @rivescloud/courier
+
+# Using yarn
+yarn add @rivescloud/courier
+
+# Using pnpm
+pnpm add @rivescloud/courier
+```
+
+Then import in your Node.js/TypeScript project:
+
+```typescript
+import { Courier, SMTPProviders } from "@rivescloud/courier";
 ```
 
 ## Quick Start
