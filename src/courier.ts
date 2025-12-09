@@ -103,12 +103,72 @@ export class Courier {
   }
 
   /**
+   * Load partials from a directory and register them with Handlebars
+   * @param dirPath - Path to directory containing partial files
+   */
+  private async loadPartials(dirPath: string): Promise<void> {
+    try {
+      for await (const entry of Deno.readDir(dirPath)) {
+        if (entry.isFile) {
+          const partialName = entry.name.split(".").slice(0, -1).join(".");
+          const partialPath = `${dirPath}/${entry.name}`;
+          const partialContent = await Deno.readTextFile(partialPath);
+          Handlebars.registerPartial(partialName, partialContent);
+        }
+      }
+    } catch (error) {
+      // Silently ignore if partials directory doesn't exist
+      if (error instanceof Deno.errors.NotFound) {
+        return;
+      }
+      throw new Error(
+        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  /**
+   * Load layouts from a directory and register them with Handlebars
+   * @param dirPath - Path to directory containing layout files
+   */
+  private async loadLayouts(dirPath: string): Promise<void> {
+    try {
+      for await (const entry of Deno.readDir(dirPath)) {
+        if (entry.isFile) {
+          const layoutName = entry.name.split(".").slice(0, -1).join(".");
+          const layoutPath = `${dirPath}/${entry.name}`;
+          const layoutContent = await Deno.readTextFile(layoutPath);
+          Handlebars.registerPartial(`layout-${layoutName}`, layoutContent);
+        }
+      }
+    } catch (error) {
+      // Silently ignore if layouts directory doesn't exist
+      if (error instanceof Deno.errors.NotFound) {
+        return;
+      }
+      throw new Error(
+        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  /**
    * Load all templates from a directory
    * Templates in the custom directory take precedence over built-in templates
+   * Also registers partials and layouts with Handlebars
    * @param dirPath - Path to directory containing template files
    */
   async loadTemplatesFromDirectory(dirPath: string): Promise<void> {
     try {
+      // Load partials first
+      const partialsPath = `${dirPath}/partials`;
+      await this.loadPartials(partialsPath);
+
+      // Load layouts
+      const layoutsPath = `${dirPath}/layouts`;
+      await this.loadLayouts(layoutsPath);
+
+      // Load template files (typically in templates subdirectory or root)
       for await (const entry of Deno.readDir(dirPath)) {
         if (entry.isFile) {
           // Extract template name from filename (remove extension)
@@ -117,6 +177,19 @@ export class Courier {
 
           // Load template, overwriting any defaults
           await this.loadTemplate(templateName, templatePath);
+        } else if (entry.isDirectory && entry.name === "templates") {
+          // Load templates from templates subdirectory
+          const templatesSubPath = `${dirPath}/templates`;
+          for await (const templateEntry of Deno.readDir(templatesSubPath)) {
+            if (templateEntry.isFile) {
+              const templateName = templateEntry.name
+                .split(".")
+                .slice(0, -1)
+                .join(".");
+              const templatePath = `${templatesSubPath}/${templateEntry.name}`;
+              await this.loadTemplate(templateName, templatePath);
+            }
+          }
         }
       }
     } catch (error) {
