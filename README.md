@@ -330,4 +330,4 @@ If you encounter any problems, please file an issue on the GitHub repository.
 
 ## License
 
-Courier is released under the [MIT License](LICENSE.md).
+Courier is released under the [MIT License](LICENSE).
