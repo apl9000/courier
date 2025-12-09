@@ -233,7 +233,7 @@ await courier.send({
 
 ## Templates
 
-Courier includes five pre-built templates:
+Courier includes six pre-built templates:
 
 - **welcome** - Professional welcome email with call-to-action button
 - **email-verification** - Email verification with code and link
