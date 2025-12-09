@@ -1,14 +1,18 @@
 /**
- * Courier - Deno email utility for iCloud SMTP with Handlebars templating
+ * Courier - Deno email utility for SMTP with Handlebars templating
+ *
+ * Supports iCloud SMTP and Microsoft Outlook SMTP providers.
  *
  * @module
  *
  * @example
  * ```ts
- * import { Courier } from "@rivescloud/courier";
+ * import { Courier, SMTPProviders } from "@rivescloud/courier";
  *
+ * // Using iCloud SMTP
  * const courier = await Courier.initialize({
  *   smtp: {
+ *     ...SMTPProviders.iCloud,
  *     user: "your-email@icloud.com",
  *     pass: "your-app-specific-password",
  *   },
@@ -23,12 +27,11 @@
  *   html: "<p>This is a <strong>test</strong> email</p>",
  * });
  *
- * // Use a template with directory loading
- * // Templates auto-load from config.templatesDir during initialize()
- * await courier.sendWithTemplate("welcome", { name: "Alice" }, {
- *   to: "alice@example.com",
- *   subject: "Welcome to our service",
- * });
+ * // Use dedicated template functions
+ * await courier.sendWelcomeEmail(
+ *   { name: "Alice", year: 2025, companyName: "Acme Inc" },
+ *   { to: "alice@example.com", subject: "Welcome!" }
+ * );
  *
  * courier.close();
  * ```
@@ -38,9 +41,17 @@ export { Courier } from "./src/courier.ts";
 export type {
   CourierConfig,
   EmailAddress,
-  EmailAttachment,
   EmailMessage,
-  ICloudSMTPConfig,
   SendResult,
+  SMTPConfig,
   TemplateData,
 } from "./src/types.ts";
+export { SMTPProviders } from "./src/types.ts";
+export type {
+  EmailVerificationData,
+  NewsletterData,
+  NotificationData,
+  PasswordResetData,
+  UnsubscribeData,
+  WelcomeEmailData,
+} from "./src/template-types.ts";

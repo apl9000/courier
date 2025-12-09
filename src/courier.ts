@@ -6,10 +6,18 @@ import type {
   CourierConfig,
   EmailAddress,
   EmailMessage,
-  SMTPConfig,
   SendResult,
+  SMTPConfig,
   TemplateData,
 } from "./types.ts";
+import type {
+  EmailVerificationData,
+  NewsletterData,
+  NotificationData,
+  PasswordResetData,
+  UnsubscribeData,
+  WelcomeEmailData,
+} from "./template-types.ts";
 
 /**
  * Courier - Email utility for sending branded transactional emails
@@ -122,7 +130,9 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to load partials from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       );
     }
   }
@@ -147,7 +157,9 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to load layouts from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       );
     }
   }
@@ -194,7 +206,9 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to load templates from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       );
     }
   }
@@ -291,6 +305,168 @@ export class Courier {
     } catch (_error) {
       return false;
     }
+  }
+
+  /**
+   * Send a welcome email using the default welcome template
+   *
+   * @example
+   * ```ts
+   * await courier.sendWelcomeEmail(
+   *   { name: "Alice", actionUrl: "https://example.com/start", year: 2025, companyName: "Acme Inc" },
+   *   { to: "alice@example.com", subject: "Welcome to Acme!" }
+   * );
+   * ```
+   *
+   * @param data - Welcome email template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendWelcomeEmail(
+    data: WelcomeEmailData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("welcome", data, message);
+  }
+
+  /**
+   * Send an email verification email using the default email-verification template
+   *
+   * @example
+   * ```ts
+   * await courier.sendEmailVerification(
+   *   {
+   *     name: "Bob",
+   *     verificationUrl: "https://example.com/verify?token=abc123",
+   *     verificationCode: "ABC123",
+   *     expiryHours: 24,
+   *     companyName: "Acme Inc"
+   *   },
+   *   { to: "bob@example.com", subject: "Verify Your Email" }
+   * );
+   * ```
+   *
+   * @param data - Email verification template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendEmailVerification(
+    data: EmailVerificationData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("email-verification", data, message);
+  }
+
+  /**
+   * Send a password reset email using the default password-reset template
+   *
+   * @example
+   * ```ts
+   * await courier.sendPasswordReset(
+   *   {
+   *     name: "Charlie",
+   *     resetUrl: "https://example.com/reset?token=xyz789",
+   *     resetCode: "XYZ789",
+   *     expiryHours: 2,
+   *     companyName: "Acme Inc"
+   *   },
+   *   { to: "charlie@example.com", subject: "Reset Your Password" }
+   * );
+   * ```
+   *
+   * @param data - Password reset template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendPasswordReset(
+    data: PasswordResetData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("password-reset", data, message);
+  }
+
+  /**
+   * Send a notification email using the default notification template
+   *
+   * @example
+   * ```ts
+   * await courier.sendNotification(
+   *   {
+   *     type: "success",
+   *     title: "Deployment Complete",
+   *     message: "Your application has been deployed successfully.",
+   *     details: "Build #1234 completed in 3m 45s",
+   *     timestamp: new Date().toISOString()
+   *   },
+   *   { to: "dev@example.com", subject: "Deployment Notification" }
+   * );
+   * ```
+   *
+   * @param data - Notification template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendNotification(
+    data: NotificationData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("notification", data, message);
+  }
+
+  /**
+   * Send a newsletter email using the default newsletter template
+   *
+   * @example
+   * ```ts
+   * await courier.sendNewsletter(
+   *   {
+   *     title: "Monthly Newsletter",
+   *     sections: [
+   *       { heading: "New Features", content: "Check out our latest updates...", link: "https://example.com/blog" }
+   *     ],
+   *     companyName: "Acme Inc",
+   *     unsubscribeUrl: "https://example.com/unsubscribe"
+   *   },
+   *   { to: "subscriber@example.com", subject: "Monthly Newsletter - December 2025" }
+   * );
+   * ```
+   *
+   * @param data - Newsletter template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendNewsletter(
+    data: NewsletterData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("newsletter", data, message);
+  }
+
+  /**
+   * Send an unsubscribe confirmation email using the default unsubscribe template
+   *
+   * @example
+   * ```ts
+   * await courier.sendUnsubscribeConfirmation(
+   *   {
+   *     name: "Dana",
+   *     reason: "Too many emails",
+   *     resubscribeUrl: "https://example.com/resubscribe?token=def456",
+   *     companyName: "Acme Inc"
+   *   },
+   *   { to: "dana@example.com", subject: "You've been unsubscribed" }
+   * );
+   * ```
+   *
+   * @param data - Unsubscribe template data
+   * @param message - Email message configuration (to, subject, from, etc.)
+   * @returns Send result with success status and message ID
+   */
+  sendUnsubscribeConfirmation(
+    data: UnsubscribeData,
+    message: Omit<EmailMessage, "html">,
+  ): Promise<SendResult> {
+    return this.sendWithTemplate("unsubscribe", data, message);
   }
 
   /**

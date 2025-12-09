@@ -3,7 +3,12 @@
  * Tests template loading, registration, and rendering
  */
 
-import { assertEquals, assertExists, assertThrows, assertStringIncludes } from "https://deno.land/std/assert/mod.ts";
+import {
+  assertEquals,
+  assertExists,
+  assertStringIncludes,
+  assertThrows,
+} from "https://deno.land/std/assert/mod.ts";
 import { Courier } from "../../mod.ts";
 import type { TemplateData } from "../../mod.ts";
 
@@ -120,7 +125,7 @@ Deno.test("Courier.sendWithTemplate() - renders and sends", async () => {
     {
       to: "harry@example.com",
       subject: "Test",
-    }
+    },
   );
   assertExists(result);
   assertEquals(typeof result.success, "boolean");
