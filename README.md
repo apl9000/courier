@@ -34,12 +34,6 @@ import { Courier } from "jsr:@rivescloud/courier";
 ```bash
 # Using npm
 npm install @rivescloud/courier
-
-# Using yarn
-yarn add @rivescloud/courier
-
-# Using pnpm
-pnpm add @rivescloud/courier
 ```
 
 Then import in your Node.js/TypeScript project:
