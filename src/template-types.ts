@@ -2,10 +2,12 @@
  * Template-specific data types for default email templates
  */
 
+import { TemplateData } from "./types.ts";
+
 /**
  * Data required for the welcome email template
  */
-export interface WelcomeEmailData {
+export interface WelcomeEmailData extends TemplateData {
   /** Recipient's name */
   name: string;
   /** Optional call-to-action URL */
@@ -19,7 +21,7 @@ export interface WelcomeEmailData {
 /**
  * Data required for the email verification template
  */
-export interface EmailVerificationData {
+export interface EmailVerificationData extends TemplateData {
   /** Recipient's name */
   name: string;
   /** Verification URL or link */
@@ -35,7 +37,7 @@ export interface EmailVerificationData {
 /**
  * Data required for the password reset template
  */
-export interface PasswordResetData {
+export interface PasswordResetData extends TemplateData {
   /** Recipient's name */
   name: string;
   /** Password reset URL */
@@ -51,7 +53,7 @@ export interface PasswordResetData {
 /**
  * Data required for the notification template
  */
-export interface NotificationData {
+export interface NotificationData extends TemplateData {
   /** Notification type (info, warning, error, success) */
   type: "info" | "warning" | "error" | "success";
   /** Notification title */
@@ -67,7 +69,7 @@ export interface NotificationData {
 /**
  * Data required for the newsletter template
  */
-export interface NewsletterData {
+export interface NewsletterData extends TemplateData {
   /** Newsletter title */
   title: string;
   /** Newsletter content sections */
@@ -85,7 +87,7 @@ export interface NewsletterData {
 /**
  * Data required for the unsubscribe template
  */
-export interface UnsubscribeData {
+export interface UnsubscribeData extends TemplateData {
   /** Recipient's name */
   name: string;
   /** Reason for unsubscribe (optional) */
