@@ -318,7 +318,7 @@ SMTPProviders.Microsoft = {
 
 ## License
 
-MIT License - See LICENSE file for details
+Rives Open Boundaries License (ROBL) - See LICENSE file for details
 
 ## Contributing
 
