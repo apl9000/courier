@@ -2,6 +2,7 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
+import type { TemplateDelegate } from "handlebars";
 import type {
   CourierConfig,
   EmailAddress,
@@ -26,7 +27,7 @@ import type {
 export class Courier {
   private transporter: Transporter;
   private config: CourierConfig;
-  private templates: Map<string, HandlebarsTemplateDelegate>;
+  private templates: Map<string, TemplateDelegate>;
 
   /**
    * Create a new Courier instance
@@ -130,8 +131,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -157,8 +157,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -206,8 +205,7 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -282,9 +280,9 @@ export class Courier {
    * @param message - Email message configuration (without html)
    * @returns Send result with success status and message ID
    */
-  sendWithTemplate(
+  sendWithTemplate<T extends TemplateData = TemplateData>(
     templateName: string,
-    data: TemplateData,
+    data: T,
     message: Omit<EmailMessage, "html">,
   ): Promise<SendResult> {
     const html = this.renderTemplate(templateName, data);
