@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang={{lang}}>
+  <head>
+    {{> head }}
+  </head>
+  <body class="bg-white font-sans text-gray-800">
+    <table role="presentation" class="w-full max-w-[600px] mx-auto">
+      <tr>
+        <td class="px-4">
+          {{!-- Main Content Slot --}}
+          {{{ body }}}
+          {{!-- Footer --}}
+          {{> footer }}
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
