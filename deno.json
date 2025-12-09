@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "exports": "./mod.ts",
   "tasks": {
-    "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
-    "example": "deno run --allow-net --allow-read --allow-env example.ts",
     "test": "deno test --allow-read --allow-env tests/",
     "test:unit": "deno test --allow-read --allow-env tests/unit/",
     "test:integration": "deno test --allow-net --allow-read --allow-env tests/integration/",
