@@ -6,7 +6,6 @@
 import {
   assertEquals,
   assertExists,
-  assertStringIncludes,
 } from "https://deno.land/std/assert/mod.ts";
 import { Courier } from "../../mod.ts";
 import type { EmailMessage, SendResult } from "../../mod.ts";
@@ -37,7 +36,8 @@ Deno.test("Courier.send() - basic email with text", async () => {
   assertExists(result);
   assertEquals(typeof result.success, "boolean");
   if (!result.success) {
-    assertStringIncludes(result.error || "", "");
+    assertExists(result.error, "Error message should be present when success is false");
+    assertEquals(typeof result.error, "string", "Error message should be a string");
   }
 
   courier.close();

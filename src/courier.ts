@@ -131,7 +131,8 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load partials from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -157,7 +158,8 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load layouts from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -205,7 +207,8 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
+        `Failed to load templates from directory "${dirPath}": ${
+          error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -280,16 +283,23 @@ export class Courier {
    * @param message - Email message configuration (without html)
    * @returns Send result with success status and message ID
    */
-  sendWithTemplate<T extends TemplateData = TemplateData>(
+  async sendWithTemplate<T extends TemplateData = TemplateData>(
     templateName: string,
     data: T,
     message: Omit<EmailMessage, "html">,
   ): Promise<SendResult> {
-    const html = this.renderTemplate(templateName, data);
-    return this.send({
-      ...message,
-      html,
-    });
+    try {
+      const html = this.renderTemplate(templateName, data);
+      return await this.send({
+        ...message,
+        html,
+      });
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
   }
 
   /**
@@ -308,8 +318,17 @@ export class Courier {
   /**
    * Send a welcome email using the default welcome template
    *
+   * Note: The welcome template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
+   *
    * @example
    * ```ts
+   * // Initialize with templates directory
+   * const courier = await Courier.initialize({
+   *   smtp: { user: "...", pass: "..." },
+   *   templatesDir: "./src/emails"
+   * });
+   *
    * await courier.sendWelcomeEmail(
    *   { name: "Alice", actionUrl: "https://example.com/start", year: 2025, companyName: "Acme Inc" },
    *   { to: "alice@example.com", subject: "Welcome to Acme!" }
@@ -329,6 +348,9 @@ export class Courier {
 
   /**
    * Send an email verification email using the default email-verification template
+   *
+   * Note: The email-verification template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
    *
    * @example
    * ```ts
@@ -358,6 +380,9 @@ export class Courier {
   /**
    * Send a password reset email using the default password-reset template
    *
+   * Note: The password-reset template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
+   *
    * @example
    * ```ts
    * await courier.sendPasswordReset(
@@ -385,6 +410,9 @@ export class Courier {
 
   /**
    * Send a notification email using the default notification template
+   *
+   * Note: The notification template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
    *
    * @example
    * ```ts
@@ -414,6 +442,9 @@ export class Courier {
   /**
    * Send a newsletter email using the default newsletter template
    *
+   * Note: The newsletter template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
+   *
    * @example
    * ```ts
    * await courier.sendNewsletter(
@@ -442,6 +473,9 @@ export class Courier {
 
   /**
    * Send an unsubscribe confirmation email using the default unsubscribe template
+   *
+   * Note: The unsubscribe template must be loaded first using `loadTemplate()` or by
+   * specifying `templatesDir` in the Courier configuration during initialization.
    *
    * @example
    * ```ts
