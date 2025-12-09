@@ -1,20 +1,13 @@
-name: CI
+name: ci
 
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: [main]
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  pull_request:
+    branches: [main]
 
 jobs:
-  lint-fmt-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,20 +20,15 @@ jobs:
 
       - name: Cache Deno dependencies
         run: deno cache mod.ts
-        
-      - name: Format check
-        run: deno fmt --check
 
       - name: Lint
-        run: deno lint
+        run: deno task lint
 
-      - name: Test with coverage
-        run: |
-          deno test --allow-read --allow-env --coverage=coverage tests/
-          deno coverage coverage --lcov > coverage.lcov
+      - name: Format (check)
+        run: deno fmt --check
 
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-lcov
-          path: coverage.lcov
+      - name: Test
+        run: deno task test
+
+      - name: Coverage
+        run: deno task coverage
