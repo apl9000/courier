@@ -1,6 +1,6 @@
 {
   "name": "@rivescloud/courier",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "exports": "./mod.ts",
   "tasks": {
     "test": "deno test --allow-read --allow-env tests/",
