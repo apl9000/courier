@@ -327,3 +327,7 @@ If you encounter any problems, please file an issue on the GitHub repository.
 - [Handlebars Documentation](https://handlebarsjs.com/)
 - [iCloud Mail Setup](https://support.apple.com/en-us/HT202304)
 - [JSR Registry](https://jsr.io/)
+
+## License
+
+Courier is released under the [MIT License](LICENSE.md).
