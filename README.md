@@ -1,23 +1,23 @@
-# 📬 Courier
+# Courier
 
-Courier is a Node.js email utility that integrates iCloud SMTP, Nodemailer, and Handlebars
-templating into a clean, modular workflow. Use it to send branded transactional emails,
+Courier is a Deno email utility that integrates SMTP (iCloud and Microsoft Outlook), Nodemailer, and
+Handlebars templating into a clean, modular workflow. Use it to send branded transactional emails,
 notifications, and automated messages with minimal setup.
 
 **Written in Deno and published to JSR (JavaScript Registry)**
 
-## ✨ Features
+## Features
 
-- 🍎 **iCloud SMTP Integration** - Built-in support for iCloud email with app-specific passwords
-- 📧 **Nodemailer Powered** - Reliable email delivery with the popular Nodemailer library
-- 🎨 **Handlebars Templates** - Create beautiful, branded emails with Handlebars templating
-- 📝 **TypeScript Support** - Full TypeScript definitions included
-- 🚀 **Easy to Use** - Simple, intuitive API for sending emails
-- 🔒 **Secure** - Uses secure SMTP connections with STARTTLS
-- 📎 **Attachments** - Support for email attachments
-- 🎯 **Type-Safe** - Complete type safety with TypeScript interfaces
+- **Multi-Provider SMTP Support** - Built-in support for iCloud and Microsoft Outlook SMTP
+- **Nodemailer Powered** - Reliable email delivery with the popular Nodemailer library
+- **Handlebars Templates** - Create beautiful, branded emails with Handlebars templating
+- **TypeScript Support** - Full TypeScript definitions included
+- **Easy to Use** - Simple, intuitive API for sending emails
+- **Secure** - Uses secure SMTP connections with STARTTLS
+- **Type-Safe** - Complete type safety with TypeScript interfaces
+- **Dedicated Template Functions** - Type-safe functions for common email templates
 
-## 📦 Installation
+## Installation
 
 ```bash
 # Using Deno
@@ -27,16 +27,17 @@ deno add @rivescloud/courier
 import { Courier } from "jsr:@rivescloud/courier";
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
-### Basic Usage
+### Basic Usage with iCloud
 
 ```typescript
-import { Courier } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@rivescloud/courier";
 
-// Create a Courier instance
-const courier = new Courier({
+// Initialize with iCloud SMTP
+const courier = await Courier.initialize({
   smtp: {
+    ...SMTPProviders.iCloud,
     user: "your-email@icloud.com",
     pass: "your-app-specific-password", // Get this from iCloud settings
   },
@@ -51,51 +52,31 @@ await courier.send({
   html: "<p>This is a <strong>test</strong> email</p>",
 });
 
-// Close the connection when done
 courier.close();
 ```
 
-### Using Templates
+### Using Microsoft Outlook SMTP
 
 ```typescript
-import { Courier } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@rivescloud/courier";
 
-const courier = new Courier({
+const courier = await Courier.initialize({
   smtp: {
-    user: "your-email@icloud.com",
-    pass: "your-app-specific-password",
+    ...SMTPProviders.Microsoft,
+    user: "your-email@outlook.com",
+    pass: "your-password",
   },
-  defaultFrom: "your-email@icloud.com",
+  defaultFrom: "your-email@outlook.com",
 });
-
-// Register a template
-courier.registerTemplate(
-  "welcome",
-  "<h1>Welcome {{name}}!</h1><p>Thanks for joining us.</p>",
-);
-
-// Send email using the template
-await courier.sendWithTemplate(
-  "welcome",
-  { name: "Alice" },
-  {
-    to: "alice@example.com",
-    subject: "Welcome!",
-  },
-);
-
-courier.close();
 ```
 
-### Loading Templates from Files
+### Using Default Email Templates
+
+Courier includes dedicated functions for common email templates with type-safe parameters:
 
 ```typescript
-// Load a template from a file
-await courier.loadTemplate("welcome", "./templates/welcome.hbs");
-
-// Use the loaded template
-await courier.sendWithTemplate(
-  "welcome",
+// Send a welcome email
+await courier.sendWelcomeEmail(
   {
     name: "Alice",
     actionUrl: "https://example.com/getting-started",
@@ -107,11 +88,43 @@ await courier.sendWithTemplate(
     subject: "Welcome to Acme Inc.!",
   },
 );
+
+// Send a password reset email
+await courier.sendPasswordReset(
+  {
+    name: "Bob",
+    resetUrl: "https://example.com/reset?token=abc123",
+    resetCode: "ABC123",
+    expiryHours: 24,
+    companyName: "Acme Inc.",
+  },
+  {
+    to: "bob@example.com",
+    subject: "Password Reset Request",
+  },
+);
+
+// Send a notification
+await courier.sendNotification(
+  {
+    type: "success",
+    title: "Deployment Complete",
+    message: "Your application has been deployed successfully.",
+    details: "Build #1234 completed in 3m 45s",
+    timestamp: new Date().toISOString(),
+  },
+  {
+    to: "developer@example.com",
+    subject: "Deployment Notification",
+  },
+);
 ```
 
-## 🔧 Configuration
+## Configuration
 
-### iCloud SMTP Setup
+### SMTP Setup
+
+#### iCloud SMTP
 
 1. Go to [appleid.apple.com](https://appleid.apple.com)
 2. Sign in with your Apple ID
@@ -119,23 +132,69 @@ await courier.sendWithTemplate(
 4. Under "App-Specific Passwords", generate a new password
 5. Use this password in your Courier configuration
 
+#### Microsoft Outlook SMTP
+
+Use your regular Outlook/Hotmail account credentials.
+
 ### Configuration Options
 
 ```typescript
 interface CourierConfig {
   smtp: {
-    user: string; // Your iCloud email
-    pass: string; // App-specific password
-    host?: string; // Default: "smtp.mail.me.com"
-    port?: number; // Default: 587
-    secure?: boolean; // Default: false (uses STARTTLS)
+    user: string; // Your email address
+    pass: string; // App-specific password or account password
+    host?: string; // SMTP host (defaults to smtp.mail.me.com for iCloud)
+    port?: number; // SMTP port (defaults to 587)
+    secure?: boolean; // Enable SSL (defaults to false for STARTTLS)
   };
   defaultFrom?: string | { email: string; name?: string };
   templatesDir?: string; // Optional template directory
 }
 ```
 
-## 📧 Sending Emails
+## Email Functions
+
+### Core Functions
+
+**`send(message: EmailMessage): Promise<SendResult>`**\
+Send a basic email message.
+
+**`sendWithTemplate(templateName: string, data: TemplateData, message: EmailMessage): Promise<SendResult>`**\
+Send an email using a registered template.
+
+**`registerTemplate(name: string, template: string): void`**\
+Register a Handlebars template from a string.
+
+**`loadTemplate(name: string, filepath: string): Promise<void>`**\
+Load and register a template from a file.
+
+**`verify(): Promise<boolean>`**\
+Verify the SMTP connection is valid.
+
+**`close(): void`**\
+Close the SMTP connection.
+
+### Template-Specific Functions
+
+**`sendWelcomeEmail(data: WelcomeEmailData, message): Promise<SendResult>`**\
+Send a welcome email with name, action URL, year, and company name.
+
+**`sendEmailVerification(data: EmailVerificationData, message): Promise<SendResult>`**\
+Send an email verification with verification URL/code and expiry time.
+
+**`sendPasswordReset(data: PasswordResetData, message): Promise<SendResult>`**\
+Send a password reset email with reset URL/code and expiry time.
+
+**`sendNotification(data: NotificationData, message): Promise<SendResult>`**\
+Send a notification email with type (info/warning/error/success), title, message, and details.
+
+**`sendNewsletter(data: NewsletterData, message): Promise<SendResult>`**\
+Send a newsletter with title, sections, and unsubscribe link.
+
+**`sendUnsubscribeConfirmation(data: UnsubscribeData, message): Promise<SendResult>`**\
+Send an unsubscribe confirmation with resubscribe link.
+
+## Sending Emails
 
 ### Simple Email
 
@@ -160,27 +219,6 @@ await courier.send({
 });
 ```
 
-### With Attachments
-
-```typescript
-await courier.send({
-  to: "recipient@example.com",
-  subject: "Document Attached",
-  html: "<p>Please find the attached document.</p>",
-  attachments: [
-    {
-      filename: "report.pdf",
-      path: "/path/to/report.pdf",
-    },
-    {
-      filename: "data.txt",
-      content: "Some text content",
-      contentType: "text/plain",
-    },
-  ],
-});
-```
-
 ### Named Email Addresses
 
 ```typescript
@@ -193,111 +231,106 @@ await courier.send({
 });
 ```
 
-## 🎨 Templates
+## Templates
 
-Courier includes three pre-built templates:
+Courier includes five pre-built templates:
 
-### Welcome Email
+- **welcome** - Professional welcome email with call-to-action button
+- **email-verification** - Email verification with code and link
+- **password-reset** - Secure password reset email with token and code
+- **notification** - System notification with severity levels (info, warning, error, success)
+- **newsletter** - Newsletter template with sections and unsubscribe link
+- **unsubscribe** - Unsubscribe confirmation with resubscribe option
 
-Professional welcome email with call-to-action button
+### Custom Templates
 
-```typescript
-await courier.loadTemplate("welcome", "./templates/welcome.hbs");
-```
-
-### Notification
-
-System notification with severity levels (info, warning, error, success)
-
-```typescript
-await courier.loadTemplate("notification", "./templates/notification.hbs");
-```
-
-### Password Reset
-
-Secure password reset email with token and code
+You can create your own templates or load custom ones:
 
 ```typescript
-await courier.loadTemplate("password-reset", "./templates/password-reset.hbs");
+// Register inline template
+courier.registerTemplate(
+  "custom",
+  "<h1>Hello {{name}}</h1><p>{{message}}</p>",
+);
+
+// Load from file
+await courier.loadTemplate("custom", "./my-templates/custom.hbs");
+
+// Use the template
+await courier.sendWithTemplate(
+  "custom",
+  { name: "Alice", message: "Welcome!" },
+  {
+    to: "alice@example.com",
+    subject: "Custom Email",
+  },
+);
 ```
 
-## 🔍 API Reference
+## API Reference
 
-### `new Courier(config: CourierConfig)`
+### Types
 
-Create a new Courier instance with the specified configuration.
-
-### `send(message: EmailMessage): Promise<SendResult>`
-
-Send an email message.
-
-### `sendWithTemplate(templateName: string, data: TemplateData, message: EmailMessage): Promise<SendResult>`
-
-Send an email using a registered template.
-
-### `registerTemplate(name: string, template: string): void`
-
-Register a Handlebars template from a string.
-
-### `loadTemplate(name: string, filepath: string): Promise<void>`
-
-Load and register a template from a file.
-
-### `renderTemplate(templateName: string, data: TemplateData): string`
-
-Render a registered template with data.
-
-### `verify(): Promise<boolean>`
-
-Verify the SMTP connection is valid.
-
-### `close(): void`
-
-Close the SMTP connection.
-
-## 🧪 Examples
-
-See the [example.ts](./example.ts) file for comprehensive examples including:
-
-- Basic email sending
-- Template usage
-- Notifications
-- Password reset emails
-- Attachments
-- Connection verification
-
-Run examples:
-
-```bash
-deno run --allow-net --allow-read --allow-env example.ts
+```typescript
+import type {
+  Courier,
+  CourierConfig,
+  EmailAddress,
+  EmailMessage,
+  EmailVerificationData,
+  NewsletterData,
+  NotificationData,
+  PasswordResetData,
+  SendResult,
+  SMTPConfig,
+  TemplateData,
+  UnsubscribeData,
+  // Template-specific types
+  WelcomeEmailData,
+} from "@rivescloud/courier";
 ```
 
-## 🛡️ Security
+### SMTP Providers
+
+```typescript
+import { SMTPProviders } from "@rivescloud/courier";
+
+// Available providers:
+SMTPProviders.iCloud = {
+  host: "smtp.mail.me.com",
+  port: 587,
+  secure: false,
+};
+
+SMTPProviders.Microsoft = {
+  host: "smtp-mail.outlook.com",
+  port: 587,
+  secure: false,
+};
+```
+
+## Security
 
 - Always use app-specific passwords for iCloud (never your main password)
 - Store credentials in environment variables, not in code
 - Use HTTPS/TLS for secure email transmission
 - Validate and sanitize template data to prevent injection attacks
 
-## 📄 License
+## License
 
 MIT License - See LICENSE file for details
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please see CONTRIBUTING.md for guidelines.
 
-## 🐛 Issues
+## Issues
 
 If you encounter any problems, please file an issue on the GitHub repository.
 
-## 📚 Learn More
+## Learn More
 
 - [Nodemailer Documentation](https://nodemailer.com/)
 - [Handlebars Documentation](https://handlebarsjs.com/)
 - [iCloud Mail Setup](https://support.apple.com/en-us/HT202304)
 - [JSR Registry](https://jsr.io/)
-
----
-
-Made with ❤️ by the Rives Cloud team

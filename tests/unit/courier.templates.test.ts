@@ -10,7 +10,6 @@ import {
   assertThrows,
 } from "https://deno.land/std/assert/mod.ts";
 import { Courier } from "../../mod.ts";
-import type { TemplateData } from "../../mod.ts";
 
 const testConfig = {
   smtp: {
