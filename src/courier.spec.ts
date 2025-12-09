@@ -55,20 +55,23 @@ Deno.test(`${Courier.name}`, async (t) => {
     courier.close();
   });
 
-  await t.step(`${Courier.prototype.send.name} - email with object recipient (email + name)`, async () => {
-    const courier = await Courier.initialize(testConfig);
+  await t.step(
+    `${Courier.prototype.send.name} - email with object recipient (email + name)`,
+    async () => {
+      const courier = await Courier.initialize(testConfig);
 
-    const message: EmailMessage = {
-      to: { email: "recipient@example.com", name: "Recipient Name" },
-      subject: "Test",
-      text: "Test",
-    };
+      const message: EmailMessage = {
+        to: { email: "recipient@example.com", name: "Recipient Name" },
+        subject: "Test",
+        text: "Test",
+      };
 
-    const result = await courier.send(message);
-    assertExists(result);
+      const result = await courier.send(message);
+      assertExists(result);
 
-    courier.close();
-  });
+      courier.close();
+    },
+  );
 
   await t.step(`${Courier.prototype.send.name} - email with array recipients`, async () => {
     const courier = await Courier.initialize(testConfig);
@@ -151,20 +154,23 @@ Deno.test(`${Courier.name}`, async (t) => {
     courier.close();
   });
 
-  await t.step(`${Courier.prototype.send.name} - uses defaultFrom when from not specified`, async () => {
-    const courier = await Courier.initialize(testConfig);
+  await t.step(
+    `${Courier.prototype.send.name} - uses defaultFrom when from not specified`,
+    async () => {
+      const courier = await Courier.initialize(testConfig);
 
-    const message: EmailMessage = {
-      to: "recipient@example.com",
-      subject: "Test",
-      text: "Test",
-    };
+      const message: EmailMessage = {
+        to: "recipient@example.com",
+        subject: "Test",
+        text: "Test",
+      };
 
-    const result = await courier.send(message);
-    assertExists(result);
+      const result = await courier.send(message);
+      assertExists(result);
 
-    courier.close();
-  });
+      courier.close();
+    },
+  );
 
   await t.step(`${Courier.prototype.send.name} - returns SendResult object`, async () => {
     const courier = await Courier.initialize(testConfig);
@@ -187,4 +193,3 @@ Deno.test(`${Courier.name}`, async (t) => {
     courier.close();
   });
 });
-
