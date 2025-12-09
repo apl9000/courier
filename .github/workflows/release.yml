@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type (patch|minor|major)'
+        required: false
+        default: 'patch'
+      confirm:
+        description: "Type 'yes' to confirm publishing this version"
+        required: false
+        default: 'no'
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Determine current version
+        id: current
+        run: |
+          current=$(deno eval "console.log(JSON.parse(Deno.readTextFileSync('deno.json')).version)")
+          echo "current=${current}" >> $GITHUB_OUTPUT
+
+      - name: Suggest next version
+        id: next
+        run: |
+          bump="${{ github.event.inputs.bump || 'patch' }}"
+          current="${{ steps.current.outputs.current }}"
+          cat <<'EOF' > /tmp/bump.ts
+          const [current, bump] = Deno.args;
+          const parts = current.split('.').map((n) => parseInt(n, 10));
+          if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) {
+            console.error('Invalid current version', current);
+            Deno.exit(1);
+          }
+          const [maj, min, patch] = parts;
+          let next = [maj, min, patch];
+          if (bump === 'major') next = [maj + 1, 0, 0];
+          else if (bump === 'minor') next = [maj, min + 1, 0];
+          else next = [maj, min, patch + 1];
+          console.log(next.join('.'));
+          EOF
+          next=$(deno run /tmp/bump.ts "$current" "$bump")
+          echo "bump=${bump}" >> $GITHUB_OUTPUT
+          echo "next=${next}" >> $GITHUB_OUTPUT
+          echo "Proposed bump: $bump (current $current -> next $next)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Confirmation gate
+        run: |
+          confirm="${{ github.event.inputs.confirm || 'no' }}"
+          if [ "$confirm" != "yes" ]; then
+            echo "Confirmation required. Rerun the workflow with confirm: yes and (optionally) bump: patch|minor|major." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+      - name: Run quality checks
+        run: |
+          deno fmt --check
+          deno lint
+          deno test --allow-read --allow-env tests/
+
+      - name: Update version in deno.json
+        run: |
+          next="${{ steps.next.outputs.next }}"
+          deno eval "const obj=JSON.parse(Deno.readTextFileSync('deno.json')); obj.version='${next}'; Deno.writeTextFileSync('deno.json', JSON.stringify(obj, null, 2)+'\\n');"
+          echo "Updated deno.json version to ${next}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build CSS assets (optional)
+        run: |
+          if deno task --help | grep -q "build:css"; then
+            deno task build:css
+          else
+            echo "No build:css task defined; skipping CSS asset build." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Commit version bump
+        run: |
+          next="${{ steps.next.outputs.next }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add deno.json
+          if git status --porcelain | grep .; then
+            git commit -m "chore: release v${next}"
+            git push origin HEAD:main
+          else
+            echo "No changes to commit" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Publish to JSR
+        env:
+          JSR_TOKEN: ${{ secrets.JSR_TOKEN }}
+        run: |
+          if [ -z "$JSR_TOKEN" ]; then
+            echo "JSR_TOKEN secret not set; cannot publish." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          deno publish
+          echo "Published @rives/courier v${{ steps.next.outputs.next }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload release artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-files
+          path: |
+            deno.json
+            coverage.lcov
+            artifacts/template-snapshots
+          if-no-files-found: ignore

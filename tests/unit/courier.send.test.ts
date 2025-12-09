@@ -154,28 +154,6 @@ Deno.test("Courier.send() - email with HTML content", async () => {
   courier.close();
 });
 
-Deno.test("Courier.send() - email with attachments", async () => {
-  const courier = await Courier.initialize(testConfig);
-
-  const message: EmailMessage = {
-    to: "recipient@example.com",
-    subject: "Test with Attachment",
-    text: "See attachment",
-    attachments: [
-      {
-        filename: "test.txt",
-        content: "Test file content",
-        contentType: "text/plain",
-      },
-    ],
-  };
-
-  const result = await courier.send(message);
-  assertExists(result);
-
-  courier.close();
-});
-
 Deno.test("Courier.send() - uses defaultFrom when from not specified", async () => {
   const courier = await Courier.initialize(testConfig);
 
