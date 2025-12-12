@@ -9,6 +9,10 @@ import type { EmailMessage, SendResult } from "../mod.ts";
 // Test SMTP configuration (using valid structure but won't actually connect)
 const testConfig = {
   smtp: {
+    service: "iCloud" as const,
+    host: "smtp.mail.me.com",
+    port: 587,
+    secure: false,
     user: "test@icloud.com",
     pass: "test-password",
   },

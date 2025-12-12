@@ -3,6 +3,7 @@
  * Supports iCloud (smtp.mail.me.com) and Microsoft Outlook (smtp-mail.outlook.com)
  */
 export interface SMTPConfig {
+  service: "iCloud" | "Microsoft";
   /** Email address */
   user: string;
   /** App-specific password or account password */
@@ -20,16 +21,18 @@ export interface SMTPConfig {
  */
 export const SMTPProviders = {
   iCloud: {
+    service: "iCloud",
     host: "smtp.mail.me.com",
     port: 587,
     secure: false,
   },
   Microsoft: {
+    service: "Microsoft",
     host: "smtp-mail.outlook.com",
     port: 587,
     secure: false,
   },
-} as const;
+};
 
 /**
  * Email address with optional name

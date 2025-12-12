@@ -3,19 +3,20 @@ import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
 import type { TemplateDelegate } from "handlebars";
-import type {
-  CourierConfig,
-  EmailAddress,
-  EmailMessage,
-  EmailVerificationData,
-  NewsletterData,
-  NotificationData,
-  PasswordResetData,
-  SendResult,
-  SMTPConfig,
-  TemplateData,
-  UnsubscribeData,
-  WelcomeEmailData,
+import {
+  SMTPProviders,
+  type CourierConfig,
+  type EmailAddress,
+  type EmailMessage,
+  type EmailVerificationData,
+  type NewsletterData,
+  type NotificationData,
+  type PasswordResetData,
+  type SendResult,
+  type SMTPConfig,
+  type TemplateData,
+  type UnsubscribeData,
+  type WelcomeEmailData,
 } from "./types.ts";
 
 /**
@@ -58,15 +59,15 @@ export class Courier {
    */
   private createTransporter(smtp: SMTPConfig): Transporter {
     const transportConfig = {
-      host: smtp.host || "smtp.mail.me.com",
-      port: smtp.port || 587,
-      secure: smtp.secure || false, // Use STARTTLS
+      service: smtp.service || SMTPProviders.iCloud.service,
+      host: smtp.host || SMTPProviders.iCloud.host,
+      port: smtp.port || SMTPProviders.iCloud.port,
+      secure: smtp.secure || SMTPProviders.iCloud.secure, // Use STARTTLS
       auth: {
         user: smtp.user,
         pass: smtp.pass,
       },
     };
-
     return nodemailer.createTransport(transportConfig);
   }
 
@@ -132,8 +133,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -159,8 +159,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -208,8 +207,7 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -312,6 +310,7 @@ export class Courier {
       await this.transporter.verify();
       return true;
     } catch (_error) {
+      console.error("SMTP verification failed:", _error);
       return false;
     }
   }
