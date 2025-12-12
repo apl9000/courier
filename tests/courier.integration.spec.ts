@@ -1,13 +1,13 @@
 /**
  * Integration tests for Courier
- * 
+ *
  * These tests require real SMTP credentials and send actual emails.
  * Set environment variables before running:
  *   - SMTP_HOST (optional, defaults to smtp.mail.me.com)
  *   - SMTP_USER (required)
  *   - SMTP_PASS (required)
  *   - SMTP_FROM (optional, falls back to SMTP_USER)
- * 
+ *
  * Run with: deno task test:integration
  */
 

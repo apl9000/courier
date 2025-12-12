@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Email-specific utilities */
+@layer components {
+  .email-container {
+    @apply max-w-[600px] mx-auto bg-white;
+  }
+
+  .email-heading {
+    @apply text-2xl font-bold text-gray-900 mb-4;
+  }
+
+  .email-body {
+    @apply text-base text-gray-800 leading-relaxed;
+  }
+
+  .email-button {
+    @apply inline-block px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg
+      hover:bg-primary-700 transition-colors;
+  }
+
+  .email-link {
+    @apply text-primary-600 hover:text-primary-700 underline;
+  }
+
+  .email-footer {
+    @apply text-sm text-gray-600 border-t pt-6 mt-12;
+  }
+
+  .email-section {
+    @apply mb-8;
+  }
+}

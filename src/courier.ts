@@ -4,7 +4,6 @@ import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
 import type { TemplateDelegate } from "handlebars";
 import {
-  SMTPProviders,
   type CourierConfig,
   type EmailAddress,
   type EmailMessage,
@@ -14,6 +13,7 @@ import {
   type PasswordResetData,
   type SendResult,
   type SMTPConfig,
+  SMTPProviders,
   type TemplateData,
   type UnsubscribeData,
   type WelcomeEmailData,
@@ -224,7 +224,32 @@ export class Courier {
     if (!template) {
       throw new Error(`Template "${templateName}" not found`);
     }
-    return template(data);
+
+    // Render the template content first
+    const bodyContent = template(data);
+
+    // Check if there's a main layout registered and wrap the content
+    const mainLayout = Handlebars.partials["layouts-main"];
+    if (mainLayout) {
+      const layoutTemplate = typeof mainLayout === "string"
+        ? Handlebars.compile(mainLayout)
+        : mainLayout;
+
+      // Merge data with layout defaults
+      const layoutData = {
+        ...data,
+        body: bodyContent,
+        lang: data.lang || "en",
+        year: data.year || new Date().getFullYear(),
+        companyName: data.companyName || "Your Company",
+        emailTitle: data.emailTitle || data.subject || "Email",
+      };
+
+      return layoutTemplate(layoutData);
+    }
+
+    // If no layout, return the template as-is
+    return bodyContent;
   }
 
   /**

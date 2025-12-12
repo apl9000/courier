@@ -1,3 +1,39 @@
-{{!< layouts-main }}
 {{!-- Header --}}
-{{> header title="Unsubscribe"}}
+{{> header title="You've Been Unsubscribed"}}
+
+{{!-- Unsubscribe Confirmation --}}
+<table role="presentation" cellpadding="0" cellspacing="0" class="w-full mb-6" style="width: 100%; margin-bottom: 24px; border-collapse: collapse;">
+  <tr>
+    <td>
+      <p class="email-body" style="font-size: 16px; color: #1f2937; line-height: 1.625; margin: 0 0 16px 0;">
+        Hi {{name}},
+      </p>
+      <p class="email-body" style="font-size: 16px; color: #1f2937; line-height: 1.625; margin: 0 0 16px 0;">
+        You have been successfully unsubscribed from our mailing list.
+      </p>
+      {{#if reason}}
+      <p class="text-sm text-gray-600" style="font-size: 14px; color: #4b5563; line-height: 1.5; margin: 16px 0;">
+        Reason: <em>{{reason}}</em>
+      </p>
+      {{/if}}
+    </td>
+  </tr>
+</table>
+
+{{!-- Resubscribe Option --}}
+{{#if resubscribeUrl}}
+<table role="presentation" cellpadding="0" cellspacing="0" class="w-full" style="width: 100%; margin-top: 32px; border-collapse: collapse;">
+  <tr>
+    <td>
+      <p class="text-sm text-gray-600" style="font-size: 14px; color: #4b5563; line-height: 1.5; margin: 0 0 12px 0;">
+        Changed your mind?
+      </p>
+      <p style="margin: 0;">
+        <a href="{{resubscribeUrl}}" class="email-link" style="color: #7c3aed; text-decoration: underline; font-weight: 500;">
+          Resubscribe to our newsletter
+        </a>
+      </p>
+    </td>
+  </tr>
+</table>
+{{/if}}

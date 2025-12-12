@@ -4,6 +4,8 @@
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
+    "build:css": "deno run --allow-read --allow-write --allow-env --allow-run build-css.ts",
+    "build:css:prod": "NODE_ENV=production deno run --allow-read --allow-write --allow-env --allow-run build-css.ts",
     "test": "deno test --allow-read --allow-env tests/",
     "test:unit": "deno test --allow-read --allow-env src/**/*.spec.ts",
     "test:integration": "deno test --allow-net --allow-read --allow-env tests/**/*.integration.spec.ts",

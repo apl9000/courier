@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="{{lang}}">
+<html lang="{{lang}}" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     {{> head }}
   </head>
-  <body class="bg-white font-sans text-gray-800">
-    <table role="presentation" class="w-full max-w-[600px] mx-auto">
+  <body class="bg-white font-sans text-gray-800" style="margin: 0; padding: 0; background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif; color: #1f2937;">
+    <!-- Email wrapper table for better client compatibility -->
+    <table role="presentation" cellpadding="0" cellspacing="0" class="w-full" style="width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
       <tr>
-        <td class="px-4">
-          {{!-- Main Content Slot --}}
-          {{{ body }}}
-          {{!-- Footer --}}
-          {{> footer }}
+        <td align="center" style="padding: 20px 0;">
+          <!-- Content container -->
+          <table role="presentation" cellpadding="0" cellspacing="0" class="max-w-600" style="max-width: 600px; width: 100%; margin: 0; border-collapse: collapse;">
+            <tr>
+              <td class="px-4" style="padding: 0 16px;">
+                {{!-- Main Content Slot --}}
+                {{{ body }}}
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4" style="padding: 0 16px;">
+                {{!-- Footer --}}
+                {{> footer }}
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>

@@ -1,3 +1,56 @@
-{{!< layouts-main }}
 {{!-- Header --}}
 {{> header title="Verify Your Email Address"}}
+
+{{!-- Verification Message --}}
+<table role="presentation" cellpadding="0" cellspacing="0" class="w-full mb-6" style="width: 100%; margin-bottom: 24px; border-collapse: collapse;">
+  <tr>
+    <td>
+      <p class="email-body" style="font-size: 16px; color: #1f2937; line-height: 1.625; margin: 0 0 16px 0;">
+        Hi <strong style="font-weight: 600;">{{name}}</strong>,
+      </p>
+      <p class="email-body" style="font-size: 16px; color: #1f2937; line-height: 1.625; margin: 0 0 16px 0;">
+        Please verify your email address by clicking the button below:
+      </p>
+    </td>
+  </tr>
+</table>
+
+{{!-- CTA Button --}}
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 32px 0; border-collapse: collapse;">
+  <tr>
+    <td align="center">
+      <a href="{{verificationUrl}}" class="email-button" style="display: inline-block; padding: 12px 24px; background-color: #7c3aed; color: #ffffff; font-weight: 600; border-radius: 8px; text-decoration: none; font-size: 16px;">
+        Verify Email
+      </a>
+    </td>
+  </tr>
+</table>
+
+{{!-- Verification Code --}}
+{{#if verificationCode}}
+<table role="presentation" cellpadding="0" cellspacing="0" class="w-full" style="width: 100%; margin-top: 32px; border-collapse: collapse;">
+  <tr>
+    <td>
+      <p class="text-sm text-gray-600" style="font-size: 14px; color: #4b5563; line-height: 1.5; margin: 0 0 8px 0;">
+        Or use this verification code:
+      </p>
+      <p class="text-2xl font-bold">
+        {{verificationCode}}
+      </p>
+    </td>
+  </tr>
+</table>
+{{/if}}
+
+{{!-- Expiry Notice --}}
+{{#if expiryHours}}
+<table role="presentation" cellpadding="0" cellspacing="0" class="w-full">
+  <tr>
+    <td>
+      <p class="text-sm text-gray-600" >
+        This link will expire in {{expiryHours}} hours.
+      </p>
+    </td>
+  </tr>
+</table>
+{{/if}}
