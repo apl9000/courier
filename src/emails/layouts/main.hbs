@@ -3,21 +3,21 @@
   <head>
     {{> head }}
   </head>
-  <body class="bg-white font-sans text-gray-800" style="margin: 0; padding: 0; background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif; color: #1f2937;">
+  <body class="bg-white font-sans text-gray-800">
     <!-- Email wrapper table for better client compatibility -->
-    <table role="presentation" cellpadding="0" cellspacing="0" class="w-full" style="width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
+    <table role="presentation" cellpadding="0" cellspacing="0" class="w-full">
       <tr>
-        <td align="center" style="padding: 20px 0;">
+        <td align="center">
           <!-- Content container -->
-          <table role="presentation" cellpadding="0" cellspacing="0" class="max-w-600" style="max-width: 600px; width: 100%; margin: 0; border-collapse: collapse;">
+          <table role="presentation" cellpadding="0" cellspacing="0" class="max-w-600">
             <tr>
-              <td class="px-4" style="padding: 0 16px;">
+              <td class="px-4">
                 {{!-- Main Content Slot --}}
                 {{{ body }}}
               </td>
             </tr>
             <tr>
-              <td class="px-4" style="padding: 0 16px;">
+              <td class="px-4">
                 {{!-- Footer --}}
                 {{> footer }}
               </td>

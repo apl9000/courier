@@ -2,6 +2,7 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
+import { TAILWIND_CSS } from "./styles.ts";
 import type { TemplateDelegate } from "handlebars";
 import {
   type CourierConfig,
@@ -243,6 +244,7 @@ export class Courier {
         year: data.year || new Date().getFullYear(),
         companyName: data.companyName || "Your Company",
         emailTitle: data.emailTitle || data.subject || "Email",
+        emailStyles: TAILWIND_CSS,
       };
 
       return layoutTemplate(layoutData);

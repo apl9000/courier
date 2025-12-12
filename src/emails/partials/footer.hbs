@@ -1,24 +1,20 @@
-<footer
-  class='mt-12 border-t pt-6 text-sm text-gray-600'
-  style='margin-top: 48px; border-top: 1px solid #e5e7eb; padding-top: 24px; font-size: 14px; color: #4b5563;'
->
+<footer class='mt-12 border-t pt-6 text-sm text-gray-600'>
   {{#if companyName}}
-    <p style='margin: 0; margin-bottom: 16px;'>
-      <strong style='font-weight: 600;'>{{companyName}}</strong>
+    <p>
+      <strong>{{companyName}}</strong>
     </p>
   {{/if}}
   {{#if unsubscribeText}}
-    <p class='mt-4' style='margin: 0; margin-top: 16px;'>
-      <strong style='font-weight: 600;'>{{unsubscribeText}}</strong>
+    <p class='mt-4'>
+      <strong>{{unsubscribeText}}</strong>
       <a
         href='{{unsubscribeUrl}}'
         class='underline email-link'
-        style='color: #7c3aed; text-decoration: underline;'
       >{{unsubscribeLinkText}}</a>.
     </p>
   {{/if}}
   {{#if year}}
-    <p style='margin: 0; margin-top: 12px; font-size: 12px;'>
+    <p>
       ©
       {{year}}
       {{companyName}}. All rights reserved.

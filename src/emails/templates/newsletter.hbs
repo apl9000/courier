@@ -3,20 +3,20 @@
 
 {{!-- Newsletter Content --}}
 {{#each sections}}
-<table role="presentation" cellpadding="0" cellspacing="0" class="email-section w-full" style="width: 100%; margin-bottom: 32px; border-collapse: collapse;">
+<table role="presentation" cellpadding="0" cellspacing="0" class="email-section w-full">
   <tr>
     <td>
       {{#if heading}}
-      <h2 class="text-xl font-semibold mb-4" style="font-size: 20px; font-weight: 600; color: #111827; margin: 0 0 16px 0;">
+      <h2 class="text-xl font-semibold mb-4">
         {{heading}}
       </h2>
       {{/if}}
-      <p class="email-body" style="font-size: 16px; color: #1f2937; line-height: 1.625; margin: 0 0 16px 0;">
+      <p class="email-body">
         {{{content}}}
       </p>
       {{#if link}}
-      <p style="margin: 16px 0 0 0;">
-        <a href="{{link}}" class="email-link" style="color: #7c3aed; text-decoration: underline; font-weight: 500;">
+      <p>
+        <a href="{{link}}" class="email-link">
           Read more &rarr;
         </a>
       </p>

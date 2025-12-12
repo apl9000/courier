@@ -39,11 +39,6 @@ try {
   // Read the generated CSS
   const cssContent: string = await Deno.readTextFile("./styles/output.css");
 
-  // Create a TypeScript file that exports the CSS as a constant
-  const tsContent = `// Auto-generated CSS from Tailwind build process\n// Do not edit manually - run: deno task build:css\n\nexport const TAILWIND_CSS = ${JSON.stringify(cssContent)};\n`;
-
-  await Deno.writeTextFile("./src/styles.ts", tsContent);
-
   console.log("✅ Tailwind CSS built successfully");
   console.log("✅ CSS exported to src/styles.ts");
   console.log(`📊 CSS file size: ${cssContent.length} bytes`);
