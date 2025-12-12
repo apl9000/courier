@@ -2,40 +2,20 @@
 {{> header title=title}}
 
 {{!-- Welcome Message --}}
-<table role="presentation" cellpadding="0" cellspacing="0" class="w-full mb-6">
-  <tr>
-    <td>
-      <p class="email-body">
-        Hi <strong>{{name}}</strong>,
-      </p>
-      <p class="email-body">
-        Welcome to {{companyName}}! We're excited to have you on board.
-      </p>
-      <p class="email-body">
-        To get started, click the button below:
-      </p>
-    </td>
-  </tr>
-</table>
+<div class="email-section">
+  <p class="email-body">Hi <strong>{{name}}</strong>,</p>
+  <p class="email-body">Welcome to {{companyName}}! We're excited to have you on board.</p>
+  <p class="email-body">To get started, click the button below:</p>
+</div>
 
 {{!-- CTA Button --}}
-<table role="presentation" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center">
-      <a href="{{actionUrl}}" class="email-button">
-        Get Started
-      </a>
-    </td>
-  </tr>
-</table>
+<div class="email-section" style="text-align: center;">
+  <a href="{{actionUrl}}" class="email-button">GET STARTED</a>
+</div>
 
 {{!-- Additional Info --}}
-<table role="presentation" cellpadding="0" cellspacing="0" class="w-full">
-  <tr>
-    <td>
-      <p class="text-sm text-gray-600">
-        If you have any questions, feel free to reach out to our support team.
-      </p>
-    </td>
-  </tr>
-</table>
+<div class="email-section">
+  <p class="email-text-alt">
+    If you have any questions, feel free to reach out to our support team.
+  </p>
+</div>

@@ -3,25 +3,16 @@
 
 {{!-- Newsletter Content --}}
 {{#each sections}}
-<table role="presentation" cellpadding="0" cellspacing="0" class="email-section w-full">
-  <tr>
-    <td>
-      {{#if heading}}
-      <h2 class="text-xl font-semibold mb-4">
-        {{heading}}
-      </h2>
-      {{/if}}
-      <p class="email-body">
-        {{{content}}}
-      </p>
-      {{#if link}}
-      <p>
-        <a href="{{link}}" class="email-link">
-          Read more &rarr;
-        </a>
-      </p>
-      {{/if}}
-    </td>
-  </tr>
-</table>
+<div class="email-section">
+  {{#if heading}}
+  <h2 class="email-subheading">{{heading}}</h2>
+  {{/if}}
+  <p class="email-body">{{{content}}}</p>
+  {{#if link}}
+  <p>
+    <a href="{{link}}" class="email-link">Read more &rarr;</a>
+  </p>
+  {{/if}}
+</div>
+<div class="email-divider"></div>
 {{/each}}

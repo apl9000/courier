@@ -1,23 +1,21 @@
-<footer class='mt-12 border-t pt-6 text-sm text-gray-600'>
+<div class='email-footer'>
   {{#if companyName}}
-    <p>
-      <strong>{{companyName}}</strong>
-    </p>
+    <p class='email-spacing-none'><strong>{{companyName}}</strong></p>
   {{/if}}
   {{#if unsubscribeText}}
-    <p class='mt-4'>
-      <strong>{{unsubscribeText}}</strong>
+    <p class='email-text-alt'>
+      {{unsubscribeText}}
       <a
         href='{{unsubscribeUrl}}'
-        class='underline email-link'
+        class='email-link'
       >{{unsubscribeLinkText}}</a>.
     </p>
   {{/if}}
   {{#if year}}
-    <p>
+    <p class='email-text-alt email-spacing-none'>
       ©
       {{year}}
       {{companyName}}. All rights reserved.
     </p>
   {{/if}}
-</footer>
+</div>

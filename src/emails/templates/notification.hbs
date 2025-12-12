@@ -2,22 +2,14 @@
 {{> header title=title}}
 
 {{!-- Notification Content --}}
-<table role="presentation" cellpadding="0" cellspacing="0" class="w-full mb-6">
-  <tr>
-    <td>
-      <p class="email-body">
-        {{{message}}}
-      </p>
-      {{#if details}}
-      <p class="text-sm text-gray-600" >
-        {{{details}}}
-      </p>
-      {{/if}}
-      {{#if timestamp}}
-      <p class="text-xs text-gray-600">
-        <em>{{timestamp}}</em>
-      </p>
-      {{/if}}
-    </td>
-  </tr>
-</table>
+<div class="email-section-bordered">
+  <p class="email-body">{{{message}}}</p>
+  {{#if details}}
+  <p class="email-text-alt">{{{details}}}</p>
+  {{/if}}
+  {{#if timestamp}}
+  <p class="email-text-alt" style="font-size: 14px;">
+    <em>{{timestamp}}</em>
+  </p>
+  {{/if}}
+</div>
