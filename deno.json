@@ -45,6 +45,6 @@
       "README.md",
       "LICENSE"
     ],
-    "exclude": ["spec/**/*.spec.ts", ".github/**"]
+    "exclude": ["spec/**/*.spec.ts", ".github/**", ".test/**", ".specstory/**"]
   }
 }

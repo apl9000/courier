@@ -370,7 +370,8 @@ export class Courier {
     data: WelcomeEmailData,
     message: Omit<EmailMessage, "html">,
   ): Promise<SendResult> {
-    return this.sendWithTemplate("welcome", data, message);
+    const title = `Welcome to ${data.companyName}`;
+    return this.sendWithTemplate("welcome", { ...data, title }, message);
   }
 
   /**
