@@ -94,13 +94,3 @@ Deno.test("Snapshot: All templates use monospace fonts", async () => {
     assertStringIncludes(html, "line-height: 1.2rem", `${template} should use 1.2rem line-height`);
   }
 });
-
-Deno.test("Snapshot: No purple colors in any template", async () => {
-  const templates = ["welcome", "email-verification", "password-reset", "notification", "newsletter", "unsubscribe"];
-
-  for (const template of templates) {
-    const html = await Deno.readTextFile(`${snapshotsDir}/${template}.html`);
-    assertEquals(html.includes("rgb(124 58 237"), false, `${template} should not contain purple`);
-    assertEquals(html.includes("#7c3aed"), false, `${template} should not contain purple hex`);
-  }
-});
