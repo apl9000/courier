@@ -63,9 +63,9 @@ export default {
         DEFAULT: '2px',
         thick: '3px',
       },
-      maxWidth: {
-        email: '600px',
-      },
+      // maxWidth: {
+      //   email: '600px',
+      // },
     },
   },
   plugins: [],

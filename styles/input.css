@@ -24,7 +24,7 @@
 @layer components {
   /* Email Container */
   .email-container {
-    @apply max-w-email mx-auto bg-bg p-line font-mono;
+    @apply max-w-full mx-auto bg-bg p-line font-mono;
     width: 100%;
   }
 
