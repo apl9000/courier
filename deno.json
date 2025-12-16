@@ -45,6 +45,18 @@
       "README.md",
       "LICENSE"
     ],
-    "exclude": ["spec/**/*.spec.ts", ".github/**", ".test/**", ".specstory/**"]
+    "exclude": [
+      "**/*.spec.ts",
+      ".github/**",
+      ".specstory/**",
+      "tests/**",
+      "build-css.ts",
+      "tailwind.config.js",
+      "styles/**",
+      "AGENTS.md",
+      ".env",
+      ".vscode/**",
+      "deno.lock"
+    ]
   }
 }
