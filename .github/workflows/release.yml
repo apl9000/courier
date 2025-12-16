@@ -6,17 +6,18 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: "Version bump type (patch|minor|major)"
+        description: 'Version bump type (patch|minor|major)'
         required: false
-        default: "patch"
+        default: 'patch'
       confirm:
         description: "Type 'yes' to confirm publishing this version"
         required: false
-        default: "no"
+        default: 'no'
 
 permissions:
   contents: write
   id-token: write
+  pull-requests: read
 
 concurrency:
   group: release-${{ github.ref }}
@@ -33,9 +34,14 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: v1.x
+          deno-version: v2.x
+
+      - name: Setup Node.js (for Tailwind CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Recreate lockfile for current Deno version
         run: deno cache --reload mod.ts src/** tests/**
@@ -82,7 +88,52 @@ jobs:
         run: |
           deno fmt --check
           deno lint
-          deno test --allow-read --allow-env tests/
+          deno task check
+
+      - name: Build CSS assets
+        run: deno task build:css
+
+      - name: Generate snapshots
+        run: deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
+
+      - name: Validate snapshots
+        run: deno test --allow-read tests/snapshots.spec.ts
+
+      - name: Run unit tests with coverage
+        run: deno test --allow-read --allow-env --coverage=coverage_profile src/**/*.spec.ts
+
+      - name: Run integration tests with coverage
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          TEST_FROM_EMAIL: ${{ secrets.TEST_FROM_EMAIL }}
+          TEST_TO_EMAIL: ${{ secrets.TEST_TO_EMAIL }}
+        run: deno test --allow-net --allow-read --allow-env --coverage=coverage_profile tests/**/*.integration.spec.ts
+
+      - name: Generate coverage report
+        run: deno coverage coverage_profile --lcov --output=coverage.lcov
+
+      - name: Check coverage threshold (90%)
+        run: |
+          # Generate detailed coverage report
+          deno coverage coverage_profile --detailed > coverage_report.txt
+          cat coverage_report.txt
+
+          # Extract overall coverage percentage
+          coverage=$(deno coverage coverage_profile | grep -oP 'cover \K[0-9.]+(?=%)' | head -1)
+          echo "Code coverage: ${coverage}%"
+          echo "## 📊 Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "Coverage: **${coverage}%**" >> $GITHUB_STEP_SUMMARY
+
+          # Check if coverage meets 90% threshold
+          if (( $(echo "$coverage < 90" | bc -l) )); then
+            echo "❌ Coverage ${coverage}% is below the required 90% threshold" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ Coverage meets the 90% threshold" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Update version in deno.json
         run: |
@@ -90,26 +141,47 @@ jobs:
           deno eval "const obj=JSON.parse(Deno.readTextFileSync('deno.json')); obj.version='${next}'; Deno.writeTextFileSync('deno.json', JSON.stringify(obj, null, 2)+'\\n');"
           echo "Updated deno.json version to ${next}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Build CSS assets (optional)
-        run: |
-          if deno task --help | grep -q "build:css"; then
-            deno task build:css
-          else
-            echo "No build:css task defined; skipping CSS asset build." >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Commit version bump
+      - name: Commit version bump and built assets
+        id: commit
         run: |
           next="${{ steps.next.outputs.next }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add deno.json
+          git add deno.json src/styles.ts
           if git status --porcelain | grep .; then
             git commit -m "chore: release v${next}"
+            git tag "v${next}"
             git push origin HEAD:main
+            git push origin "v${next}"
+            echo "tag=v${next}" >> $GITHUB_OUTPUT
           else
             echo "No changes to commit" >> $GITHUB_STEP_SUMMARY
+            exit 1
           fi
+
+      - name: Generate release notes
+        id: release_notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: '${{ steps.commit.outputs.tag }}',
+            });
+            return data.body;
+          result-encoding: string
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.commit.outputs.tag }}
+          release_name: Release ${{ steps.commit.outputs.tag }}
+          body: ${{ steps.release_notes.outputs.result }}
+          draft: false
+          prerelease: false
 
       - name: Publish to JSR
         run: npx jsr@latest publish

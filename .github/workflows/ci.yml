@@ -18,6 +18,11 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Setup Node.js (for Tailwind CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Cache Deno dependencies
         run: deno cache mod.ts
 
@@ -27,5 +32,74 @@ jobs:
       - name: Format (check)
         run: deno fmt --check
 
-      - name: Test
-        run: deno task test
+      - name: Type check
+        run: deno task check
+
+      - name: Build CSS assets
+        run: deno task build:css
+
+      - name: Generate snapshots
+        run: deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
+
+      - name: Validate snapshots
+        run: deno test --allow-read tests/snapshots.spec.ts
+
+      - name: Run unit tests with coverage
+        run: deno test --allow-read --allow-env --coverage=coverage_profile src/**/*.spec.ts
+
+      - name: Run integration tests
+        if: github.event_name == 'push' && secrets.SMTP_HOST != ''
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          TEST_FROM_EMAIL: ${{ secrets.TEST_FROM_EMAIL }}
+          TEST_TO_EMAIL: ${{ secrets.TEST_TO_EMAIL }}
+        run: deno test --allow-net --allow-read --allow-env --coverage=coverage_profile tests/**/*.integration.spec.ts
+
+      - name: Generate coverage report
+        run: deno coverage coverage_profile --lcov --output=coverage.lcov
+
+      - name: Check coverage threshold (90%)
+        run: |
+          # Generate detailed coverage report
+          deno coverage coverage_profile --detailed > coverage_report.txt
+          cat coverage_report.txt
+
+          # Extract overall coverage percentage
+          coverage=$(deno coverage coverage_profile | grep -oP 'cover \K[0-9.]+(?=%)' | head -1)
+          echo "Code coverage: ${coverage}%"
+
+          # Check if coverage meets 90% threshold
+          if (( $(echo "$coverage < 90" | bc -l) )); then
+            echo "❌ Coverage ${coverage}% is below the required 90% threshold"
+            exit 1
+          else
+            echo "✅ Coverage ${coverage}% meets the 90% threshold"
+          fi
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.lcov
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload snapshot artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: email-snapshots
+          path: tests/snapshots/*.html
+          retention-days: 7
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.lcov
+            coverage_report.txt
+          retention-days: 7
