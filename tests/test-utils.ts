@@ -10,6 +10,14 @@ export const smtpUser = Deno.env.get("SMTP_USER");
 export const smtpPass = Deno.env.get("SMTP_PASS");
 export const smtpFrom = Deno.env.get("SMTP_FROM") || smtpUser;
 
+// Get test email recipients from environment (comma-separated)
+const testEmailsEnv = Deno.env.get("TEST_EMAILS");
+export const testEmails = testEmailsEnv
+  ? testEmailsEnv.split(",").map((email) => email.trim()).filter((email) => email.length > 0)
+  : smtpUser
+  ? [smtpUser]
+  : [];
+
 // Reusable SMTP config
 export const smtpConfig = {
   service: "iCloud" as const,

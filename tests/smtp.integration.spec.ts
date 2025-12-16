@@ -7,13 +7,21 @@
  *   - SMTP_USER (required)
  *   - SMTP_PASS (required)
  *   - SMTP_FROM (optional, falls back to SMTP_USER)
+ *   - TEST_EMAILS (optional, comma-separated list of test recipients, e.g., "test1@email.com,test2@email.com")
  *
  * Run with: deno task test:integration
  */
 
 import { assertEquals, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
 import { Courier } from "../mod.ts";
-import { closeCourier, hasCredentials, smtpConfig, smtpFrom, smtpUser } from "./test-utils.ts";
+import {
+  closeCourier,
+  hasCredentials,
+  smtpConfig,
+  smtpFrom,
+  smtpUser,
+  testEmails,
+} from "./test-utils.ts";
 
 Deno.test({
   name: "Integration: SMTP connection verification",
@@ -63,9 +71,11 @@ Deno.test({
     });
 
     const result = await courier.send({
-      to: [smtpUser!, `test2@example.com`],
+      to: testEmails.length > 0 ? testEmails : smtpUser!,
       subject: "[Test] Multi-recipient email",
-      text: "This email is sent to multiple recipients.",
+      text: `This email is sent to ${
+        testEmails.length > 1 ? "multiple recipients" : "test recipient"
+      }.`,
     });
 
     assertEquals(result.success, true, "Multi-recipient email should send successfully");

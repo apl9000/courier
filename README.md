@@ -279,6 +279,77 @@ await courier.sendWithTemplate(
 );
 ```
 
+### Custom Themes and Styling
+
+Courier uses Tailwind CSS for styling with a monospace/brutalist theme by default. You can customize
+the theme to match your brand:
+
+#### 1. Configure Your Own Tailwind Theme
+
+Edit `tailwind.config.js` to customize colors, fonts, and other design tokens:
+
+```javascript
+export default {
+  content: ["./src/emails/**/*.hbs"],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          primary: "#your-color",
+          secondary: "#your-color",
+        },
+      },
+      fontFamily: {
+        sans: ["Your Font", "sans-serif"],
+      },
+    },
+  },
+};
+```
+
+#### 2. Build Your Custom Styles
+
+After modifying the theme or `styles/input.css`, rebuild the CSS:
+
+```zsh
+deno task build:css        # Development build
+deno task build:css:prod   # Production build (minified)
+```
+
+This generates inlined styles in `src/emails/partials/head.hbs`.
+
+#### 3. Create Custom Email Templates
+
+Create your own `.hbs` templates using Tailwind utility classes:
+
+```html
+{{!< layouts-main }} {{> header title="Custom Email" logo="https://example.com/logo.png"}}
+
+<p class="text-brand-primary font-sans">Your custom content here</p>
+
+{{> footer companyName="Your Company" companyAddress="Your Address"}}
+```
+
+#### 4. Use Custom Templates
+
+Load and use your custom templates:
+
+```typescript
+// Load custom template directory
+const courier = await Courier.initialize({
+  smtp: smtpConfig,
+  templatesDir: "./my-custom-templates",
+});
+
+// Or load individual templates
+await courier.loadTemplate("my-template", "./path/to/template.hbs");
+await courier.sendWithTemplate("my-template", data, message);
+```
+
+**Note**: The default monospace/brutalist theme provides excellent email client compatibility and
+accessibility. Custom themes should be tested across multiple email clients (Gmail, Outlook, Apple
+Mail) to ensure compatibility.
+
 ## API Reference
 
 ### Types
