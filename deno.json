@@ -16,7 +16,7 @@
     "test:notification": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/notification.integration.spec.ts",
     "test:newsletter": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/newsletter.integration.spec.ts",
     "test:unsubscribe": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/unsubscribe.integration.spec.ts",
-    "snapshots": "deno run --allow-read --allow-write scripts/render-template-snapshots.ts",
+    "snapshots": "deno run --allow-read --allow-write tests/generate-snapshots.ts",
     "coverage": "deno coverage tests/ --lcov",
     "lint": "deno lint",
     "fmt": "deno fmt",

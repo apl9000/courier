@@ -374,7 +374,7 @@ SMTPProviders.Microsoft = {
   ```zsh
   deno task snapshots
   ```
-  This writes HTML files under `artifacts/template-snapshots/`.
+  This writes HTML files under `tests/snapshots/`.
 
 ## Security
 
@@ -385,7 +385,8 @@ SMTPProviders.Microsoft = {
 
 ## Contributing
 
-Contributions are welcome! Please see CONTRIBUTING.md for guidelines.
+Contributions are welcome! Please file an issue on the GitHub repository to discuss proposed
+changes.
 
 ## Issues
 
