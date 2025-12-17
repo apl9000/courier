@@ -15,8 +15,8 @@ const testEmailsEnv = Deno.env.get("SMTP_TEST_TO");
 export const testEmails = testEmailsEnv
   ? testEmailsEnv.split(",").map((email) => email.trim()).filter((email) => email.length > 0)
   : smtpUser
-    ? [smtpUser]
-    : [];
+  ? [smtpUser]
+  : [];
 
 // Reusable SMTP config
 export const smtpConfig = {
