@@ -116,4 +116,3 @@ Deno.test("Snapshot: All templates use monospace fonts", async () => {
     );
   }
 });
-5

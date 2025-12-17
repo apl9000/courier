@@ -3,7 +3,7 @@
  * Run: deno run --allow-read --allow-write --allow-env generate-snapshots.ts
  */
 
-import { Courier, ProfessionalTheme } from "../mod.ts";
+import { Courier } from "../mod.ts";
 
 // Mock SMTP config (won't actually send emails)
 const courier = await Courier.initialize({

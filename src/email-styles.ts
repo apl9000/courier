@@ -15,8 +15,7 @@
  * @example Using a preset theme
  * ```ts
  * import { DarkTheme } from "@rivescloud/courier";
-
-*
+ *
  * const courier = await Courier.initialize({
  *   smtp: config,
  *   theme: DarkTheme

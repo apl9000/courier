@@ -312,7 +312,8 @@ export interface UnsubscribeData extends TemplateData {
   /** Resubscribe URL */
   resubscribeUrl: string;
   /** Company name */
-  companyName: string;  /** Email title (defaults to "You've Been Unsubscribed") */
+  companyName: string;
+  /** Email title (defaults to "You've Been Unsubscribed") */
   title?: string;
   /** Confirmation message (defaults to 'You have been successfully unsubscribed from our mailing list.') */
   confirmationMessage?: string;
