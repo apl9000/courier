@@ -42,7 +42,6 @@ Deno.test({
     });
     const result = await courier.send({
       to: smtpUser!,
-      from: smtpFrom,
       subject: "[Test] Basic Email from Courier",
       text: "This is a test email sent by Courier integration test.",
       html: "<p>This is a <strong>test email</strong> sent by Courier integration test.</p>",
@@ -70,9 +69,8 @@ Deno.test({
     const result = await courier.send({
       to: testEmails,
       subject: "[Test] Multi-recipient email",
-      text: `This email is sent to ${
-        testEmails.length > 1 ? "multiple recipients" : "test recipient"
-      }.`,
+      text: `This email is sent to ${testEmails.length > 1 ? "multiple recipients" : "test recipient"
+        }.`,
     });
 
     assertEquals(result.success, true, "Multi-recipient email should send successfully");
