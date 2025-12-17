@@ -74,9 +74,13 @@ jobs:
             echo "Commit message: $commit_msg"
             
             # Determine bump type based on conventional commits
-            if echo "$commit_msg" | grep -qiE "^(feat|fix|chore|docs|style|refactor|perf|test|build|ci)(\(.+\))?!:|BREAKING CHANGE:"; then
+            # Check for breaking changes first (highest priority)
+            if echo "$commit_msg" | grep -qE "BREAKING CHANGE:"; then
               bump="major"
-              echo "🚨 Detected BREAKING CHANGE - major version bump"
+              echo "🚨 Detected BREAKING CHANGE in commit body - major version bump"
+            elif echo "$commit_msg" | grep -qiE "^(feat|fix|chore|docs|style|refactor|perf|test|build|ci)(\(.+\))?!:"; then
+              bump="major"
+              echo "🚨 Detected breaking change marker (!) - major version bump"
             elif echo "$commit_msg" | grep -qiE "^feat(\(.+\))?:"; then
               bump="minor"
               echo "✨ Detected feature - minor version bump"
