@@ -27,6 +27,7 @@ jobs:
   release:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    environment: copilot
     steps:
       - name: Checkout
         uses: actions/checkout@v4
