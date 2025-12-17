@@ -1,0 +1,71 @@
+{
+  "name": "@rivescloud/courier",
+  "version": "0.0.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
+    "test": "deno test --allow-read --allow-env",
+    "test:unit": "deno test --allow-read --allow-env src/**/*.spec.ts",
+    "test:snapshots": "deno test --allow-read --allow-env tests/snapshots.spec.ts",
+    "test:themes": "deno test --allow-read --allow-env tests/custom-theming.spec.ts tests/preset-themes.spec.ts tests/theme-validation.spec.ts",
+    "test:integration": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/**/*.integration.spec.ts",
+    "test:smtp": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/smtp.integration.spec.ts",
+    "test:welcome": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/welcome-email.integration.spec.ts",
+    "test:verification": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/email-verification.integration.spec.ts",
+    "test:password-reset": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/password-reset.integration.spec.ts",
+    "test:notification": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/notification.integration.spec.ts",
+    "test:newsletter": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/newsletter.integration.spec.ts",
+    "test:unsubscribe": "deno test --allow-net --allow-read --allow-env --env-file=.env tests/unsubscribe.integration.spec.ts",
+    "snapshots": "deno run --allow-read --allow-write --allow-env --allow-sys tests/generate-snapshots.ts",
+    "coverage": "deno coverage tests/ --lcov",
+    "check": "deno check mod.ts src/** tests/**",
+    "lint": "deno lint",
+    "fmt": "deno fmt",
+    "fmt:check": "deno fmt --check"
+  },
+  "imports": {
+    "nodemailer": "npm:nodemailer@^6.9.7",
+    "handlebars": "npm:handlebars@^4.7.8"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "semiColons": true,
+    "exclude": ["tests/snapshots/"]
+  },
+  "test": {
+    "include": ["src/**/*.spec.ts", "tests/**/*.spec.ts"]
+  },
+  "publish": {
+    "include": [
+      "mod.ts",
+      "src/**/*.ts",
+      "src/emails/**/*.hbs",
+      "README.md",
+      "LICENSE"
+    ],
+    "exclude": [
+      "**/*.spec.ts",
+      ".github/**",
+      ".specstory/**",
+      "tests/**",
+      "build-css.ts",
+      "tailwind.config.js",
+      "styles/**",
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".env",
+      ".vscode/**",
+      "deno.lock"
+    ]
+  }
+}

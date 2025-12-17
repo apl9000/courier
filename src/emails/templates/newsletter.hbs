@@ -1,0 +1,96 @@
+{{!-- Header --}}
+{{> header title=title subtitle=subtitle}}
+
+{{!-- Featured section (optional) --}}
+{{#if featured}}
+<div class="email-box-highlight">
+  <h2 class="email-subheading email-spacing-none">{{featured.heading}}</h2>
+  <p class="email-body email-spacing-sm">{{{featured.content}}}</p>
+  {{#if featured.link}}
+  <p class="email-spacing-sm">
+    <a href="{{featured.link}}" class="email-button-primary">{{#if featuredButtonLabel}}{{featuredButtonLabel}}{{else}}READ MORE{{/if}}</a>
+  </p>
+  {{/if}}
+</div>
+{{/if}}
+
+{{!-- Newsletter Content Sections --}}
+{{#each sections}}
+<div class="email-section">
+  {{#if image}}
+    {{#if (eq image.layout "hero")}}
+      {{!-- Hero image layout --}}
+      <img src="{{image.src}}" alt="{{image.alt}}" class="email-image-hero" />
+    {{/if}}
+  {{/if}}
+  
+  {{#if image}}
+    {{#if (eq image.layout "left")}}
+      {{!-- Left image layout --}}
+      <table class="email-section-image-left" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="email-image-cell">
+            <img src="{{image.src}}" alt="{{image.alt}}" class="email-image-inline" />
+          </td>
+          <td class="email-content-cell">
+            {{#if heading}}
+            <h2 class="email-subheading">{{heading}}</h2>
+            {{/if}}
+            <p class="email-body">{{{content}}}</p>
+            {{#if link}}
+            <p>
+              <a href="{{link}}" class="email-link">{{#if linkText}}{{linkText}}{{else}}{{#if ../sectionLinkText}}{{../sectionLinkText}}{{else}}Read more &rarr;{{/if}}{{/if}}</a>
+            </p>
+            {{/if}}
+          </td>
+        </tr>
+      </table>
+    {{else if (eq image.layout "right")}}
+      {{!-- Right image layout --}}
+      <table class="email-section-image-right" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="email-content-cell">
+            {{#if heading}}
+            <h2 class="email-subheading">{{heading}}</h2>
+            {{/if}}
+            <p class="email-body">{{{content}}}</p>
+            {{#if link}}
+            <p>
+              <a href="{{link}}" class="email-link">{{#if linkText}}{{linkText}}{{else}}{{#if ../sectionLinkText}}{{../sectionLinkText}}{{else}}Read more &rarr;{{/if}}{{/if}}</a>
+            </p>
+            {{/if}}
+          </td>
+          <td class="email-image-cell">
+            <img src="{{image.src}}" alt="{{image.alt}}" class="email-image-inline" />
+          </td>
+        </tr>
+      </table>
+    {{else}}
+      {{!-- No layout specified for hero, render content normally --}}
+      {{#if heading}}
+      <h2 class="email-subheading">{{heading}}</h2>
+      {{/if}}
+      <p class="email-body">{{{content}}}</p>
+      {{#if link}}
+      <p>
+        <a href="{{link}}" class="email-link">{{#if linkText}}{{linkText}}{{else}}{{#if ../sectionLinkText}}{{../sectionLinkText}}{{else}}Read more &rarr;{{/if}}{{/if}}</a>
+      </p>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    {{!-- No image --}}
+    {{#if heading}}
+    <h2 class="email-subheading">{{heading}}</h2>
+    {{/if}}
+    <p class="email-body">{{{content}}}</p>
+    {{#if link}}
+    <p>
+      <a href="{{link}}" class="email-link">{{#if linkText}}{{linkText}}{{else}}{{#if ../sectionLinkText}}{{../sectionLinkText}}{{else}}Read more &rarr;{{/if}}{{/if}}</a>
+    </p>
+    {{/if}}
+  {{/if}}
+</div>
+{{#unless @last}}
+<hr class="email-divider-subtle" />
+{{/unless}}
+{{/each}}

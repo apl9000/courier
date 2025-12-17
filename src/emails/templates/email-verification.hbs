@@ -1,0 +1,31 @@
+{{!-- Header --}}
+{{> header title=title}}
+
+{{!-- Verification Message --}}
+<div class="email-section">
+  <p class="email-body">{{#if instructionText}}{{{instructionText}}}{{else}}Please verify your email address by clicking the button below:{{/if}}</p>
+</div>
+
+{{!-- CTA Button --}}
+<div class="email-section email-text-center">
+  <a href="{{verificationUrl}}" class="email-button-primary">{{#if verifyLabel}}{{verifyLabel}}{{else}}VERIFY EMAIL{{/if}}</a>
+</div>
+
+{{!-- Verification Code --}}
+{{#if verificationCode}}
+<div class="email-box-highlight">
+  <p class="email-text-alt email-spacing-none">{{#if codeInstructionText}}{{codeInstructionText}}{{else}}Or use this verification code:{{/if}}</p>
+  <p class="email-spacing-sm">
+    <span class="email-code-lg">{{verificationCode}}</span>
+  </p>
+</div>
+{{/if}}
+
+{{!-- Expiry Notice --}}
+{{#if expiryHours}}
+<div class="email-section">
+  <p class="email-text-alt">
+    <em>{{#if expiryNoticeText}}{{expiryNoticeText}}{{else}}This link will expire in {{expiryHours}} hours.{{/if}}</em>
+  </p>
+</div>
+{{/if}}

@@ -1,0 +1,20 @@
+{{!-- Header --}}
+{{> header title=title}}
+
+{{!-- Unsubscribe Confirmation --}}
+<div class="email-section">
+  <p class="email-body">{{#if confirmationMessage}}{{confirmationMessage}}{{else}}You have been successfully unsubscribed from our mailing list.{{/if}}</p>
+  {{#if reason}}
+  <p class="email-text-alt">{{#if reasonLabel}}{{reasonLabel}}{{else}}Reason:{{/if}} <em>{{reason}}</em></p>
+  {{/if}}
+</div>
+
+{{!-- Resubscribe Option --}}
+{{#if resubscribeUrl}}
+<div class="email-box-alt">
+  <p class="email-text-alt email-spacing-none">{{#if resubscribeHeading}}{{resubscribeHeading}}{{else}}Changed your mind?{{/if}}</p>
+  <p class="email-spacing-sm">
+    <a href="{{resubscribeUrl}}" class="email-link-accent">{{#if resubscribeLinkText}}{{resubscribeLinkText}}{{else}}Resubscribe to our newsletter{{/if}}</a>
+  </p>
+</div>
+{{/if}}
