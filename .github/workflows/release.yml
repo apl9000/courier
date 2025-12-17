@@ -1,8 +1,8 @@
 name: Release
 
-# This workflow must be manually triggered to create a release.
-# It will not run automatically on pushes to prevent accidental releases.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       bump:
@@ -73,6 +73,7 @@ jobs:
           echo "Proposed bump: $bump (current $current -> next $next)" >> $GITHUB_STEP_SUMMARY
 
       - name: Confirmation gate
+        if: github.event_name == 'workflow_dispatch'
         run: |
           confirm="${{ github.event.inputs.confirm || 'no' }}"
           if [ "$confirm" != "yes" ]; then
