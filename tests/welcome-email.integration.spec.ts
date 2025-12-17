@@ -26,7 +26,11 @@ Deno.test({
         actionUrl: "https://example.com/start",
         year: new Date().getFullYear(),
         companyName: "Courier Test",
-        features: ["Send emails with Handlebars templates", "Multi-provider SMTP support", "Custom theming"],
+        features: [
+          "Send emails with Handlebars templates",
+          "Multi-provider SMTP support",
+          "Custom theming",
+        ],
       },
       {
         to: smtpUser!,

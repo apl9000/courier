@@ -1,4 +1,3 @@
-
 /**
  * Tests for theme validation and error handling
  */

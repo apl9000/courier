@@ -97,14 +97,17 @@ deno task test
 # Unit tests only
 deno task test:unit
 
+# Theme tests
+deno task test:themes
+
+# Snapshot tests
+deno task test:snapshots
+
 # Integration tests (requires SMTP credentials)
 deno task test:integration
 
 # Generate HTML snapshots
-deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
-
-# Validate snapshots
-deno test --allow-read tests/snapshots.spec.ts
+deno task snapshots
 
 # Code coverage
 deno task coverage
@@ -118,6 +121,9 @@ deno task lint
 
 # Format code
 deno task fmt
+
+# Check formatting without modifying
+deno task fmt:check
 ```
 
 ## Design System
@@ -205,7 +211,7 @@ Generated at runtime from theme configuration in `src/email-styles.ts`:
 **Important:** Regenerate snapshots after modifying templates:
 
 ```bash
-deno run --allow-read --allow-write tests/generate-snapshots.ts
+deno task snapshots
 ```
 
 ## Testing Guidelines
@@ -223,29 +229,29 @@ Each email template has:
 **Unit Tests:**
 
 ```typescript
-Deno.test('renders welcome email template', async () => {
+Deno.test("renders welcome email template", async () => {
   const courier = new Courier(config);
-  const html = await courier.renderTemplate('welcome', {
-    name: 'Test User',
-    actionUrl: 'https://example.com',
+  const html = await courier.renderTemplate("welcome", {
+    name: "Test User",
+    actionUrl: "https://example.com",
   });
-  assertStringIncludes(html, 'Welcome');
+  assertStringIncludes(html, "Welcome");
 });
 ```
 
 **Integration Tests:**
 
 ```typescript
-import {hasCredentials, smtpConfig} from './test-utils.ts';
+import { hasCredentials, smtpConfig } from "./test-utils.ts";
 
 Deno.test({
-  name: 'sends welcome email via SMTP',
+  name: "sends welcome email via SMTP",
   ignore: !hasCredentials,
   async fn() {
     const courier = new Courier(smtpConfig);
     await courier.sendWelcomeEmail({
-      to: 'test@example.com',
-      name: 'Test User',
+      to: "test@example.com",
+      name: "Test User",
     });
   },
 });
@@ -254,10 +260,10 @@ Deno.test({
 **Snapshot Tests:**
 
 ```typescript
-Deno.test('Welcome email has monospace styling', async () => {
-  const html = await Deno.readTextFile('./tests/snapshots/welcome.html');
-  assertStringIncludes(html, 'ui-monospace');
-  assertStringIncludes(html, 'email-button');
+Deno.test("Welcome email has monospace styling", async () => {
+  const html = await Deno.readTextFile("./tests/snapshots/welcome.html");
+  assertStringIncludes(html, "ui-monospace");
+  assertStringIncludes(html, "email-button");
 });
 ```
 
@@ -400,7 +406,7 @@ sections: Array<{
   image?: {
     src: string;
     alt: string;
-    layout?: 'left' | 'right' | 'hero'; // Image positioning
+    layout?: "left" | "right" | "hero"; // Image positioning
   };
 }>;
 ```
@@ -430,7 +436,7 @@ sections: Array<{
 4. **Add send method** to `Courier` class (optional)
 5. **Create integration test** in `tests/`
 6. **Update snapshot generator** in `tests/generate-snapshots.ts`
-7. **Regenerate snapshots** with `deno run --allow-read --allow-write --allow-env --allow-sys tests/generate-snapshots.ts`
+7. **Regenerate snapshots** with `deno task snapshots`
 8. **Update README** with usage example
 
 Example:
@@ -506,19 +512,16 @@ deno publish
 
 ### Changing Colors
 
-1. Update `tailwind.config.js` colors
-2. Update `src/email-styles.ts` EmailColors
-3. Run `deno task build:css`
-4. Regenerate snapshots
-5. Validate in browser
+1. Update theme colors in `src/email-styles.ts`
+2. Regenerate snapshots with `deno task snapshots`
+3. Validate in browser and email clients
 
 ### Modifying Layout
 
 1. Edit `src/emails/layouts/main.hbs`
 2. Update any affected partials
-3. Run `deno task build:css`
-4. Regenerate snapshots
-5. Test in multiple email clients
+3. Regenerate snapshots with `deno task snapshots`
+4. Test in multiple email clients
 
 ### Adding CSS Classes
 
@@ -540,7 +543,7 @@ deno publish
 
 ### Weekly
 
-- [ ] Review and merge PRs
+- [ ] Review PRs
 - [ ] Run full test suite
 - [ ] Check for dependency updates
 
@@ -580,8 +583,8 @@ When encountering problems:
 ## Agent-Specific Notes
 
 - **Always run tests** before committing changes
-- **Rebuild CSS** after any style/template modifications
-- **Regenerate snapshots** to validate changes
+- **Regenerate snapshots** with `deno task snapshots` after template/style changes
+- **Run type checking** with `deno task check` to catch errors early
 - **Check type safety** with `deno task check`
 - **Follow existing patterns** in the codebase
 - **Update documentation** when adding features

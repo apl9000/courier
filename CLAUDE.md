@@ -16,15 +16,17 @@ deno task dev              # Run with required permissions
 deno task check            # Type check all files
 
 # Testing
-deno task test             # All tests
+deno task test             # All tests (unit + theme + snapshot tests)
 deno task test:unit        # Unit tests only
+deno task test:themes      # Theme-specific tests
+deno task test:snapshots   # Snapshot validation tests
 deno task test:integration # Integration tests (requires SMTP env vars)
-deno task test:welcome     # Test specific template (also: verification, password-reset, notification, newsletter, unsubscribe)
 deno task snapshots        # Generate HTML snapshots for templates
 
 # Linting and formatting
 deno task lint
 deno task fmt
+deno task fmt:check        # Check formatting without modifying
 ```
 
 ## Architecture
@@ -77,7 +79,8 @@ All template text comes from variables with optional overrides and sensible defa
 - **Color palette**: Black (#000), white (#fff), and gray (#666, #eee) only
 - **No gradients, shadows, or purple tones**
 - **Borders**: 2px standard, 6px double for dividers
-- **Email-safe patterns**: Table-based layouts with height chain (html → body → table → td), inline CSS, explicit dimensions
+- **Email-safe patterns**: Table-based layouts with height chain (html → body → table → td), inline
+  CSS, explicit dimensions
 - **Container**: Full viewport height (100vh), centered, left-aligned text
 - **Buttons**: Use backgroundAlt for better contrast
 - **Images**: Newsletter supports left, right, and hero layouts
