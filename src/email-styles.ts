@@ -818,6 +818,7 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       .email-subheading,
       .email-heading,
       .email-text-alt,
+      .email-text-xs,
       .email-content-cell,
       .email-content-cell .email-body,
       .email-content-cell .email-subheading,
@@ -826,9 +827,12 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       .email-box-highlight *,
       .email-box-alt,
       .email-box-alt *,
+      .email-footer,
+      .email-footer *,
       td,
       p,
-      h1, h2, h3 {
+      h1, h2, h3,
+      em, strong {
         color: inherit !important;
       }
       
@@ -837,6 +841,25 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       .email-link-accent {
         color: inherit !important;
         text-decoration-color: currentColor !important;
+      }
+      
+      /* Buttons - ensure visibility and contrast */
+      .email-button {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: inherit !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+      }
+      
+      .email-button-primary {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #000000 !important;
+        border-color: rgba(255, 255, 255, 0.9) !important;
+      }
+      
+      .email-button-accent {
+        background-color: transparent !important;
+        color: inherit !important;
+        border-color: currentColor !important;
       }
       
       /* Background colors - make transparent for email client control */
@@ -854,6 +877,26 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
         border-color: rgba(255, 255, 255, 0.3) !important;
       }
       
+      /* Dividers - ensure visibility */
+      .email-divider,
+      .email-divider-subtle,
+      .email-divider-accent,
+      hr {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+      
+      /* Bordered sections and boxes */
+      .email-box,
+      .email-section-bordered {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+      
+      /* Images with borders */
+      .email-image-hero,
+      .email-image-inline {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+      
       /* Semantic boxes - force dark text on light pastel backgrounds */
       .email-box-success,
       .email-box-success *,
@@ -864,6 +907,92 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       .email-box-info,
       .email-box-info * {
         color: #000000 !important;
+      }
+    }
+    
+    /* Light mode - ensure dark text for readability when email client forces light background */
+    @media (prefers-color-scheme: light) {
+      /* Force dark text colors for readability */
+      .email-body,
+      .email-subheading,
+      .email-heading,
+      .email-text-alt,
+      .email-text-xs,
+      .email-content-cell,
+      .email-content-cell .email-body,
+      .email-content-cell .email-subheading,
+      .email-box-highlight,
+      .email-box-highlight *,
+      .email-box-alt,
+      .email-box-alt *,
+      .email-footer,
+      .email-footer *,
+      td,
+      p,
+      h1, h2, h3,
+      em, strong {
+        color: #000000 !important;
+      }
+      
+      /* Links - dark color in light mode */
+      .email-link,
+      .email-link-accent {
+        color: #000000 !important;
+        text-decoration-color: #000000 !important;
+      }
+      
+      /* Buttons - ensure dark text and visible borders */
+      .email-button {
+        background-color: #f5f5f5 !important;
+        color: #000000 !important;
+        border-color: #000000 !important;
+      }
+      
+      .email-button-primary {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #000000 !important;
+      }
+      
+      .email-button-accent {
+        background-color: transparent !important;
+        color: #000000 !important;
+        border-color: #000000 !important;
+      }
+      
+      /* Background colors - light backgrounds */
+      .email-box-highlight,
+      .email-box-alt,
+      .email-code,
+      .email-code-lg {
+        background-color: #f5f5f5 !important;
+      }
+      
+      /* Code blocks - dark text */
+      .email-code,
+      .email-code-lg {
+        color: #000000 !important;
+        border-color: #000000 !important;
+      }
+      
+      /* Dividers - dark borders */
+      .email-divider,
+      .email-divider-subtle,
+      .email-divider-accent,
+      hr {
+        border-color: #d4d4d4 !important;
+      }
+      
+      /* Bordered sections and boxes */
+      .email-box,
+      .email-section-bordered {
+        border-color: #000000 !important;
+      }
+      
+      /* Images with borders */
+      .email-image-hero,
+      .email-image-inline {
+        border-color: #000000 !important;
       }
     }
   `;
