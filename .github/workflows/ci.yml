@@ -25,16 +25,16 @@ jobs:
         run: deno task lint
 
       - name: Format (check)
-        run: deno fmt --check
+        run: deno task fmt:check
 
       - name: Type check
         run: deno task check
 
       - name: Generate snapshots
-        run: deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
+        run: deno task snapshots
 
       - name: Validate snapshots
-        run: deno test --allow-read tests/snapshots.spec.ts
+        run: deno task test:snapshots
 
       - name: Run unit tests with coverage
         run: deno test --allow-read --allow-env --coverage=coverage_profile src/**/*.spec.ts

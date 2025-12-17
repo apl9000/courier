@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: "Version bump type (patch|minor|major)"
+        description: 'Version bump type (patch|minor|major)'
         required: false
-        default: "patch"
+        default: 'patch'
       confirm:
         description: "Type 'yes' to confirm publishing this version"
         required: false
-        default: "no"
+        default: 'no'
 
 permissions:
   contents: write
@@ -37,11 +37,6 @@ jobs:
         uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-
-      - name: Setup Node.js (for Tailwind CLI)
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
 
       - name: Recreate lockfile for current Deno version
         run: deno cache --reload mod.ts src/** tests/**
@@ -86,18 +81,15 @@ jobs:
 
       - name: Run quality checks
         run: |
-          deno fmt --check
+          deno task fmt:check
           deno lint
           deno task check
 
-      - name: Build CSS assets
-        run: deno task build:css
-
       - name: Generate snapshots
-        run: deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
+        run: deno task snapshots
 
       - name: Validate snapshots
-        run: deno test --allow-read tests/snapshots.spec.ts
+        run: deno task test:snapshots
 
       - name: Run unit tests with coverage
         run: deno test --allow-read --allow-env --coverage=coverage_profile src/**/*.spec.ts
@@ -147,7 +139,7 @@ jobs:
           next="${{ steps.next.outputs.next }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add deno.json src/styles.ts
+          git add deno.json
           if git status --porcelain | grep .; then
             git commit -m "chore: release v${next}"
             git tag "v${next}"
