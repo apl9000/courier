@@ -22,13 +22,17 @@ runtime CSS generation with theme support.
 - Borders: 2px standard, 6px double for dividers
 - Follow existing CSS class patterns in src/email-styles.ts
 - Always use semantic email-\* class names (email-button, email-heading, etc.)
+- All template copy must come from variables - no hard-coded text in .hbs files
+- Newsletter images support left, right, and hero layouts
 
 ## Email Client Compatibility
 
-- Use table-based layouts for email wrapper
+- Use table-based layouts for email wrapper with proper height chain (html → body → table → td)
 - Always set background colors on body, table, and td elements
 - Inline all CSS in <style> tags (no external stylesheets)
 - Use width="100%" and explicit dimensions
+- Container uses min-height: 100vh for full viewport height
+- Buttons use backgroundAlt for better contrast
 - Test changes in multiple email clients (Gmail, Outlook, Apple Mail)
 
 ## Development Workflow
@@ -49,10 +53,11 @@ runtime CSS generation with theme support.
 
 ## When Adding New Features
 
-- Create TypeScript types in src/types.ts
-- Add template file in src/emails/templates/
+- Create TypeScript types in src/types.ts with optional text override properties
+- Add template file in src/emails/templates/ (all copy from variables)
 - Add render and send methods to Courier class
-- Create integration test file in tests/
+- Register any new Handlebars helpers in Courier constructor
+- Create integration test file in tests/ with all required fields
 - Update generate-snapshots.ts script
 - Regenerate snapshots to validate output
 - Update README.md with usage examples
@@ -115,7 +120,9 @@ Available in src/email-styles.ts:
 ## Remember
 
 - Always preserve monospace aesthetic in email designs (DefaultTheme)
+- All template text must come from variables with sensible defaults
 - Regenerate snapshots after modifying templates
 - Test integration with actual SMTP before merging
 - Keep email templates simple and compatible
 - Follow existing patterns for consistency
+- DarkTheme uses system background colors (#0d1117) for seamless integration

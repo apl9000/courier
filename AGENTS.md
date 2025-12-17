@@ -169,13 +169,23 @@ Generated at runtime from theme configuration in `src/email-styles.ts`:
 
 **Components:**
 
-- `.email-button` - CTA buttons (themed borders, colors, hover state)
+- `.email-button` - CTA buttons (themed borders, backgroundAlt for contrast, hover state)
 - `.email-link` - Text links (themed underline thickness)
 - `.email-divider` - Section divider (themed double border)
+- `.email-divider-accent` - Left-aligned accent divider (60px, theme accent color)
 - `.email-box` - Bordered content box (themed border, padding)
 - `.email-box-alt` - Alt background box (themed background)
 - `.email-code` - Code display (themed monospace, background)
 - `.email-footer` - Footer section (themed thick border, alt text color)
+
+**Images:**
+
+- `.email-image-hero` - Full-width hero image (100%, bordered)
+- `.email-image-inline` - Square thumbnail (150x150px, object-fit cover)
+- `.email-section-image-left` - Section with image on left
+- `.email-section-image-right` - Section with image on right
+- `.email-image-cell` - Table cell for image positioning
+- `.email-content-cell` - Table cell for content positioning
 
 **Utilities:**
 
@@ -307,14 +317,19 @@ All templates inherit from `layouts/main.hbs`:
 
 ```handlebars
 <!DOCTYPE html>
-<html lang="{{lang}}">
+<html lang="{{lang}}" style="height: 100%;">
   <head>{{> head }}</head>
-  <body class="m-0 p-0 bg-white">
-    <table role="presentation" class="w-full m-0 p-0 bg-white">
-      <tr>
-        <td align="center" class="p-0 bg-white">
+  <body style="margin: 0; padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh;">
+    <!-- Email wrapper table for better client compatibility -->
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; height: 100%; min-height: 100vh; margin: 0; padding: 0; background-color: #ffffff;">
+      <tr style="height: 100%;">
+        <td align="center" style="padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh; vertical-align: top;">
+          <!-- Content container -->
           <div class="email-container">
+            {{!-- Main Content Slot --}}
             {{{ body }}}
+
+            {{!-- Footer --}}
             {{> footer }}
           </div>
         </td>
@@ -324,6 +339,12 @@ All templates inherit from `layouts/main.hbs`:
 </html>
 ```
 
+### Handlebars Helpers
+
+Registered in `Courier` constructor:
+
+- `eq` - Equality comparison: `{{#if (eq layout "hero")}}`
+
 ### Partial Usage
 
 ```handlebars
@@ -332,6 +353,11 @@ All templates inherit from `layouts/main.hbs`:
 
 {{!-- Footer partial with company info --}}
 {{> footer companyName="Courier" year=2025 unsubscribeUrl="..."}}
+
+{{!-- Newsletter with image layouts --}}
+{{#if (eq image.layout "hero")}}
+  <img src="{{image.src}}" alt="{{image.alt}}" class="email-image-hero" />
+{{/if}}
 ```
 
 ### Template Data Types
@@ -346,6 +372,38 @@ Defined in `src/types.ts`:
 - `UnsubscribeData`
 
 Always provide all required fields to ensure proper rendering.
+
+### Template Text Customization
+
+**All templates use variables for text content** - no hard-coded copy in `.hbs` files.
+
+Each template interface includes optional text override properties with sensible defaults:
+
+```typescript
+// Example: WelcomeEmailData
+interface WelcomeEmailData {
+  name: string; // Required
+  welcomeMessage?: string; // Optional, defaults to "Welcome to {companyName}!"
+  ctaLabel?: string; // Optional, defaults to "GET STARTED"
+  // ... more optional text overrides
+}
+```
+
+**Newsletter Image Support:**
+
+```typescript
+sections: Array<{
+  heading?: string;
+  content: string;
+  link?: string;
+  linkText?: string; // Optional, defaults to "Read more →"
+  image?: {
+    src: string;
+    alt: string;
+    layout?: 'left' | 'right' | 'hero'; // Image positioning
+  };
+}>;
+```
 
 ## Email Client Compatibility
 
@@ -372,7 +430,7 @@ Always provide all required fields to ensure proper rendering.
 4. **Add send method** to `Courier` class (optional)
 5. **Create integration test** in `tests/`
 6. **Update snapshot generator** in `tests/generate-snapshots.ts`
-7. **Run CSS build** and generate snapshots
+7. **Regenerate snapshots** with `deno run --allow-read --allow-write --allow-env --allow-sys tests/generate-snapshots.ts`
 8. **Update README** with usage example
 
 Example:
