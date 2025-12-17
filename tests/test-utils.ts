@@ -11,12 +11,12 @@ export const smtpPass = Deno.env.get("SMTP_PASS");
 export const smtpFrom = Deno.env.get("SMTP_FROM") || smtpUser;
 
 // Get test email recipients from environment (comma-separated)
-const testEmailsEnv = Deno.env.get("TEST_EMAILS");
+const testEmailsEnv = Deno.env.get("SMTP_TEST_TO");
 export const testEmails = testEmailsEnv
   ? testEmailsEnv.split(",").map((email) => email.trim()).filter((email) => email.length > 0)
   : smtpUser
-  ? [smtpUser]
-  : [];
+    ? [smtpUser]
+    : [];
 
 // Reusable SMTP config
 export const smtpConfig = {

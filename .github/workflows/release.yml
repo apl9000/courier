@@ -97,11 +97,10 @@ jobs:
       - name: Run integration tests with coverage
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          TEST_FROM_EMAIL: ${{ secrets.TEST_FROM_EMAIL }}
-          TEST_TO_EMAIL: ${{ secrets.TEST_TO_EMAIL }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_TEST_TO: ${{ secrets.SMTP_TEST_TO }}
         run: deno test --allow-net --allow-read --allow-env --coverage=coverage_profile tests/**/*.integration.spec.ts
 
       - name: Generate coverage report

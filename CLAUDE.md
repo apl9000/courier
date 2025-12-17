@@ -107,6 +107,6 @@ Set in `.env` file (git-ignored) or shell:
 - `SMTP_USER` - Your SMTP username
 - `SMTP_PASS` - App-specific password
 - `SMTP_FROM` - Default from address (falls back to SMTP_USER)
-- `TEST_EMAILS` -
+- `SMTP_TEST_TO` - Comma-separated list of test recipients (falls back to SMTP_USER)
 
 Integration tests require `--allow-env` permission (Nodemailer reads env vars during import).

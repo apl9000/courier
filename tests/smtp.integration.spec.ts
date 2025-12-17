@@ -7,7 +7,7 @@
  *   - SMTP_USER (required)
  *   - SMTP_PASS (required)
  *   - SMTP_FROM (optional, falls back to SMTP_USER)
- *   - TEST_EMAILS (optional, comma-separated list of test recipients, e.g., "test1@email.com,test2@email.com")
+ *   - SMTP_TEST_TO (optional, comma-separated list of test recipients, e.g., "test1@email.com,test2@email.com")
  *
  * Run with: deno task test:integration
  */
@@ -64,7 +64,7 @@ Deno.test({
 
 Deno.test({
   name: "Integration: Multiple recipients",
-  ignore: !hasCredentials || testEmails.length === 0,
+  ignore: !hasCredentials || testEmails.length <= 1,
   sanitizeResources: false,
   async fn() {
     const courier = await Courier.initialize({
@@ -75,9 +75,8 @@ Deno.test({
     const result = await courier.send({
       to: testEmails,
       subject: "[Test] Multi-recipient email",
-      text: `This email is sent to ${
-        testEmails.length > 1 ? "multiple recipients" : "test recipient"
-      }.`,
+      text: `This email is sent to ${testEmails.length > 1 ? "multiple recipients" : "test recipient"
+        }.`,
     });
 
     assertEquals(result.success, true, "Multi-recipient email should send successfully");
