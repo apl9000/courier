@@ -147,8 +147,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load partials from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load partials from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -174,8 +173,7 @@ export class Courier {
         return;
       }
       throw new Error(
-        `Failed to load layouts from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load layouts from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -223,8 +221,7 @@ export class Courier {
       }
     } catch (error) {
       throw new Error(
-        `Failed to load templates from directory "${dirPath}": ${
-          error instanceof Error ? error.message : String(error)
+        `Failed to load templates from directory "${dirPath}": ${error instanceof Error ? error.message : String(error)
         }`,
       );
     }
@@ -260,6 +257,7 @@ export class Courier {
         year: data.year || new Date().getFullYear(),
         companyName: data.companyName || "Your Company",
         emailTitle: data.emailTitle || data.subject || "Email",
+        backgroundColor: this.theme.colors.background,
         // Always use runtime-generated CSS from theme configuration
         emailStyles: generateThemedCSS(this.theme),
       };

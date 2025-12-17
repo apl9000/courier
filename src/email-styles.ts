@@ -496,7 +496,6 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       "height": "100%",
       "min-height": "100vh",
       "margin": "0 auto",
-      "background-color": theme.colors.background,
       "padding": theme.spacing.containerPadding,
       "box-sizing": "border-box",
       "font-family": theme.typography.fontFamily,
@@ -811,5 +810,63 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     }),
   ];
 
-  return `\n${rules.join("\n")}\n`;
+  // Dark mode media query for email client adaptation
+  const darkModeRules = `
+    @media (prefers-color-scheme: dark) {
+      /* Text colors - inherit from email client */
+      .email-body,
+      .email-subheading,
+      .email-heading,
+      .email-text-alt,
+      .email-content-cell,
+      .email-content-cell .email-body,
+      .email-content-cell .email-subheading,
+      .email-image-cell,
+      .email-box-highlight,
+      .email-box-highlight *,
+      .email-box-alt,
+      .email-box-alt *,
+      td,
+      p,
+      h1, h2, h3 {
+        color: inherit !important;
+      }
+      
+      /* Links - inherit color in dark mode */
+      .email-link,
+      .email-link-accent {
+        color: inherit !important;
+        text-decoration-color: currentColor !important;
+      }
+      
+      /* Background colors - make transparent for email client control */
+      .email-box-highlight,
+      .email-box-alt,
+      .email-code,
+      .email-code-lg {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+      }
+      
+      /* Code blocks - ensure readability */
+      .email-code,
+      .email-code-lg {
+        color: inherit !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+      
+      /* Semantic boxes - force dark text on light pastel backgrounds */
+      .email-box-success,
+      .email-box-success *,
+      .email-box-warning,
+      .email-box-warning *,
+      .email-box-error,
+      .email-box-error *,
+      .email-box-info,
+      .email-box-info * {
+        color: #000000 !important;
+      }
+    }
+  `;
+
+  return `\n${rules.join("\n")}\n${darkModeRules}\n`;
 }
