@@ -34,16 +34,15 @@ Deno.test({
 Deno.test({
   name: "Integration: Send basic email",
   sanitizeResources: false,
-  sanitizeOps: false,
   async fn() {
     const courier = await Courier.initialize({
       smtp: smtpConfig,
       defaultFrom: smtpFrom,
     });
+
     const result = await courier.send({
       to: smtpUser!,
       subject: "[Test] Basic Email from Courier",
-      text: "This is a test email sent by Courier integration test.",
       html: "<p>This is a <strong>test email</strong> sent by Courier integration test.</p>",
     });
     assertEquals(result.success, true, "Email should send successfully");
@@ -69,9 +68,8 @@ Deno.test({
     const result = await courier.send({
       to: [...testEmails, smtpUser!],
       subject: "[Test] Multi-recipient email",
-      text: `This email is sent to ${
-        testEmails.length > 1 ? "multiple recipients" : "test recipient"
-      }.`,
+      text: `This email is sent to ${testEmails.length > 1 ? "multiple recipients" : "test recipient"
+        }.`,
     });
 
     assertEquals(result.success, true, "Multi-recipient email should send successfully");
