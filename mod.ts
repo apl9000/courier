@@ -49,7 +49,21 @@ export type {
   SendResult,
   SMTPConfig,
   TemplateData,
+  ThemeConfig,
   UnsubscribeData,
   WelcomeEmailData,
 } from "./src/types.ts";
 export { SMTPProviders } from "./src/types.ts";
+export {
+  ColorfulTheme,
+  createTheme,
+  DarkTheme,
+  DefaultTheme,
+  EmailClasses,
+  EmailColors,
+  EmailStyles,
+  EmailTokens,
+  generateThemedCSS,
+  mergeTheme,
+  ProfessionalTheme,
+} from "./src/email-styles.ts";

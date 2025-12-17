@@ -3,19 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    font-family: ui-monospace, SFMono-Regular, Monaco, Consolas,
-      'Liberation Mono', 'Courier New', monospace;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
-    font-variant-numeric: tabular-nums lining-nums;
-    font-size: 16px;
-    line-height: 1.2rem;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   * {
     box-sizing: border-box;
   }
@@ -97,50 +84,38 @@
     @apply font-medium font-mono bg-bg-alt px-1 py-0.5;
   }
 
-  .email-code-block {
-    @apply block w-full p-line bg-bg-alt font-mono text-sm mb-line overflow-x-auto;
-    white-space: pre;
-  }
-
-  /* Lists */
-  .email-list {
-    @apply pl-8 mb-line;
-    list-style-type: square;
-  }
-
-  .email-list-item {
-    @apply mb-0;
-  }
-
-  /* Table */
-  .email-table {
-    @apply w-full border-collapse mb-line;
-  }
-
-  .email-table th,
-  .email-table td {
-    @apply border-2 border-text p-2 text-left align-top leading-base;
-  }
-
-  .email-table th {
-    @apply font-bold;
-  }
-
   /* Spacing utilities */
   .email-spacing-none {
     margin-top: 0;
   }
 
-  .email-spacing-small {
-    @apply mb-line;
+  .email-spacing-top {
+    margin-top: 0.6rem;
   }
 
-  .email-spacing-medium {
-    margin-bottom: calc(1.2rem * 1.5);
+  /* Text alignment */
+  .email-text-center {
+    text-align: center;
   }
 
-  .email-spacing-large {
-    margin-bottom: calc(1.2rem * 2);
+  /* Code size variants */
+  .email-code-lg {
+    @apply font-medium font-mono bg-bg-alt px-1 py-0.5;
+    font-size: 20px;
+  }
+
+  /* Image utilities */
+  .email-logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .email-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
   }
 
   /* Generic box for custom content */

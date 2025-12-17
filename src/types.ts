@@ -1,4 +1,52 @@
 /**
+ * Theme configuration for customizing email styles at runtime
+ */
+export interface ThemeConfig {
+  /** Color palette */
+  colors?: {
+    text?: string;
+    textAlt?: string;
+    background?: string;
+    backgroundAlt?: string;
+    border?: string;
+    accent?: string;
+    accentHover?: string;
+  };
+  /** Typography settings */
+  typography?: {
+    fontFamily?: string;
+    fontSize?: {
+      sm?: string;
+      base?: string;
+      lg?: string;
+      xl?: string;
+      "2xl"?: string;
+    };
+    fontWeight?: {
+      normal?: string;
+      medium?: string;
+      bold?: string;
+    };
+    lineHeight?: string;
+  };
+  /** Spacing and layout */
+  spacing?: {
+    line?: string;
+    containerPadding?: string;
+  };
+  /** Border styles */
+  borders?: {
+    width?: string;
+    widthThick?: string;
+    widthDouble?: string;
+  };
+  /** Container settings */
+  container?: {
+    maxWidth?: string;
+  };
+}
+
+/**
  * SMTP Provider configuration
  * Supports iCloud (smtp.mail.me.com) and Microsoft Outlook (smtp-mail.outlook.com)
  */
@@ -83,6 +131,8 @@ export interface CourierConfig {
   defaultFrom?: string | EmailAddress;
   /** Optional template directory path */
   templatesDir?: string;
+  /** Optional theme configuration for runtime customization */
+  theme?: ThemeConfig;
 }
 
 /**

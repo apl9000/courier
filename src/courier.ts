@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
 import { TAILWIND_CSS } from "./styles.ts";
+import { generateThemedCSS, mergeTheme } from "./email-styles.ts";
 import type { TemplateDelegate } from "handlebars";
 import {
   type CourierConfig,
@@ -21,7 +22,6 @@ import {
 } from "./types.ts";
 
 /**
-
  * Courier - Email utility for sending branded transactional emails
  * Supports iCloud SMTP and Microsoft Outlook SMTP with Handlebars templating
  *
@@ -31,14 +31,16 @@ export class Courier {
   private transporter: Transporter;
   private config: CourierConfig;
   private templates: Map<string, TemplateDelegate>;
+  private theme: ReturnType<typeof mergeTheme>;
 
   /**
    * Create a new Courier instance
-   * @param config - Courier configuration including SMTP settings
+   * @param config - Courier configuration including SMTP settings and optional theme
    */
   private constructor(config: CourierConfig) {
     this.config = config;
     this.templates = new Map();
+    this.theme = mergeTheme(config.theme);
     this.transporter = this.createTransporter(config.smtp);
   }
 
@@ -244,7 +246,8 @@ export class Courier {
         year: data.year || new Date().getFullYear(),
         companyName: data.companyName || "Your Company",
         emailTitle: data.emailTitle || data.subject || "Email",
-        emailStyles: TAILWIND_CSS,
+        // Use compiled Tailwind CSS or generate themed CSS if custom theme provided
+        emailStyles: this.config.theme ? generateThemedCSS(this.theme) : TAILWIND_CSS,
       };
 
       return layoutTemplate(layoutData);

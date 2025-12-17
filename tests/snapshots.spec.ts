@@ -63,6 +63,7 @@ Deno.test("Snapshot: Newsletter has dividers between sections", async () => {
 
   assertStringIncludes(html, "email-divider", "Should include dividers");
   assertStringIncludes(html, "email-subheading", "Should include subheadings");
+  assertStringIncludes(html, "border-top-width: 6px", "Dividers should use 6px border");
   assertStringIncludes(html, "border-style: double", "Dividers should use double border style");
   assertStringIncludes(html, "New Features", "Should include section heading");
 });
@@ -81,6 +82,7 @@ Deno.test("Snapshot: All templates have consistent footer styling", async () => 
   for (const template of templates) {
     const html = await Deno.readTextFile(`${snapshotsDir}/${template}.html`);
     assertStringIncludes(html, "email-footer", `${template} should have email-footer class`);
+    assertStringIncludes(html, "border-top-width: 3px", `${template} footer should have 3px border`);
     assertStringIncludes(html, "border-style: double", `${template} footer should have double border style`);
   }
 });
@@ -91,6 +93,6 @@ Deno.test("Snapshot: All templates use monospace fonts", async () => {
   for (const template of templates) {
     const html = await Deno.readTextFile(`${snapshotsDir}/${template}.html`);
     assertStringIncludes(html, "ui-monospace", `${template} should use monospace font`);
-    assertStringIncludes(html, "line-height: 1.2rem", `${template} should use 1.2rem line-height`);
+    assertStringIncludes(html, "line-height: 1.20rem", `${template} should use 1.20rem line-height`);
   }
 });
