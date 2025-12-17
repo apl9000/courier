@@ -24,14 +24,39 @@ Deno.test({
         title: "Monthly Update - December 2025",
         sections: [
           {
+            heading: "Bug Fixes",
+            content: "We've fixed several important bugs.",
+            link: "https://example.com/changelog",
+            image: {
+              src: "https://via.placeholder.com/600x200",
+              alt: "Bug Fixes",
+              layout: "hero",
+            },
+          },
+          {
             heading: "New Features",
             content: "Check out the latest features added this month.",
             link: "https://example.com/blog/new-features",
+            image: {
+              src: "https://via.placeholder.com/150",
+              alt: "New Features",
+              layout: "left",
+            },
+          },
+          {
+            heading: "No Image Section",
+            content: "We've fixed several important bugs.",
+            link: "https://example.com/changelog",
           },
           {
             heading: "Bug Fixes",
             content: "We've fixed several important bugs.",
             link: "https://example.com/changelog",
+            image: {
+              src: "https://via.placeholder.com/600x200",
+              alt: "Bug Fixes",
+              layout: "right",
+            },
           },
         ],
         companyName: "Courier Test",

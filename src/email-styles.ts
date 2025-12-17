@@ -64,6 +64,12 @@ export const EmailClasses = {
   spacingSm: "email-spacing-sm",
   spacingMd: "email-spacing-md",
   spacingLg: "email-spacing-lg",
+  imageHero: "email-image-hero",
+  imageInline: "email-image-inline",
+  imageCell: "email-image-cell",
+  contentCell: "email-content-cell",
+  sectionImageLeft: "email-section-image-left",
+  sectionImageRight: "email-section-image-right",
 } as const;
 
 /**
@@ -204,10 +210,10 @@ export const DarkTheme = {
     text: "#f5f5f5",
     textSecondary: "#d4d4d4",
     textAlt: "#a0a0a0",
-    background: "#1a1a1a",
-    backgroundSubtle: "#262626",
-    backgroundAlt: "#2d2d2d",
-    border: "#404040",
+    background: "#0d1117",
+    backgroundSubtle: "#161b22",
+    backgroundAlt: "#1c2128",
+    border: "#30363d",
     borderSoft: "#525252",
     accent: "#60a5fa",
     accentHover: "#3b82f6",
@@ -488,15 +494,18 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     // Container
     cssRule(".email-container", {
       "max-width": theme.container.maxWidth,
+      "height": "100%",
+      "min-height": "100vh",
       "margin": "0 auto",
       "background-color": theme.colors.background,
       "padding": theme.spacing.containerPadding,
+      "box-sizing": "border-box",
       "font-family": theme.typography.fontFamily,
       "font-size": theme.typography.fontSize.base,
       "line-height": theme.typography.lineHeight,
       "font-weight": theme.typography.fontWeight.normal,
+      "text-align": "left",
     }),
-
     // Typography
     cssRule(".email-heading", {
       "font-size": theme.typography.fontSize["2xl"],
@@ -539,7 +548,7 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     cssRule(".email-button", {
       "display": "inline-block",
       "padding": "0.875rem 1.5rem",
-      "background-color": theme.colors.background,
+      "background-color": theme.colors.backgroundAlt,
       "color": theme.colors.text,
       "font-weight": theme.typography.fontWeight.medium,
       "font-size": theme.typography.fontSize.sm,
@@ -551,7 +560,7 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
       "transition": "background-color 150ms ease",
     }),
     cssRule(".email-button:hover", {
-      "background-color": theme.colors.backgroundAlt,
+      "background-color": color("backgroundSubtle", theme.colors.background),
     }),
 
     // Buttons - Primary
@@ -635,6 +644,8 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     cssRule(".email-divider-accent", {
       "margin-top": "1.5rem",
       "margin-bottom": "1.5rem",
+      "margin-left": "0",
+      "margin-right": "auto",
       "border": "0",
       "height": "3px",
       "width": "60px",
@@ -652,8 +663,45 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     }),
     cssRule(".email-section-hero", {
       "padding": "2.5rem 0",
-      "text-align": "center",
+      "text-align": "left",
       "margin-bottom": "2rem",
+    }),
+
+    // Images
+    cssRule(".email-image-hero", {
+      "width": "100%",
+      "max-width": "100%",
+      "height": "auto",
+      "display": "block",
+      "margin-bottom": theme.spacing.line,
+      "border": `${theme.borders.width} solid ${theme.colors.border}`,
+    }),
+    cssRule(".email-image-inline", {
+      "width": "150px",
+      "height": "150px",
+      "object-fit": "cover",
+      "display": "block",
+      "border": `${theme.borders.width} solid ${theme.colors.border}`,
+    }),
+    cssRule(".email-section-image-left", {
+      "width": "100%",
+      "margin-bottom": theme.spacing.line,
+    }),
+    cssRule(".email-section-image-right", {
+      "width": "100%",
+      "margin-bottom": theme.spacing.line,
+    }),
+    cssRule(".email-image-cell", {
+      "width": "150px",
+      "vertical-align": "top",
+      "padding-right": theme.spacing.line,
+    }),
+    cssRule(".email-section-image-right .email-image-cell", {
+      "padding-right": "0",
+      "padding-left": theme.spacing.line,
+    }),
+    cssRule(".email-content-cell", {
+      "vertical-align": "top",
     }),
 
     // Footer
@@ -764,5 +812,5 @@ export function generateThemedCSS(theme: ReturnType<typeof mergeTheme>): string 
     }),
   ];
 
-  return `<style>\n${rules.join("\n")}\n</style>`;
+  return `\n${rules.join("\n")}\n`;
 }

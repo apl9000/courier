@@ -21,6 +21,7 @@ Deno.test({
 
     const result = await courier.sendEmailVerification(
       {
+        title: "Verify Your Email Address",
         name: "Test User",
         verificationUrl: "https://example.com/verify?token=abc123xyz",
         verificationCode: "ABC123",

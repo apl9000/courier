@@ -21,6 +21,7 @@ Deno.test({
 
     const result = await courier.sendPasswordReset(
       {
+        title: "Reset Your Password",
         name: "Test User",
         resetUrl: "https://example.com/reset?token=xyz789",
         resetCode: "XYZ789",

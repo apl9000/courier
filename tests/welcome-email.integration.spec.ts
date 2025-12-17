@@ -5,7 +5,7 @@
  */
 
 import { assertEquals, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
-import { ColorfulTheme, Courier } from "../mod.ts";
+import { Courier } from "../mod.ts";
 import { closeCourier, hasCredentials, smtpConfig, smtpFrom, smtpUser } from "./test-utils.ts";
 
 Deno.test({
@@ -17,15 +17,16 @@ Deno.test({
       smtp: smtpConfig,
       defaultFrom: smtpFrom,
       templatesDir: "./src/emails",
-      theme: ColorfulTheme,
     });
 
     const result = await courier.sendWelcomeEmail(
       {
+        title: "Welcome to Courier",
         name: "Test User",
         actionUrl: "https://example.com/start",
         year: new Date().getFullYear(),
         companyName: "Courier Test",
+        features: ["Send emails with Handlebars templates", "Multi-provider SMTP support", "Custom theming"],
       },
       {
         to: smtpUser!,

@@ -21,6 +21,7 @@ Deno.test({
 
     const result = await courier.sendUnsubscribeConfirmation(
       {
+        title: "You've Been Unsubscribed",
         name: "Test User",
         reason: "Too many emails",
         resubscribeUrl: "https://example.com/resubscribe?token=def456",

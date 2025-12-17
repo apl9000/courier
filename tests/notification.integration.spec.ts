@@ -26,6 +26,8 @@ Deno.test({
         message: "Your deployment has completed successfully.",
         details: "Build #1234 finished in 5 minutes.",
         timestamp: new Date().toISOString(),
+        actionUrl: "https://example.com/deployments/1234",
+        actionText: "View Deployment",
       },
       {
         to: smtpUser!,

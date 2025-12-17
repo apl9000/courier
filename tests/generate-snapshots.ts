@@ -3,7 +3,7 @@
  * Run: deno run --allow-read --allow-write --allow-env generate-snapshots.ts
  */
 
-import { Courier } from "../mod.ts";
+import { Courier, ProfessionalTheme } from "../mod.ts";
 
 // Mock SMTP config (won't actually send emails)
 const courier = await Courier.initialize({
@@ -32,6 +32,7 @@ console.log("✅ Generated: tests/snapshots/welcome.html");
 
 // Email Verification
 const verificationHtml = await courier.renderTemplate("email-verification", {
+  title: "Verify Your Email Address",
   name: "Alex Rivera",
   verificationUrl: "https://example.com/verify?token=abc123xyz",
   verificationCode: "ABC123",
@@ -44,6 +45,7 @@ console.log("✅ Generated: tests/snapshots/email-verification.html");
 
 // Password Reset
 const passwordResetHtml = await courier.renderTemplate("password-reset", {
+  title: "Reset Your Password",
   name: "Alex Rivera",
   resetUrl: "https://example.com/reset?token=xyz789",
   resetCode: "XYZ789",
@@ -76,18 +78,33 @@ const newsletterHtml = await courier.renderTemplate("newsletter", {
       content:
         "We've added support for monospace email templates with a minimalist design system inspired by brutalist web design.",
       link: "https://example.com/blog/new-features",
+      image: {
+        src: "https://via.placeholder.com/600x200/000000/ffffff?text=New+Features",
+        alt: "New Features Hero Image",
+        layout: "hero",
+      },
     },
     {
       heading: "Bug Fixes",
       content:
         "Fixed several important bugs related to email rendering and SMTP connection handling.",
       link: "https://example.com/changelog",
+      image: {
+        src: "https://via.placeholder.com/150/666666/ffffff?text=Bugs",
+        alt: "Bug Fixes",
+        layout: "left",
+      },
     },
     {
       heading: "Documentation",
       content:
         "Updated documentation with new examples and best practices for creating accessible email templates.",
       link: "https://example.com/docs",
+      image: {
+        src: "https://via.placeholder.com/150/000000/ffffff?text=Docs",
+        alt: "Documentation",
+        layout: "right",
+      },
     },
   ],
   companyName: "Courier",
@@ -99,6 +116,7 @@ console.log("✅ Generated: tests/snapshots/newsletter.html");
 
 // Unsubscribe Confirmation
 const unsubscribeHtml = await courier.renderTemplate("unsubscribe", {
+  title: "You've Been Unsubscribed",
   name: "Alex Rivera",
   reason: "Too many emails",
   resubscribeUrl: "https://example.com/resubscribe?token=def456",

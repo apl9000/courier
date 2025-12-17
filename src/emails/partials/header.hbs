@@ -2,14 +2,14 @@
   <tr>
     <td>
       {{#if logo}}
-      <img src='{{logo}}' alt='{{#if logoAlt}}{{logoAlt}}{{else}}Logo{{/if}}' class='email-logo' />
+        <img src='{{logo}}' alt='{{logoAlt}}' class='email-logo' />
       {{/if}}
       {{#if avatar}}
-      <img src='{{avatar}}' alt='{{#if avatarAlt}}{{avatarAlt}}{{else}}Avatar{{/if}}' class='email-avatar' />
+        <img src='{{avatar}}' alt='{{avatarAlt}}' class='email-avatar' />
       {{/if}}
       <h1 class='email-heading'>{{title}}</h1>
       {{#if subtitle}}
-      <p class='email-text-alt email-spacing-none'>{{subtitle}}</p>
+        <p class='email-text-alt email-spacing-none'>{{subtitle}}</p>
       {{/if}}
     </td>
   </tr>

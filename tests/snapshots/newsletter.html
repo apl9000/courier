@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" style="height: 100%;">
   <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -7,16 +7,20 @@
     <meta name='x-apple-disable-message-reformatting' />
     <meta http-equiv='X-UA-Compatible' content='IE=edge' />
     <style>
-      <style>
+      
     .email-container {
       max-width: 600px;
+      height: 100%;
+      min-height: 100vh;
       margin: 0 auto;
       background-color: #ffffff;
       padding: 1.5rem;
+      box-sizing: border-box;
       font-family: ui-monospace, 'SFMono-Regular', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
       font-size: 15px;
       line-height: 1.5;
       font-weight: 400;
+      text-align: left;
     }
     .email-heading {
       font-size: 26px;
@@ -57,7 +61,7 @@
     .email-button {
       display: inline-block;
       padding: 0.875rem 1.5rem;
-      background-color: #ffffff;
+      background-color: #f5f5f5;
       color: #000000;
       font-weight: 500;
       font-size: 14px;
@@ -69,7 +73,7 @@
       transition: background-color 150ms ease;
     }
     .email-button:hover {
-      background-color: #f5f5f5;
+      background-color: #fafafa;
     }
     .email-button-primary {
       display: inline-block;
@@ -145,6 +149,8 @@
     .email-divider-accent {
       margin-top: 1.5rem;
       margin-bottom: 1.5rem;
+      margin-left: 0;
+      margin-right: auto;
       border: 0;
       height: 3px;
       width: 60px;
@@ -160,8 +166,43 @@
     }
     .email-section-hero {
       padding: 2.5rem 0;
-      text-align: center;
+      text-align: left;
       margin-bottom: 2rem;
+    }
+    .email-image-hero {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 1.5rem;
+      border: 2px solid #000000;
+    }
+    .email-image-inline {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #000000;
+    }
+    .email-section-image-left {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .email-section-image-right {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .email-image-cell {
+      width: 150px;
+      vertical-align: top;
+      padding-right: 1.5rem;
+    }
+    .email-section-image-right .email-image-cell {
+      padding-right: 0;
+      padding-left: 1.5rem;
+    }
+    .email-content-cell {
+      vertical-align: top;
     }
     .email-footer {
       margin-top: 1.5rem;
@@ -256,14 +297,14 @@
       border-radius: 50%;
       margin-bottom: 1rem;
     }
-    </style>
+    
     </style>
     <title>Email</title>  </head>
-  <body class="m-0 p-0 bg-white">
+  <body style="margin: 0; padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh;">
     <!-- Email wrapper table for better client compatibility -->
-    <table role="presentation" cellpadding="0" cellspacing="0" class="w-full m-0 p-0 bg-white">
-      <tr>
-        <td align="center" class="p-0 bg-white">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; height: 100%; min-height: 100vh; margin: 0; padding: 0; background-color: #ffffff;">
+      <tr style="height: 100%;">
+        <td align="center" style="padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh; vertical-align: top;">
           <!-- Content container -->
           <div class="email-container">
             <table role='presentation' cellpadding='0' cellspacing='0' class='w-full'>
@@ -275,29 +316,50 @@
 </table>
 <hr class='email-divider-accent' />
 
-
 <div class="email-section">
-  <h2 class="email-subheading">New Features</h2>
-  <p class="email-body">We've added support for monospace email templates with a minimalist design system inspired by brutalist web design.</p>
-  <p>
-    <a href="https://example.com/blog/new-features" class="email-link">Read more &rarr;</a>
-  </p>
+      <img src="https://via.placeholder.com/600x200/000000/ffffff?text&#x3D;New+Features" alt="New Features Hero Image" class="email-image-hero" />
+  
+      <h2 class="email-subheading">New Features</h2>
+      <p class="email-body">We've added support for monospace email templates with a minimalist design system inspired by brutalist web design.</p>
+      <p>
+        <a href="https://example.com/blog/new-features" class="email-link">Read more &rarr;</a>
+      </p>
+    </div>
+<hr class="email-divider-subtle" />
+<div class="email-section">
+  
+      <table class="email-section-image-left" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="email-image-cell">
+            <img src="https://via.placeholder.com/150/666666/ffffff?text&#x3D;Bugs" alt="Bug Fixes" class="email-image-inline" />
+          </td>
+          <td class="email-content-cell">
+            <h2 class="email-subheading">Bug Fixes</h2>
+            <p class="email-body">Fixed several important bugs related to email rendering and SMTP connection handling.</p>
+            <p>
+              <a href="https://example.com/changelog" class="email-link">Read more &rarr;</a>
+            </p>
+          </td>
+        </tr>
+      </table>
 </div>
 <hr class="email-divider-subtle" />
 <div class="email-section">
-  <h2 class="email-subheading">Bug Fixes</h2>
-  <p class="email-body">Fixed several important bugs related to email rendering and SMTP connection handling.</p>
-  <p>
-    <a href="https://example.com/changelog" class="email-link">Read more &rarr;</a>
-  </p>
-</div>
-<hr class="email-divider-subtle" />
-<div class="email-section">
-  <h2 class="email-subheading">Documentation</h2>
-  <p class="email-body">Updated documentation with new examples and best practices for creating accessible email templates.</p>
-  <p>
-    <a href="https://example.com/docs" class="email-link">Read more &rarr;</a>
-  </p>
+  
+      <table class="email-section-image-right" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="email-content-cell">
+            <h2 class="email-subheading">Documentation</h2>
+            <p class="email-body">Updated documentation with new examples and best practices for creating accessible email templates.</p>
+            <p>
+              <a href="https://example.com/docs" class="email-link">Read more &rarr;</a>
+            </p>
+          </td>
+          <td class="email-image-cell">
+            <img src="https://via.placeholder.com/150/000000/ffffff?text&#x3D;Docs" alt="Documentation" class="email-image-inline" />
+          </td>
+        </tr>
+      </table>
 </div>
 
             

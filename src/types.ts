@@ -179,6 +179,16 @@ export interface WelcomeEmailData extends TemplateData {
   companyName: string;
   /** Optional list of features to highlight */
   features?: string[];
+  /** Welcome message text (defaults to 'Welcome to {companyName}! We're excited to have you on board.') */
+  welcomeMessage?: string;
+  /** Features heading (defaults to 'What you can do:') */
+  featuresHeading?: string;
+  /** CTA instruction text (defaults to 'To get started, click the button below:') */
+  ctaText?: string;
+  /** CTA button label (defaults to 'GET STARTED') */
+  ctaLabel?: string;
+  /** Support text (defaults to 'If you have any questions, feel free to reach out to our support team.') */
+  supportText?: string;
 }
 
 /**
@@ -195,6 +205,16 @@ export interface EmailVerificationData extends TemplateData {
   expiryHours: number;
   /** Company name */
   companyName: string;
+  /** Email title (defaults to 'Verify Your Email Address') */
+  title?: string;
+  /** Instruction text (defaults to 'Please verify your email address by clicking the button below:') */
+  instructionText?: string;
+  /** Verify button label (defaults to 'VERIFY EMAIL') */
+  verifyLabel?: string;
+  /** Code instruction text (defaults to 'Or use this verification code:') */
+  codeInstructionText?: string;
+  /** Expiry notice text (defaults to 'This link will expire in {expiryHours} hours.') */
+  expiryNoticeText?: string;
 }
 
 /**
@@ -211,6 +231,18 @@ export interface PasswordResetData extends TemplateData {
   expiryHours: number;
   /** Company name */
   companyName: string;
+  /** Email title (defaults to 'Reset Your Password') */
+  title?: string;
+  /** Instruction text (defaults to 'We received a request to reset your password. Click the button below to create a new password:') */
+  instructionText?: string;
+  /** Reset button label (defaults to 'RESET PASSWORD') */
+  resetLabel?: string;
+  /** Code instruction text (defaults to 'Or use this reset code:') */
+  codeInstructionText?: string;
+  /** Expiry notice text (defaults to 'This link will expire in {expiryHours} hours.') */
+  expiryNoticeText?: string;
+  /** Security notice text (defaults to "If you didn't request a password reset, please ignore this email or contact support if you have concerns.") */
+  securityNoticeText?: string;
 }
 
 /**
@@ -252,11 +284,21 @@ export interface NewsletterData extends TemplateData {
     heading?: string;
     content: string;
     link?: string;
+    linkText?: string;
+    image?: {
+      src: string;
+      alt: string;
+      layout?: "left" | "right" | "hero";
+    };
   }>;
   /** Company name */
   companyName: string;
   /** Unsubscribe URL */
   unsubscribeUrl: string;
+  /** Featured section button label (defaults to 'READ MORE') */
+  featuredButtonLabel?: string;
+  /** Section link text (defaults to 'Read more →') */
+  sectionLinkText?: string;
 }
 
 /**
@@ -270,5 +312,14 @@ export interface UnsubscribeData extends TemplateData {
   /** Resubscribe URL */
   resubscribeUrl: string;
   /** Company name */
-  companyName: string;
+  companyName: string;  /** Email title (defaults to "You've Been Unsubscribed") */
+  title?: string;
+  /** Confirmation message (defaults to 'You have been successfully unsubscribed from our mailing list.') */
+  confirmationMessage?: string;
+  /** Reason label (defaults to 'Reason:') */
+  reasonLabel?: string;
+  /** Resubscribe heading (defaults to 'Changed your mind?') */
+  resubscribeHeading?: string;
+  /** Resubscribe link text (defaults to 'Resubscribe to our newsletter') */
+  resubscribeLinkText?: string;
 }

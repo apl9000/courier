@@ -41,6 +41,11 @@ export class Courier {
     this.templates = new Map();
     this.theme = mergeTheme(config.theme);
     this.transporter = this.createTransporter(config.smtp);
+
+    // Register Handlebars helpers
+    Handlebars.registerHelper("eq", function (a, b) {
+      return a === b;
+    });
   }
 
   /**
