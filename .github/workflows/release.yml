@@ -1,18 +1,28 @@
 name: Release
 
+# Release workflow that triggers on push to main or manual dispatch
+# For automatic releases: version bump is determined from commit messages
+# - "BREAKING CHANGE:" or "!:" triggers major version bump
+# - "feat:" or "feature:" triggers minor version bump  
+# - "fix:", "chore:", etc. triggers patch version bump
+# For manual releases: explicit version bump selection required
 on:
   push:
     branches: [main]
   workflow_dispatch:
     inputs:
       bump:
-        description: "Version bump type (patch|minor|major)"
-        required: false
-        default: "patch"
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
       confirm:
         description: "Type 'yes' to confirm publishing this version"
-        required: false
-        default: "no"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -48,10 +58,51 @@ jobs:
           current=$(deno eval "console.log(JSON.parse(Deno.readTextFileSync('deno.json')).version)")
           echo "current=${current}" >> $GITHUB_OUTPUT
 
-      - name: Suggest next version
+      - name: Determine version bump type
+        id: bump_type
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Manual trigger - use provided input
+            bump="${{ github.event.inputs.bump }}"
+            echo "Using manual bump type: $bump"
+          else
+            # Automatic trigger - analyze commit messages
+            echo "Analyzing commit messages to determine version bump..."
+            
+            # Get commit message
+            commit_msg=$(git log -1 --pretty=%B)
+            echo "Commit message: $commit_msg"
+            
+            # Determine bump type based on conventional commits
+            if echo "$commit_msg" | grep -qiE "^[a-z]+(\(.+\))?!:|BREAKING CHANGE:"; then
+              bump="major"
+              echo "🚨 Detected BREAKING CHANGE - major version bump"
+            elif echo "$commit_msg" | grep -qiE "^feat(\(.+\))?:|^feature(\(.+\))?:"; then
+              bump="minor"
+              echo "✨ Detected feature - minor version bump"
+            elif echo "$commit_msg" | grep -qiE "^(fix|chore|docs|style|refactor|perf|test|build|ci)(\(.+\))?:"; then
+              bump="patch"
+              echo "🔧 Detected fix/chore - patch version bump"
+            else
+              # No conventional commit format found - fail with clear message
+              echo "❌ ERROR: Commit message does not follow conventional commits format"
+              echo "Expected format: <type>[optional scope]: <description>"
+              echo "Valid types: feat, fix, chore, docs, style, refactor, perf, test, build, ci"
+              echo "For breaking changes: add '!' after type or include 'BREAKING CHANGE:' in body"
+              echo ""
+              echo "Commit message was:"
+              echo "$commit_msg"
+              exit 1
+            fi
+          fi
+          
+          echo "bump=${bump}" >> $GITHUB_OUTPUT
+          echo "**Version Bump Type:** \`${bump}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Calculate next version
         id: next
         run: |
-          bump="${{ github.event.inputs.bump || 'patch' }}"
+          bump="${{ steps.bump_type.outputs.bump }}"
           current="${{ steps.current.outputs.current }}"
           cat <<'EOF' > /tmp/bump.ts
           const [current, bump] = Deno.args;
@@ -70,16 +121,18 @@ jobs:
           next=$(deno run /tmp/bump.ts "$current" "$bump")
           echo "bump=${bump}" >> $GITHUB_OUTPUT
           echo "next=${next}" >> $GITHUB_OUTPUT
-          echo "Proposed bump: $bump (current $current -> next $next)" >> $GITHUB_STEP_SUMMARY
+          echo "**Proposed Version:** \`$current\` → \`$next\` (\`${bump}\` bump)" >> $GITHUB_STEP_SUMMARY
 
       - name: Confirmation gate
         if: github.event_name == 'workflow_dispatch'
         run: |
-          confirm="${{ github.event.inputs.confirm || 'no' }}"
+          confirm="${{ github.event.inputs.confirm }}"
           if [ "$confirm" != "yes" ]; then
-            echo "Confirmation required. Rerun the workflow with confirm: yes and (optionally) bump: patch|minor|major." >> $GITHUB_STEP_SUMMARY
+            echo "❌ Confirmation required to proceed with release" >> $GITHUB_STEP_SUMMARY
+            echo "Rerun the workflow with confirm: 'yes' to publish version ${{ steps.next.outputs.next }}" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
+          echo "✅ Release confirmed for version ${{ steps.next.outputs.next }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Run quality checks
         run: |
