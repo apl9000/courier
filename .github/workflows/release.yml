@@ -3,7 +3,7 @@ name: Release
 # Release workflow that triggers on push to main or manual dispatch
 # For automatic releases: version bump is determined from commit messages
 # - "BREAKING CHANGE:" or "!:" triggers major version bump
-# - "feat:" or "feature:" triggers minor version bump  
+# - "feat:" triggers minor version bump  
 # - "fix:", "chore:", etc. triggers patch version bump
 # For manual releases: explicit version bump selection required
 on:
