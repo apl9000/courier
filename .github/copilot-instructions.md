@@ -33,7 +33,7 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 ## Development Workflow
 
 - Run `deno task build:css` after changing styles or tailwind.config.js
-- Run `deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts` to regenerate snapshots
+- Run `deno task snapshots` to regenerate snapshots
 - Run tests with `deno task test` before committing
 - Use `deno task check` for type checking
 - Follow existing test patterns in tests/ directory
@@ -55,7 +55,7 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 - Update generate-snapshots.ts script
 - Rebuild CSS and generate snapshots
 - Update README.md with usage examples
-- Document new classes in AGENTS.md
+- Update CLAUDE.md and AGENTS.md if architecture changes
 
 ## Security
 
@@ -68,7 +68,7 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 ## Documentation
 
 - Update README.md for user-facing changes
-- Update AGENTS.md for development guidance
+- Update CLAUDE.md and AGENTS.md for development guidance
 - Add inline comments only for complex logic
 - Keep JSDoc comments up to date
 - Document new CSS classes and their purpose
@@ -83,7 +83,7 @@ deno task build:css
 deno task test
 
 # Generate snapshots
-deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
+deno task snapshots
 
 # Type check
 deno task check
