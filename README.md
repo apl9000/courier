@@ -32,8 +32,14 @@ import { Courier } from "jsr:@rivescloud/courier";
 ### Using npm/Node.js
 
 ```bash
-# Using npm
-npm install @rivescloud/courier
+# Using npm (installs from JSR)
+npx jsr add @rivescloud/courier
+
+# Or with yarn
+yarn dlx jsr add @rivescloud/courier
+
+# Or with pnpm
+pnpm dlx jsr add @rivescloud/courier
 ```
 
 Then import in your Node.js/TypeScript project:
@@ -513,6 +519,13 @@ SMTPProviders.Microsoft = {
 
 - **Why `--allow-env` matters:** Nodemailer may read environment variables during import; tests must
   be run with `--allow-env` to avoid permission errors.
+
+- **Multi-recipient testing:** To test with multiple email addresses, set the `TEST_EMAILS` environment
+  variable with comma-separated email addresses:
+  ```zsh
+  TEST_EMAILS="test1@example.com,test2@example.com,test3@example.com" deno task test:smtp
+  ```
+  If not set, tests will use the `SMTP_USER` as the default recipient.
 
 - **Template snapshots (optional):** To preview rendered HTML for built-in templates without sending
   email, run:

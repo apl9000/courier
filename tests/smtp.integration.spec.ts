@@ -62,7 +62,7 @@ Deno.test({
 
 Deno.test({
   name: "Integration: Multiple recipients",
-  ignore: !hasCredentials,
+  ignore: !hasCredentials || testEmails.length === 0,
   sanitizeResources: false,
   async fn() {
     const courier = await Courier.initialize({
@@ -71,7 +71,7 @@ Deno.test({
     });
 
     const result = await courier.send({
-      to: testEmails.length > 0 ? testEmails : smtpUser!,
+      to: testEmails,
       subject: "[Test] Multi-recipient email",
       text: `This email is sent to ${
         testEmails.length > 1 ? "multiple recipients" : "test recipient"
