@@ -15,8 +15,8 @@ const testEmailsEnv = Deno.env.get("SMTP_TEST_TO");
 export const testEmails = testEmailsEnv
   ? testEmailsEnv.split(",").map((email) => email.trim()).filter((email) => email.length > 0)
   : smtpUser
-  ? [smtpUser]
-  : [];
+    ? [smtpUser]
+    : [];
 
 // Reusable SMTP config
 export const smtpConfig = {
@@ -25,9 +25,6 @@ export const smtpConfig = {
   user: smtpUser!,
   pass: smtpPass!,
 };
-
-// Skip tests if credentials not provided
-export const hasCredentials = smtpUser && smtpPass;
 
 /**
  * Helper to safely close courier and allow cleanup

@@ -54,6 +54,13 @@ export class Courier {
    * @returns Promise resolving to initialized Courier instance
    */
   static async initialize(config: CourierConfig): Promise<Courier> {
+    // Validate SMTP credentials
+    if (!config.smtp.user || !config.smtp.pass) {
+      throw new Error(
+        "SMTP credentials are required. Please provide smtp.user and smtp.pass in the configuration.",
+      );
+    }
+
     const courier = new Courier(config);
     if (config.templatesDir) {
       await courier.loadTemplatesFromDirectory(config.templatesDir);

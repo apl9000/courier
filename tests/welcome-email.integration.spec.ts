@@ -6,11 +6,10 @@
 
 import { assertEquals, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
 import { Courier } from "../mod.ts";
-import { closeCourier, hasCredentials, smtpConfig, smtpFrom, smtpUser } from "./test-utils.ts";
+import { closeCourier, smtpConfig, smtpFrom, smtpUser } from "./test-utils.ts";
 
 Deno.test({
   name: "Integration: Send welcome email template",
-  ignore: !hasCredentials,
   sanitizeResources: false,
   async fn() {
     const courier = await Courier.initialize({

@@ -40,19 +40,13 @@ jobs:
         run: deno test --allow-read --allow-env --coverage=coverage_profile src/**/*.spec.ts
 
       - name: Run integration tests
-        if: github.event_name == 'push'
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           SMTP_FROM: ${{ secrets.SMTP_FROM }}
           SMTP_TEST_TO: ${{ secrets.SMTP_TEST_TO }}
-        run: |
-          if [ -z "$SMTP_HOST" ]; then
-            echo "⚠️ SMTP credentials not configured, skipping integration tests"
-            exit 0
-          fi
-          deno test --allow-net --allow-read --allow-env --coverage=coverage_profile tests/**/*.integration.spec.ts
+        run: deno test --allow-net --allow-read --allow-env --coverage=coverage_profile tests/**/*.integration.spec.ts
 
       - name: Generate coverage report
         run: deno coverage coverage_profile --lcov --output=coverage.lcov

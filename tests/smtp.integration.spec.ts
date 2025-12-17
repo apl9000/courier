@@ -14,18 +14,10 @@
 
 import { assertEquals, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
 import { Courier } from "../mod.ts";
-import {
-  closeCourier,
-  hasCredentials,
-  smtpConfig,
-  smtpFrom,
-  smtpUser,
-  testEmails,
-} from "./test-utils.ts";
+import { closeCourier, smtpConfig, smtpFrom, smtpUser, testEmails } from "./test-utils.ts";
 
 Deno.test({
   name: "Integration: SMTP connection verification",
-  ignore: !hasCredentials,
   sanitizeResources: false,
   sanitizeOps: false,
   async fn() {
@@ -41,7 +33,6 @@ Deno.test({
 
 Deno.test({
   name: "Integration: Send basic email",
-  ignore: !hasCredentials,
   sanitizeResources: false,
   sanitizeOps: false,
   async fn() {
@@ -64,9 +55,13 @@ Deno.test({
 
 Deno.test({
   name: "Integration: Multiple recipients",
-  ignore: !hasCredentials || testEmails.length <= 1,
   sanitizeResources: false,
   async fn() {
+    if (testEmails.length <= 1) {
+      throw new Error(
+        "Multiple recipient test requires SMTP_TEST_TO with at least 2 comma-separated email addresses.",
+      );
+    }
     const courier = await Courier.initialize({
       smtp: smtpConfig,
       defaultFrom: smtpFrom,
