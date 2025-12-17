@@ -2,7 +2,6 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import Handlebars from "handlebars";
-import { TAILWIND_CSS } from "./styles.ts";
 import { generateThemedCSS, mergeTheme } from "./email-styles.ts";
 import type { TemplateDelegate } from "handlebars";
 import {
@@ -246,8 +245,8 @@ export class Courier {
         year: data.year || new Date().getFullYear(),
         companyName: data.companyName || "Your Company",
         emailTitle: data.emailTitle || data.subject || "Email",
-        // Use compiled Tailwind CSS or generate themed CSS if custom theme provided
-        emailStyles: this.config.theme ? generateThemedCSS(this.theme) : TAILWIND_CSS,
+        // Always use runtime-generated CSS from theme configuration
+        emailStyles: generateThemedCSS(this.theme),
       };
 
       return layoutTemplate(layoutData);
@@ -340,7 +339,9 @@ export class Courier {
       await this.transporter.verify();
       return true;
     } catch (_error) {
-      console.error("SMTP verification failed:", _error);
+      if (this.config.debug) {
+        console.error("SMTP verification failed:", _error);
+      }
       return false;
     }
   }

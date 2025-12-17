@@ -24,11 +24,11 @@ Deno.test("Snapshot: Welcome email has monospace styling", async () => {
   assertStringIncludes(html, "GET STARTED", "Button should be uppercase");
 
   // Check for proper colors (black text, white bg)
-  assertStringIncludes(html, "rgb(0 0 0", "Should use black text");
-  assertStringIncludes(html, "rgb(255 255 255", "Should use white background");
+  assertStringIncludes(html, "color: #000000", "Should use black text");
+  assertStringIncludes(html, "background-color: #ffffff", "Should use white background");
 
   // Should NOT contain purple colors
-  assertEquals(html.includes("rgb(124 58 237"), false, "Should not contain purple colors");
+  assertEquals(html.includes("#7c3aed"), false, "Should not contain purple colors");
 });
 
 Deno.test("Snapshot: Email verification has bordered code box", async () => {
@@ -38,7 +38,7 @@ Deno.test("Snapshot: Email verification has bordered code box", async () => {
   assertStringIncludes(html, "email-code", "Should include email-code class");
   assertStringIncludes(html, "ABC123", "Should include verification code");
   assertStringIncludes(html, "VERIFY EMAIL", "Button should be uppercase");
-  assertStringIncludes(html, "border-width: 2px", "Should have 2px borders");
+  assertStringIncludes(html, "border: 2px solid", "Should have 2px borders");
 });
 
 Deno.test("Snapshot: Password reset has monospace layout", async () => {
@@ -47,7 +47,7 @@ Deno.test("Snapshot: Password reset has monospace layout", async () => {
   assertStringIncludes(html, "email-box", "Should include email-box class");
   assertStringIncludes(html, "XYZ789", "Should include reset code");
   assertStringIncludes(html, "RESET PASSWORD", "Button should be uppercase");
-  assertStringIncludes(html, "font-weight: 800", "Headings should be bold (800)");
+  assertStringIncludes(html, "font-weight: 700", "Headings should be bold (700)");
 });
 
 Deno.test("Snapshot: Notification has bordered section", async () => {
@@ -63,8 +63,7 @@ Deno.test("Snapshot: Newsletter has dividers between sections", async () => {
 
   assertStringIncludes(html, "email-divider", "Should include dividers");
   assertStringIncludes(html, "email-subheading", "Should include subheadings");
-  assertStringIncludes(html, "border-top-width: 6px", "Dividers should use 6px border");
-  assertStringIncludes(html, "border-style: double", "Dividers should use double border style");
+  assertStringIncludes(html, "border-top: 6px double", "Dividers should use 6px double border");
   assertStringIncludes(html, "New Features", "Should include section heading");
 });
 
@@ -72,27 +71,49 @@ Deno.test("Snapshot: Unsubscribe has alt-styled box", async () => {
   const html = await Deno.readTextFile(`${snapshotsDir}/unsubscribe.html`);
 
   assertStringIncludes(html, "email-box-alt", "Should include alt box style");
-  assertStringIncludes(html, "rgb(238 238 238", "Alt box should have gray background");
+  assertStringIncludes(html, "background-color: #f5f5f5", "Alt box should have gray background");
   assertStringIncludes(html, "Been Unsubscribed", "Should include title");
 });
 
 Deno.test("Snapshot: All templates have consistent footer styling", async () => {
-  const templates = ["welcome", "email-verification", "password-reset", "notification", "newsletter", "unsubscribe"];
+  const templates = [
+    "welcome",
+    "email-verification",
+    "password-reset",
+    "notification",
+    "newsletter",
+    "unsubscribe",
+  ];
 
   for (const template of templates) {
     const html = await Deno.readTextFile(`${snapshotsDir}/${template}.html`);
     assertStringIncludes(html, "email-footer", `${template} should have email-footer class`);
-    assertStringIncludes(html, "border-top-width: 3px", `${template} footer should have 3px border`);
-    assertStringIncludes(html, "border-style: double", `${template} footer should have double border style`);
+    assertStringIncludes(
+      html,
+      "border-top: 3px double",
+      `${template} footer should have 3px double border`,
+    );
   }
 });
 
 Deno.test("Snapshot: All templates use monospace fonts", async () => {
-  const templates = ["welcome", "email-verification", "password-reset", "notification", "newsletter", "unsubscribe"];
+  const templates = [
+    "welcome",
+    "email-verification",
+    "password-reset",
+    "notification",
+    "newsletter",
+    "unsubscribe",
+  ];
 
   for (const template of templates) {
     const html = await Deno.readTextFile(`${snapshotsDir}/${template}.html`);
     assertStringIncludes(html, "ui-monospace", `${template} should use monospace font`);
-    assertStringIncludes(html, "line-height: 1.20rem", `${template} should use 1.20rem line-height`);
+    assertStringIncludes(
+      html,
+      "line-height: 1.5",
+      `${template} should use 1.5 line-height`,
+    );
   }
 });
+5

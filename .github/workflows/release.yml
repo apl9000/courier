@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: 'Version bump type (patch|minor|major)'
+        description: "Version bump type (patch|minor|major)"
         required: false
-        default: 'patch'
+        default: "patch"
       confirm:
         description: "Type 'yes' to confirm publishing this version"
         required: false
-        default: 'no'
+        default: "no"
 
 permissions:
   contents: write
@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node.js (for Tailwind CLI)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Recreate lockfile for current Deno version
         run: deno cache --reload mod.ts src/** tests/**

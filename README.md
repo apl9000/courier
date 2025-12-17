@@ -360,46 +360,74 @@ await courier.sendWithTemplate(
 
 ### Custom Themes and Styling
 
-Courier uses Tailwind CSS for styling with a monospace/brutalist theme by default. You can customize
-the theme to match your brand:
+Courier uses runtime CSS generation with a monospace/brutalist theme by default. You can customize
+the theme to match your brand using the `theme` option:
 
-#### 1. Configure Your Own Tailwind Theme
+#### 1. Use a Preset Theme
 
-Edit `tailwind.config.js` to customize colors, fonts, and other design tokens:
+Choose from built-in preset themes:
 
-```javascript
-export default {
-  content: ['./src/emails/**/*.hbs'],
+```typescript
+import {
+  Courier,
+  DarkTheme,
+  ProfessionalTheme,
+  ColorfulTheme,
+} from '@rivescloud/courier';
+
+const courier = await Courier.initialize({
+  smtp: {
+    /* ... */
+  },
+  theme: DarkTheme, // or ProfessionalTheme, ColorfulTheme
+});
+```
+
+#### 2. Create a Custom Theme
+
+Override specific theme properties:
+
+```typescript
+const courier = await Courier.initialize({
+  smtp: {
+    /* ... */
+  },
   theme: {
-    extend: {
-      colors: {
-        brand: {
-          primary: '#your-color',
-          secondary: '#your-color',
-        },
-      },
-      fontFamily: {
-        sans: ['Your Font', 'sans-serif'],
-      },
+    colors: {
+      text: '#1a1a1a',
+      background: '#f5f5f5',
+      accent: '#0891b2',
+    },
+    typography: {
+      fontFamily: "'Inter', sans-serif",
     },
   },
-};
+});
 ```
 
-#### 2. Build Your Custom Styles
+#### 3. Extend a Preset Theme
 
-After modifying the theme or `styles/input.css`, rebuild the CSS:
+Combine preset themes with custom overrides:
 
-```zsh
-deno task build:css        # Development build
-deno task build:css:prod   # Production build (minified)
+```typescript
+import {createTheme, ProfessionalTheme} from '@rivescloud/courier';
+
+const myTheme = createTheme(ProfessionalTheme, {
+  colors: {accent: '#ff6b6b'},
+  container: {maxWidth: '800px'},
+});
+
+const courier = await Courier.initialize({
+  smtp: {
+    /* ... */
+  },
+  theme: myTheme,
+});
 ```
 
-This generates inlined styles in `src/emails/partials/head.hbs`.
+#### 4. Create Custom Email Templates
 
-#### 3. Create Custom Email Templates
-
-Create your own `.hbs` templates using Tailwind utility classes:
+Create your own `.hbs` templates using email CSS classes:
 
 ```html
 {{!< layouts-main }} {{> header title="Custom Email"

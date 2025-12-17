@@ -1,21 +1,20 @@
+<hr class='email-divider' />
 <div class='email-footer'>
   {{#if companyName}}
-    <p class='email-spacing-none'><strong>{{companyName}}</strong></p>
+  <p class='email-spacing-none'><strong>{{companyName}}</strong></p>
+  {{/if}}
+  {{#if address}}
+  <p class='email-text-xs email-spacing-xs'>{{address}}</p>
   {{/if}}
   {{#if unsubscribeText}}
-    <p class='email-text-alt'>
-      {{unsubscribeText}}
-      <a
-        href='{{unsubscribeUrl}}'
-        class='email-link'
-      >{{unsubscribeLinkText}}</a>.
-    </p>
+  <p class='email-text-alt email-spacing-md'>
+    {{unsubscribeText}}
+    <a href='{{unsubscribeUrl}}' class='email-link'>{{unsubscribeLinkText}}</a>.
+  </p>
   {{/if}}
   {{#if year}}
-    <p class='email-text-alt email-spacing-none'>
-      ©
-      {{year}}
-      {{companyName}}. All rights reserved.
-    </p>
+  <p class='email-text-xs email-spacing-sm'>
+    &copy; {{year}} {{companyName}}. All rights reserved.
+  </p>
   {{/if}}
 </div>

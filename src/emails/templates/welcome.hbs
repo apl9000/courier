@@ -4,13 +4,29 @@
 {{!-- Welcome Message --}}
 <div class="email-section">
   <p class="email-body">Hi <strong>{{name}}</strong>,</p>
-  <p class="email-body">Welcome to {{companyName}}! We're excited to have you on board.</p>
-  <p class="email-body">To get started, click the button below:</p>
+  <p class="email-body">
+    Welcome to {{companyName}}! We're excited to have you on board.
+  </p>
 </div>
 
+{{!-- Feature highlights (optional) --}}
+{{#if features}}
+<div class="email-box-highlight">
+  <p class="email-subheading email-spacing-none">What you can do:</p>
+  <ul class="email-body email-spacing-sm">
+    {{#each features}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
+</div>
+{{/if}}
+
 {{!-- CTA Button --}}
-<div class="email-section email-text-center">
-  <a href="{{actionUrl}}" class="email-button">GET STARTED</a>
+<div class="email-section-hero">
+  <p class="email-body email-spacing-none">To get started, click the button below:</p>
+  <p class="email-spacing-md">
+    <a href="{{actionUrl}}" class="email-button-primary">GET STARTED</a>
+  </p>
 </div>
 
 {{!-- Additional Info --}}

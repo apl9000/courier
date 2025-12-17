@@ -1,7 +1,20 @@
 {{!-- Header --}}
-{{> header title=title}}
+{{> header title=title subtitle=subtitle}}
 
-{{!-- Newsletter Content --}}
+{{!-- Featured section (optional) --}}
+{{#if featured}}
+<div class="email-box-highlight">
+  <h2 class="email-subheading email-spacing-none">{{featured.heading}}</h2>
+  <p class="email-body email-spacing-sm">{{{featured.content}}}</p>
+  {{#if featured.link}}
+  <p class="email-spacing-sm">
+    <a href="{{featured.link}}" class="email-button-primary">READ MORE</a>
+  </p>
+  {{/if}}
+</div>
+{{/if}}
+
+{{!-- Newsletter Content Sections --}}
 {{#each sections}}
 <div class="email-section">
   {{#if heading}}
@@ -14,5 +27,7 @@
   </p>
   {{/if}}
 </div>
-<div class="email-divider"></div>
+{{#unless @last}}
+<hr class="email-divider-subtle" />
+{{/unless}}
 {{/each}}

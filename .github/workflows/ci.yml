@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js (for Tailwind CLI)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Cache Deno dependencies
         run: deno cache mod.ts

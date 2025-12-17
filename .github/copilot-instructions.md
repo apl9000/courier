@@ -1,6 +1,7 @@
 # GitHub Copilot Instructions for Courier
 
-This repository contains Courier, a Deno/Node.js email utility with Handlebars templating and Tailwind CSS styling.
+This repository contains Courier, a Deno/Node.js email utility with Handlebars templating and
+runtime CSS generation with theme support.
 
 ## Code Style
 
@@ -14,12 +15,12 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 
 ## Email Template Design
 
-- Maintain monospace/brutalist design aesthetic
-- Use only black (#000), white (#fff), and gray (#666, #eee) colors
-- Never add gradients, shadows, or purple tones
-- Typography: ui-monospace font stack, 1.20rem line-height
+- Maintain monospace/brutalist design aesthetic (DefaultTheme)
+- Use only black (#000), white (#fff), and gray (#666, #eee) colors by default
+- Never add gradients, shadows, or purple tones unless using custom theme
+- Typography: ui-monospace font stack, 1.5 line-height
 - Borders: 2px standard, 6px double for dividers
-- Follow existing CSS class patterns in styles/input.css
+- Follow existing CSS class patterns in src/email-styles.ts
 - Always use semantic email-\* class names (email-button, email-heading, etc.)
 
 ## Email Client Compatibility
@@ -32,11 +33,11 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 
 ## Development Workflow
 
-- Run `deno task build:css` after changing styles or tailwind.config.js
-- Run `deno task snapshots` to regenerate snapshots
+- Run `deno task snapshots` to regenerate snapshots after template changes
 - Run tests with `deno task test` before committing
 - Use `deno task check` for type checking
 - Follow existing test patterns in tests/ directory
+- Update src/email-styles.ts when adding new CSS classes or themes
 
 ## Testing Requirements
 
@@ -53,7 +54,7 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 - Add render and send methods to Courier class
 - Create integration test file in tests/
 - Update generate-snapshots.ts script
-- Rebuild CSS and generate snapshots
+- Regenerate snapshots to validate output
 - Update README.md with usage examples
 - Update CLAUDE.md and AGENTS.md if architecture changes
 
@@ -76,9 +77,6 @@ This repository contains Courier, a Deno/Node.js email utility with Handlebars t
 ## Common Commands
 
 ```bash
-# Build CSS
-deno task build:css
-
 # Run all tests
 deno task test
 
@@ -108,17 +106,16 @@ Available in src/email-styles.ts:
 
 - src/courier.ts - Main class
 - src/types.ts - Type definitions
-- src/email-styles.ts - Design tokens
+- src/email-styles.ts - Theme system and runtime CSS generation
 - src/emails/layouts/ - Email layouts
 - src/emails/partials/ - Reusable components
 - src/emails/templates/ - Email templates
 - tests/ - Test files
-- styles/ - Tailwind CSS source and output
 
 ## Remember
 
-- Always preserve monospace aesthetic in email designs
-- Run CSS build before generating snapshots
+- Always preserve monospace aesthetic in email designs (DefaultTheme)
+- Regenerate snapshots after modifying templates
 - Test integration with actual SMTP before merging
 - Keep email templates simple and compatible
 - Follow existing patterns for consistency

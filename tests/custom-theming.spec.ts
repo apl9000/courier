@@ -44,16 +44,32 @@ Deno.test("Custom theme: overrides default colors", async () => {
   assertStringIncludes(html, `color: ${customTheme.colors!.text}`, "Should use custom text color");
 
   // Should use custom background color
-  assertStringIncludes(html, `background-color: ${customTheme.colors!.background}`, "Should use custom background color");
+  assertStringIncludes(
+    html,
+    `background-color: ${customTheme.colors!.background}`,
+    "Should use custom background color",
+  );
 
   // Should use custom border color
-  assertStringIncludes(html, `border: 2px solid ${customTheme.colors!.border}`, "Should use custom border color");
+  assertStringIncludes(
+    html,
+    `border: 2px solid ${customTheme.colors!.border}`,
+    "Should use custom border color",
+  );
 
   // Should use custom alt text color
-  assertStringIncludes(html, `color: ${customTheme.colors!.textAlt}`, "Should use custom alt text color");
+  assertStringIncludes(
+    html,
+    `color: ${customTheme.colors!.textAlt}`,
+    "Should use custom alt text color",
+  );
 
   // Should use custom alt background color
-  assertStringIncludes(html, `background-color: ${customTheme.colors!.backgroundAlt}`, "Should use custom alt background color");
+  assertStringIncludes(
+    html,
+    `background-color: ${customTheme.colors!.backgroundAlt}`,
+    "Should use custom alt background color",
+  );
 });
 
 Deno.test("Custom theme: overrides typography settings", async () => {
@@ -89,19 +105,39 @@ Deno.test("Custom theme: overrides typography settings", async () => {
   });
 
   // Should use custom font family
-  assertStringIncludes(html, `font-family: ${customTheme.typography!.fontFamily}`, "Should use custom font family");
+  assertStringIncludes(
+    html,
+    `font-family: ${customTheme.typography!.fontFamily}`,
+    "Should use custom font family",
+  );
 
   // Should use custom base font size
-  assertStringIncludes(html, `font-size: ${customTheme.typography!.fontSize!.base}`, "Should use custom base font size");
+  assertStringIncludes(
+    html,
+    `font-size: ${customTheme.typography!.fontSize!.base}`,
+    "Should use custom base font size",
+  );
 
   // Should use custom heading font size
-  assertStringIncludes(html, `font-size: ${customTheme.typography!.fontSize!["2xl"]}`, "Should use custom heading font size");
+  assertStringIncludes(
+    html,
+    `font-size: ${customTheme.typography!.fontSize!["2xl"]}`,
+    "Should use custom heading font size",
+  );
 
   // Should use custom line height
-  assertStringIncludes(html, `line-height: ${customTheme.typography!.lineHeight}`, "Should use custom line height");
+  assertStringIncludes(
+    html,
+    `line-height: ${customTheme.typography!.lineHeight}`,
+    "Should use custom line height",
+  );
 
   // Should use custom font weight
-  assertStringIncludes(html, `font-weight: ${customTheme.typography!.fontWeight!.bold}`, "Should use custom bold weight");
+  assertStringIncludes(
+    html,
+    `font-weight: ${customTheme.typography!.fontWeight!.bold}`,
+    "Should use custom bold weight",
+  );
 });
 
 Deno.test("Custom theme: overrides spacing settings", async () => {
@@ -125,10 +161,18 @@ Deno.test("Custom theme: overrides spacing settings", async () => {
   });
 
   // Should use custom container padding
-  assertStringIncludes(html, `padding: ${customTheme.spacing!.containerPadding}`, "Should use custom container padding");
+  assertStringIncludes(
+    html,
+    `padding: ${customTheme.spacing!.containerPadding}`,
+    "Should use custom container padding",
+  );
 
   // Should use custom line spacing
-  assertStringIncludes(html, `margin-bottom: ${customTheme.spacing!.line}`, "Should use custom line spacing");
+  assertStringIncludes(
+    html,
+    `margin-bottom: ${customTheme.spacing!.line}`,
+    "Should use custom line spacing",
+  );
 });
 
 Deno.test("Custom theme: overrides border settings", async () => {
@@ -154,10 +198,18 @@ Deno.test("Custom theme: overrides border settings", async () => {
   });
 
   // Should use custom border width
-  assertStringIncludes(html, `border: ${customTheme.borders!.width} solid`, "Should use custom border width");
+  assertStringIncludes(
+    html,
+    `border: ${customTheme.borders!.width} solid`,
+    "Should use custom border width",
+  );
 
   // Should use custom thick border (footer)
-  assertStringIncludes(html, `border-top: ${customTheme.borders!.widthThick} double`, "Should use custom thick border width");
+  assertStringIncludes(
+    html,
+    `border-top: ${customTheme.borders!.widthThick} double`,
+    "Should use custom thick border width",
+  );
 });
 
 Deno.test("Custom theme: overrides container settings", async () => {
@@ -180,7 +232,11 @@ Deno.test("Custom theme: overrides container settings", async () => {
   });
 
   // Should use custom max width
-  assertStringIncludes(html, `max-width: ${customTheme.container!.maxWidth}`, "Should use custom container max-width");
+  assertStringIncludes(
+    html,
+    `max-width: ${customTheme.container!.maxWidth}`,
+    "Should use custom container max-width",
+  );
 });
 
 Deno.test("Custom theme: partial override merges with defaults", async () => {
@@ -208,24 +264,32 @@ Deno.test("Custom theme: partial override merges with defaults", async () => {
   assertStringIncludes(html, `color: ${customTheme.colors!.text}`, "Should use custom text color");
 
   // Should use custom background color
-  assertStringIncludes(html, `background-color: ${customTheme.colors!.background}`, "Should use custom background color");
+  assertStringIncludes(
+    html,
+    `background-color: ${customTheme.colors!.background}`,
+    "Should use custom background color",
+  );
 
   // Should still use default typography (monospace)
   assertStringIncludes(
     html,
     "ui-monospace",
-    "Should keep default monospace font when not overridden"
+    "Should keep default monospace font when not overridden",
   );
 
   // Should still use default line height
-  assertStringIncludes(html, "line-height: 1.20rem", "Should keep default line height when not overridden");
+  assertStringIncludes(
+    html,
+    "line-height: 1.5",
+    "Should keep default line height when not overridden",
+  );
 });
 
-Deno.test("No custom theme: uses default Tailwind CSS", async () => {
+Deno.test("No custom theme: uses DefaultTheme runtime CSS", async () => {
   const courier = await Courier.initialize({
     smtp: testConfig,
     templatesDir,
-    // No theme provided
+    // No theme provided - should use DefaultTheme
   });
 
   const html = courier.renderTemplate("welcome", {
@@ -234,12 +298,10 @@ Deno.test("No custom theme: uses default Tailwind CSS", async () => {
     companyName: "Test Company",
   });
 
-  // Should use Tailwind CSS (contains CSS custom properties)
-  assertStringIncludes(html, "--tw-text-opacity", "Should use Tailwind CSS with custom properties");
-  assertStringIncludes(html, "rgb(0 0 0", "Should use Tailwind's rgb color format");
-
-  // Should have Tailwind's preflight styles
-  assertStringIncludes(html, "! tailwindcss v3", "Should include Tailwind CSS version comment");
+  // Should use runtime-generated CSS with DefaultTheme values
+  assertStringIncludes(html, ".email-container {", "Should include CSS classes");
+  assertStringIncludes(html, "color: #000000", "Should use DefaultTheme text color");
+  assertStringIncludes(html, "ui-monospace", "Should use DefaultTheme monospace font");
 });
 
 Deno.test("Custom theme: generates dynamic CSS for all email types", async () => {

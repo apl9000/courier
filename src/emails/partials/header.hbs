@@ -1,4 +1,4 @@
-<table role='presentation' cellpadding='0' cellspacing='0'>
+<table role='presentation' cellpadding='0' cellspacing='0' class='w-full'>
   <tr>
     <td>
       {{#if logo}}
@@ -8,6 +8,10 @@
       <img src='{{avatar}}' alt='{{#if avatarAlt}}{{avatarAlt}}{{else}}Avatar{{/if}}' class='email-avatar' />
       {{/if}}
       <h1 class='email-heading'>{{title}}</h1>
+      {{#if subtitle}}
+      <p class='email-text-alt email-spacing-none'>{{subtitle}}</p>
+      {{/if}}
     </td>
   </tr>
 </table>
+<hr class='email-divider-accent' />

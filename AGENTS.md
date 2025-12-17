@@ -8,7 +8,7 @@ Courier is a Deno/Node.js email utility that provides:
 
 - Multi-provider SMTP support (iCloud, Microsoft Outlook)
 - Handlebars email templating system
-- Tailwind CSS-based design system with monospace/brutalist aesthetic
+- Runtime CSS generation with preset themes and custom theme support
 - Type-safe email delivery with Nodemailer
 - Published to JSR (JavaScript Registry) as @rivescloud/courier
 
@@ -17,7 +17,7 @@ Courier is a Deno/Node.js email utility that provides:
 - **Runtime:** Deno (primary), Node.js (compatible)
 - **Email Delivery:** Nodemailer v6.9.7
 - **Templating:** Handlebars v4.7.8
-- **Styling:** Tailwind CSS v4.1.18
+- **Styling:** Runtime CSS generation from theme configuration
 - **Testing:** Deno's built-in test runner
 - **Package Registry:** JSR (jsr.io)
 
@@ -28,8 +28,7 @@ Courier is a Deno/Node.js email utility that provides:
 ├── src/
 │   ├── courier.ts              # Main Courier class
 │   ├── types.ts                # TypeScript type definitions
-│   ├── email-styles.ts         # Design tokens and CSS utilities
-│   ├── styles.ts               # Auto-generated Tailwind CSS export
+│   ├── email-styles.ts         # Theme system and runtime CSS generation
 │   └── emails/
 │       ├── layouts/
 │       │   └── main.hbs        # Main email layout
@@ -44,18 +43,13 @@ Courier is a Deno/Node.js email utility that provides:
 │           ├── notification.hbs
 │           ├── newsletter.hbs
 │           └── unsubscribe.hbs
-├── styles/
-│   ├── input.css               # Tailwind source with @layer components
-│   └── output.css              # Compiled Tailwind CSS
 ├── tests/
 │   ├── test-utils.ts           # Shared test configuration
 │   ├── snapshots/              # HTML snapshots for validation
 │   ├── generate-snapshots.ts   # Snapshot generation script
 │   └── *.integration.spec.ts   # Integration tests per template
-├── build-css.ts                # CSS build script
 ├── mod.ts                      # Main module export
-├── deno.json                   # Deno configuration
-└── tailwind.config.js          # Tailwind configuration
+└── deno.json                   # Deno configuration
 ```
 
 ## Development Setup
@@ -74,8 +68,7 @@ Courier is a Deno/Node.js email utility that provides:
    deno install
    ```
 
-3. **Environment Variables:**
-   Create `.env` file for integration tests:
+3. **Environment Variables:** Create `.env` file for integration tests:
    ```bash
    SMTP_HOST=smtp.mail.me.com
    SMTP_PORT=587
@@ -85,15 +78,9 @@ Courier is a Deno/Node.js email utility that provides:
    TEST_TO_EMAIL=test-recipient@example.com
    ```
 
-### Build Commands
+### Development Commands
 
 ```bash
-# Build Tailwind CSS
-deno task build:css
-
-# Build for production (minified)
-deno task build:css:prod
-
 # Development server
 deno task dev
 
@@ -137,11 +124,13 @@ deno task fmt
 
 ### Monospace/Brutalist Aesthetic
 
-The email templates follow a minimalist, monospace design system inspired by brutalist web design principles:
+The email templates follow a minimalist, monospace design system inspired by brutalist web design
+principles:
 
 **Typography:**
 
-- Font Stack: `ui-monospace, SFMono-Regular, Monaco, Consolas, Liberation Mono, Courier New, monospace`
+- Font Stack:
+  `ui-monospace, SFMono-Regular, Monaco, Consolas, Liberation Mono, Courier New, monospace`
 - Base Size: 16px
 - Line Height: 1.20rem (consistent vertical rhythm)
 - Font Weights: 500 (normal), 600 (medium), 800 (bold)
@@ -165,48 +154,49 @@ The email templates follow a minimalist, monospace design system inspired by bru
 
 ### Email CSS Classes
 
-Located in `styles/input.css` under `@layer components`:
+Generated at runtime from theme configuration in `src/email-styles.ts`:
 
 **Layout:**
 
-- `.email-container` - Main container (max-width 600px, white bg, padding)
+- `.email-container` - Main container (themed max-width, background, padding)
 
 **Typography:**
 
-- `.email-heading` - Main heading (24px, uppercase, bold 800)
-- `.email-subheading` - Section headings (16px, uppercase, bold 800)
-- `.email-body` - Body text (16px, line-height 1.20rem)
-- `.email-text-alt` - Alternative text (14px, gray)
+- `.email-heading` - Main heading (themed font size, uppercase, bold)
+- `.email-subheading` - Section headings (themed size, uppercase, bold)
+- `.email-body` - Body text (themed size, line-height)
+- `.email-text-alt` - Alternative text (themed alt color)
 
 **Components:**
 
-- `.email-button` - CTA buttons (bordered, uppercase, hover state)
-- `.email-link` - Text links (underlined, 2px thickness)
-- `.email-divider` - Section divider (6px double border)
-- `.email-box` - Bordered content box (2px border, padding)
-- `.email-box-alt` - Gray background box (no border)
-- `.email-code` - Code display (monospace, gray bg)
-- `.email-footer` - Footer section (3px double top border, gray text)
+- `.email-button` - CTA buttons (themed borders, colors, hover state)
+- `.email-link` - Text links (themed underline thickness)
+- `.email-divider` - Section divider (themed double border)
+- `.email-box` - Bordered content box (themed border, padding)
+- `.email-box-alt` - Alt background box (themed background)
+- `.email-code` - Code display (themed monospace, background)
+- `.email-footer` - Footer section (themed thick border, alt text color)
 
 **Utilities:**
 
-- `.email-section` - Section spacing (margin-bottom)
-- `.email-section-bordered` - Bordered section
+- `.email-section` - Section spacing (themed margin)
+- `.email-section-bordered` - Bordered section (themed)
 - `.email-spacing-none` - Remove top margin
+- `.email-text-center` - Center text alignment
 
-### CSS Build Process
+### Runtime CSS Generation
 
-1. Source CSS: `styles/input.css` (Tailwind directives + @layer components)
-2. Tailwind CLI processes input.css → `styles/output.css`
-3. Build script (`build-css.ts`) reads output.css → exports to `src/styles.ts`
-4. Templates import `TAILWIND_CSS` from `src/styles.ts`
-5. CSS inlined in `<style>` tags in email HTML
+1. Theme configuration defined in `src/email-styles.ts` (DefaultTheme, DarkTheme, etc.)
+2. `mergeTheme()` merges custom theme with DefaultTheme
+3. `generateThemedCSS()` creates CSS from merged theme
+4. CSS inlined in `<style>` tags via `{{{emailStyles}}}` in layout
+5. No build step required - CSS generated on demand
 
-**Important:** Always run `deno task build:css` after modifying:
+**Important:** Regenerate snapshots after modifying templates:
 
-- `styles/input.css`
-- `tailwind.config.js`
-- Any template files (to regenerate snapshots)
+```bash
+deno run --allow-read --allow-write tests/generate-snapshots.ts
+```
 
 ## Testing Guidelines
 
@@ -269,7 +259,8 @@ Generate HTML snapshots after any template/style changes:
 deno run --allow-read --allow-write --allow-env tests/generate-snapshots.ts
 ```
 
-Snapshots are stored in `tests/snapshots/*.html` and can be opened in a browser for visual inspection.
+Snapshots are stored in `tests/snapshots/*.html` and can be opened in a browser for visual
+inspection.
 
 ## Code Style Guidelines
 
@@ -484,7 +475,8 @@ deno publish
 2. **Validate CSS** - Inspect `styles/output.css`
 3. **Test rendering** - Use unit tests
 4. **Check SMTP logs** - Enable debug in Nodemailer
-5. **Email validators** - Use tools like [Litmus](https://litmus.com) or [Email on Acid](https://www.emailonacid.com)
+5. **Email validators** - Use tools like [Litmus](https://litmus.com) or
+   [Email on Acid](https://www.emailonacid.com)
 
 ## Maintenance Checklist
 

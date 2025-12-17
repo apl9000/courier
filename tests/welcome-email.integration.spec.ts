@@ -5,7 +5,7 @@
  */
 
 import { assertEquals, assertExists } from "https://deno.land/std@0.208.0/assert/mod.ts";
-import { ColorfulTheme, Courier, DarkTheme } from "../mod.ts";
+import { ColorfulTheme, Courier } from "../mod.ts";
 import { closeCourier, hasCredentials, smtpConfig, smtpFrom, smtpUser } from "./test-utils.ts";
 
 Deno.test({
@@ -37,7 +37,11 @@ Deno.test({
       console.error("Failed to send welcome email. Error:", result.error);
     }
 
-    assertEquals(result.success, true, `Welcome email should send successfully. Error: ${result.error || "none"}`);
+    assertEquals(
+      result.success,
+      true,
+      `Welcome email should send successfully. Error: ${result.error || "none"}`,
+    );
     assertExists(result.messageId, "Message ID should be present on success");
 
     await closeCourier(courier);

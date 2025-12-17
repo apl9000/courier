@@ -65,5 +65,6 @@ export {
   EmailTokens,
   generateThemedCSS,
   mergeTheme,
+  ModernBrutalistTheme,
   ProfessionalTheme,
 } from "./src/email-styles.ts";

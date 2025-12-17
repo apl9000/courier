@@ -73,17 +73,20 @@ const newsletterHtml = await courier.renderTemplate("newsletter", {
   sections: [
     {
       heading: "New Features",
-      content: "We've added support for monospace email templates with a minimalist design system inspired by brutalist web design.",
+      content:
+        "We've added support for monospace email templates with a minimalist design system inspired by brutalist web design.",
       link: "https://example.com/blog/new-features",
     },
     {
       heading: "Bug Fixes",
-      content: "Fixed several important bugs related to email rendering and SMTP connection handling.",
+      content:
+        "Fixed several important bugs related to email rendering and SMTP connection handling.",
       link: "https://example.com/changelog",
     },
     {
       heading: "Documentation",
-      content: "Updated documentation with new examples and best practices for creating accessible email templates.",
+      content:
+        "Updated documentation with new examples and best practices for creating accessible email templates.",
       link: "https://example.com/docs",
     },
   ],

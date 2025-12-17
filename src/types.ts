@@ -5,37 +5,53 @@ export interface ThemeConfig {
   /** Color palette */
   colors?: {
     text?: string;
+    textSecondary?: string;
     textAlt?: string;
     background?: string;
+    backgroundSubtle?: string;
     backgroundAlt?: string;
     border?: string;
+    borderSoft?: string;
     accent?: string;
     accentHover?: string;
+    accentMuted?: string;
   };
   /** Typography settings */
   typography?: {
     fontFamily?: string;
     fontSize?: {
+      xs?: string;
       sm?: string;
       base?: string;
       lg?: string;
       xl?: string;
       "2xl"?: string;
+      "3xl"?: string;
     };
     fontWeight?: {
       normal?: string;
       medium?: string;
+      semibold?: string;
       bold?: string;
+      black?: string;
     };
     lineHeight?: string;
   };
   /** Spacing and layout */
   spacing?: {
+    xs?: string;
+    sm?: string;
+    base?: string;
+    md?: string;
+    lg?: string;
+    xl?: string;
+    "2xl"?: string;
     line?: string;
     containerPadding?: string;
   };
   /** Border styles */
   borders?: {
+    widthThin?: string;
     width?: string;
     widthThick?: string;
     widthDouble?: string;
@@ -133,6 +149,8 @@ export interface CourierConfig {
   templatesDir?: string;
   /** Optional theme configuration for runtime customization */
   theme?: ThemeConfig;
+  /** Enable debug logging (console.error for errors) */
+  debug?: boolean;
 }
 
 /**
@@ -159,6 +177,8 @@ export interface WelcomeEmailData extends TemplateData {
   year: number;
   /** Company name */
   companyName: string;
+  /** Optional list of features to highlight */
+  features?: string[];
 }
 
 /**
@@ -206,7 +226,11 @@ export interface NotificationData extends TemplateData {
   /** Optional additional details */
   details?: string;
   /** Timestamp of the notification */
-  timestamp: string;
+  timestamp?: string;
+  /** Optional action URL */
+  actionUrl?: string;
+  /** Optional action button text */
+  actionText?: string;
 }
 
 /**
@@ -215,9 +239,17 @@ export interface NotificationData extends TemplateData {
 export interface NewsletterData extends TemplateData {
   /** Newsletter title */
   title: string;
+  /** Optional subtitle displayed below title */
+  subtitle?: string;
+  /** Optional featured content section */
+  featured?: {
+    heading: string;
+    content: string;
+    link?: string;
+  };
   /** Newsletter content sections */
   sections: Array<{
-    heading: string;
+    heading?: string;
     content: string;
     link?: string;
   }>;
