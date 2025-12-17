@@ -5,18 +5,18 @@
 import type { Courier as CourierType } from "../mod.ts";
 
 // Get SMTP config from environment
-export const smtpHost = Deno.env.get("SMTP_HOST") || "smtp.mail.me.com";
+export const smtpHost = Deno.env.get("SMTP_HOST");
 export const smtpUser = Deno.env.get("SMTP_USER");
 export const smtpPass = Deno.env.get("SMTP_PASS");
-export const smtpFrom = Deno.env.get("SMTP_FROM") || smtpUser;
+export const smtpFrom = Deno.env.get("SMTP_FROM");
 
 // Get test email recipients from environment (comma-separated)
 const testEmailsEnv = Deno.env.get("SMTP_TEST_TO");
 export const testEmails = testEmailsEnv
   ? testEmailsEnv.split(",").map((email) => email.trim()).filter((email) => email.length > 0)
   : smtpUser
-  ? [smtpUser]
-  : [];
+    ? [smtpUser]
+    : [];
 
 // Reusable SMTP config
 export const smtpConfig = {
