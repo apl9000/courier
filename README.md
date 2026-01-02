@@ -45,7 +45,7 @@ pnpm dlx jsr add @apl/courier
 Then import in your Node.js/TypeScript project:
 
 ```typescript
-import {Courier, SMTPProviders} from '@apl/courier';
+import { Courier, SMTPProviders } from "@apl/courier";
 ```
 
 ## Quick Start
@@ -53,24 +53,24 @@ import {Courier, SMTPProviders} from '@apl/courier';
 ### Basic Usage with iCloud
 
 ```typescript
-import {Courier, SMTPProviders} from '@apl/courier';
+import { Courier, SMTPProviders } from "@apl/courier";
 
 // Initialize with iCloud SMTP
 const courier = await Courier.initialize({
   smtp: {
     ...SMTPProviders.iCloud,
-    user: 'your-email@icloud.com',
-    pass: 'your-app-specific-password', // Get this from iCloud settings
+    user: "your-email@icloud.com",
+    pass: "your-app-specific-password", // Get this from iCloud settings
   },
-  defaultFrom: 'your-email@icloud.com',
+  defaultFrom: "your-email@icloud.com",
 });
 
 // Send a simple email
 await courier.send({
-  to: 'recipient@example.com',
-  subject: 'Hello from Courier!',
-  text: 'This is a test email',
-  html: '<p>This is a <strong>test</strong> email</p>',
+  to: "recipient@example.com",
+  subject: "Hello from Courier!",
+  text: "This is a test email",
+  html: "<p>This is a <strong>test</strong> email</p>",
 });
 
 courier.close();
@@ -79,15 +79,15 @@ courier.close();
 ### Using Microsoft Outlook SMTP
 
 ```typescript
-import {Courier, SMTPProviders} from '@apl/courier';
+import { Courier, SMTPProviders } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
     ...SMTPProviders.Microsoft,
-    user: 'your-email@outlook.com',
-    pass: 'your-password',
+    user: "your-email@outlook.com",
+    pass: "your-password",
   },
-  defaultFrom: 'your-email@outlook.com',
+  defaultFrom: "your-email@outlook.com",
 });
 ```
 
@@ -99,45 +99,45 @@ Courier includes dedicated functions for common email templates with type-safe p
 // Send a welcome email
 await courier.sendWelcomeEmail(
   {
-    name: 'Alice',
-    actionUrl: 'https://example.com/getting-started',
+    name: "Alice",
+    actionUrl: "https://example.com/getting-started",
     year: new Date().getFullYear(),
-    companyName: 'Acme Inc.',
+    companyName: "Acme Inc.",
   },
   {
-    to: 'alice@example.com',
-    subject: 'Welcome to Acme Inc.!',
-  }
+    to: "alice@example.com",
+    subject: "Welcome to Acme Inc.!",
+  },
 );
 
 // Send a password reset email
 await courier.sendPasswordReset(
   {
-    name: 'Bob',
-    resetUrl: 'https://example.com/reset?token=abc123',
-    resetCode: 'ABC123',
+    name: "Bob",
+    resetUrl: "https://example.com/reset?token=abc123",
+    resetCode: "ABC123",
     expiryHours: 24,
-    companyName: 'Acme Inc.',
+    companyName: "Acme Inc.",
   },
   {
-    to: 'bob@example.com',
-    subject: 'Password Reset Request',
-  }
+    to: "bob@example.com",
+    subject: "Password Reset Request",
+  },
 );
 
 // Send a notification
 await courier.sendNotification(
   {
-    type: 'success',
-    title: 'Deployment Complete',
-    message: 'Your application has been deployed successfully.',
-    details: 'Build #1234 completed in 3m 45s',
+    type: "success",
+    title: "Deployment Complete",
+    message: "Your application has been deployed successfully.",
+    details: "Build #1234 completed in 3m 45s",
     timestamp: new Date().toISOString(),
   },
   {
-    to: 'developer@example.com',
-    subject: 'Deployment Notification',
-  }
+    to: "developer@example.com",
+    subject: "Deployment Notification",
+  },
 );
 ```
 
@@ -168,7 +168,7 @@ interface CourierConfig {
     port?: number; // SMTP port (defaults to 587)
     secure?: boolean; // Enable SSL (defaults to false for STARTTLS)
   };
-  defaultFrom?: string | {email: string; name?: string};
+  defaultFrom?: string | { email: string; name?: string };
   templatesDir?: string; // Optional template directory
   theme?: ThemeConfig; // Optional runtime theme customization
 }
@@ -179,52 +179,52 @@ interface CourierConfig {
 Customize email styles at runtime by providing a theme configuration:
 
 ```typescript
-import {Courier, SMTPProviders} from '@apl/courier';
+import { Courier, SMTPProviders } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
     ...SMTPProviders.iCloud,
-    user: 'your-email@icloud.com',
-    pass: 'your-app-specific-password',
+    user: "your-email@icloud.com",
+    pass: "your-app-specific-password",
   },
   // Custom theme configuration
   theme: {
     colors: {
-      text: '#1a1a1a',
-      textAlt: '#6b7280',
-      background: '#ffffff',
-      backgroundAlt: '#f3f4f6',
-      border: '#000000',
-      accent: '#3b82f6', // Blue accent
-      accentHover: '#2563eb',
+      text: "#1a1a1a",
+      textAlt: "#6b7280",
+      background: "#ffffff",
+      backgroundAlt: "#f3f4f6",
+      border: "#000000",
+      accent: "#3b82f6", // Blue accent
+      accentHover: "#2563eb",
     },
     typography: {
-      fontFamily: 'system-ui, sans-serif', // Use system fonts
+      fontFamily: "system-ui, sans-serif", // Use system fonts
       fontSize: {
-        base: '16px',
-        sm: '14px',
-        lg: '18px',
-        xl: '20px',
-        '2xl': '28px', // Larger headings
+        base: "16px",
+        sm: "14px",
+        lg: "18px",
+        xl: "20px",
+        "2xl": "28px", // Larger headings
       },
       fontWeight: {
-        normal: '400',
-        medium: '500',
-        bold: '700',
+        normal: "400",
+        medium: "500",
+        bold: "700",
       },
-      lineHeight: '1.5',
+      lineHeight: "1.5",
     },
     spacing: {
-      line: '1.5rem',
-      containerPadding: '2rem',
+      line: "1.5rem",
+      containerPadding: "2rem",
     },
     borders: {
-      width: '1px',
-      widthThick: '2px',
-      widthDouble: '4px',
+      width: "1px",
+      widthThick: "2px",
+      widthDouble: "4px",
     },
     container: {
-      maxWidth: '680px',
+      maxWidth: "680px",
     },
   },
 });
@@ -232,15 +232,15 @@ const courier = await Courier.initialize({
 // Now all emails use your custom theme!
 await courier.sendWelcomeEmail(
   {
-    name: 'Alex',
-    actionUrl: 'https://app.example.com',
-    companyName: 'My Company',
+    name: "Alex",
+    actionUrl: "https://app.example.com",
+    companyName: "My Company",
     year: 2025,
   },
   {
-    to: 'alex@example.com',
-    subject: 'Welcome!',
-  }
+    to: "alex@example.com",
+    subject: "Welcome!",
+  },
 );
 ```
 
@@ -294,10 +294,10 @@ Send an unsubscribe confirmation with resubscribe link.
 
 ```typescript
 await courier.send({
-  to: 'recipient@example.com',
-  subject: 'Hello!',
-  text: 'Plain text content',
-  html: '<p>HTML content</p>',
+  to: "recipient@example.com",
+  subject: "Hello!",
+  text: "Plain text content",
+  html: "<p>HTML content</p>",
 });
 ```
 
@@ -305,11 +305,11 @@ await courier.send({
 
 ```typescript
 await courier.send({
-  to: ['user1@example.com', 'user2@example.com'],
-  cc: 'manager@example.com',
-  bcc: 'archive@example.com',
-  subject: 'Team Update',
-  html: '<p>Update for the team</p>',
+  to: ["user1@example.com", "user2@example.com"],
+  cc: "manager@example.com",
+  bcc: "archive@example.com",
+  subject: "Team Update",
+  html: "<p>Update for the team</p>",
 });
 ```
 
@@ -317,11 +317,11 @@ await courier.send({
 
 ```typescript
 await courier.send({
-  from: {email: 'noreply@example.com', name: 'Acme Inc.'},
-  to: {email: 'user@example.com', name: 'John Doe'},
-  replyTo: {email: 'support@example.com', name: 'Support Team'},
-  subject: 'Welcome!',
-  html: '<p>Welcome to our service!</p>',
+  from: { email: "noreply@example.com", name: "Acme Inc." },
+  to: { email: "user@example.com", name: "John Doe" },
+  replyTo: { email: "support@example.com", name: "Support Team" },
+  subject: "Welcome!",
+  html: "<p>Welcome to our service!</p>",
 });
 ```
 
@@ -342,19 +342,19 @@ You can create your own templates or load custom ones:
 
 ```typescript
 // Register inline template
-courier.registerTemplate('custom', '<h1>Hello {{name}}</h1><p>{{message}}</p>');
+courier.registerTemplate("custom", "<h1>Hello {{name}}</h1><p>{{message}}</p>");
 
 // Load from file
-await courier.loadTemplate('custom', './my-templates/custom.hbs');
+await courier.loadTemplate("custom", "./my-templates/custom.hbs");
 
 // Use the template
 await courier.sendWithTemplate(
-  'custom',
-  {name: 'Alice', message: 'Welcome!'},
+  "custom",
+  { name: "Alice", message: "Welcome!" },
   {
-    to: 'alice@example.com',
-    subject: 'Custom Email',
-  }
+    to: "alice@example.com",
+    subject: "Custom Email",
+  },
 );
 ```
 
@@ -368,12 +368,7 @@ the theme to match your brand using the `theme` option:
 Choose from built-in preset themes:
 
 ```typescript
-import {
-  ColorfulTheme,
-  Courier,
-  DarkTheme,
-  ProfessionalTheme,
-} from '@apl/courier';
+import { ColorfulTheme, Courier, DarkTheme, ProfessionalTheme } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
@@ -394,9 +389,9 @@ const courier = await Courier.initialize({
   },
   theme: {
     colors: {
-      text: '#1a1a1a',
-      background: '#f5f5f5',
-      accent: '#0891b2',
+      text: "#1a1a1a",
+      background: "#f5f5f5",
+      accent: "#0891b2",
     },
     typography: {
       fontFamily: "'Inter', sans-serif",
@@ -410,11 +405,11 @@ const courier = await Courier.initialize({
 Combine preset themes with custom overrides:
 
 ```typescript
-import {createTheme, ProfessionalTheme} from '@apl/courier';
+import { createTheme, ProfessionalTheme } from "@apl/courier";
 
 const myTheme = createTheme(ProfessionalTheme, {
-  colors: {accent: '#ff6b6b'},
-  container: {maxWidth: '800px'},
+  colors: { accent: "#ff6b6b" },
+  container: { maxWidth: "800px" },
 });
 
 const courier = await Courier.initialize({
@@ -430,8 +425,7 @@ const courier = await Courier.initialize({
 Create your own `.hbs` templates using email CSS classes:
 
 ```html
-{{!< layouts-main }} {{> header title="Custom Email"
-logo="https://example.com/logo.png"}}
+{{!< layouts-main }} {{> header title="Custom Email" logo="https://example.com/logo.png"}}
 
 <p class="text-brand-primary font-sans">Your custom content here</p>
 
@@ -446,12 +440,12 @@ Load and use your custom templates:
 // Load custom template directory
 const courier = await Courier.initialize({
   smtp: smtpConfig,
-  templatesDir: './my-custom-templates',
+  templatesDir: "./my-custom-templates",
 });
 
 // Or load individual templates
-await courier.loadTemplate('my-template', './path/to/template.hbs');
-await courier.sendWithTemplate('my-template', data, message);
+await courier.loadTemplate("my-template", "./path/to/template.hbs");
+await courier.sendWithTemplate("my-template", data, message);
 ```
 
 **Note**: The default monospace/brutalist theme provides excellent email client compatibility and
@@ -478,23 +472,23 @@ import type {
   UnsubscribeData,
   // Template-specific types
   WelcomeEmailData,
-} from '@apl/courier';
+} from "@apl/courier";
 ```
 
 ### SMTP Providers
 
 ```typescript
-import {SMTPProviders} from '@apl/courier';
+import { SMTPProviders } from "@apl/courier";
 
 // Available providers:
 SMTPProviders.iCloud = {
-  host: 'smtp.mail.me.com',
+  host: "smtp.mail.me.com",
   port: 587,
   secure: false,
 };
 
 SMTPProviders.Microsoft = {
-  host: 'smtp-mail.outlook.com',
+  host: "smtp-mail.outlook.com",
   port: 587,
   secure: false,
 };
