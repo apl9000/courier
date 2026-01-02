@@ -1,5 +1,5 @@
 {
-  "name": "@rivescloud/courier",
+  "name": "@apl/courier",
   "version": "0.0.0",
   "exports": "./mod.ts",
   "tasks": {

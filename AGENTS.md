@@ -10,7 +10,7 @@ Courier is a Deno/Node.js email utility that provides:
 - Handlebars email templating system
 - Runtime CSS generation with preset themes and custom theme support
 - Type-safe email delivery with Nodemailer
-- Published to JSR (JavaScript Registry) as @rivescloud/courier
+- Published to JSR (JavaScript Registry) as @apl/courier
 
 **Tech Stack:**
 
@@ -228,29 +228,29 @@ Each email template has:
 **Unit Tests:**
 
 ```typescript
-Deno.test("renders welcome email template", async () => {
+Deno.test('renders welcome email template', async () => {
   const courier = new Courier(config);
-  const html = await courier.renderTemplate("welcome", {
-    name: "Test User",
-    actionUrl: "https://example.com",
+  const html = await courier.renderTemplate('welcome', {
+    name: 'Test User',
+    actionUrl: 'https://example.com',
   });
-  assertStringIncludes(html, "Welcome");
+  assertStringIncludes(html, 'Welcome');
 });
 ```
 
 **Integration Tests:**
 
 ```typescript
-import { hasCredentials, smtpConfig } from "./test-utils.ts";
+import {hasCredentials, smtpConfig} from './test-utils.ts';
 
 Deno.test({
-  name: "sends welcome email via SMTP",
+  name: 'sends welcome email via SMTP',
   ignore: !hasCredentials,
   async fn() {
     const courier = new Courier(smtpConfig);
     await courier.sendWelcomeEmail({
-      to: "test@example.com",
-      name: "Test User",
+      to: 'test@example.com',
+      name: 'Test User',
     });
   },
 });
@@ -259,10 +259,10 @@ Deno.test({
 **Snapshot Tests:**
 
 ```typescript
-Deno.test("Welcome email has monospace styling", async () => {
-  const html = await Deno.readTextFile("./tests/snapshots/welcome.html");
-  assertStringIncludes(html, "ui-monospace");
-  assertStringIncludes(html, "email-button");
+Deno.test('Welcome email has monospace styling', async () => {
+  const html = await Deno.readTextFile('./tests/snapshots/welcome.html');
+  assertStringIncludes(html, 'ui-monospace');
+  assertStringIncludes(html, 'email-button');
 });
 ```
 
@@ -405,7 +405,7 @@ sections: Array<{
   image?: {
     src: string;
     alt: string;
-    layout?: "left" | "right" | "hero"; // Image positioning
+    layout?: 'left' | 'right' | 'hero'; // Image positioning
   };
 }>;
 ```

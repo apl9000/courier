@@ -3,7 +3,7 @@ name: Release
 # Release workflow that triggers on push to main or manual dispatch
 # For automatic releases: version bump is determined from commit messages
 # - "BREAKING CHANGE:" or "!:" triggers major version bump
-# - "feat:" triggers minor version bump  
+# - "feat:" triggers minor version bump
 # - "fix:", "chore:", etc. triggers patch version bump
 # For manual releases: explicit version bump selection required
 on:
@@ -68,11 +68,11 @@ jobs:
           else
             # Automatic trigger - analyze commit messages
             echo "Analyzing commit messages to determine version bump..."
-            
+
             # Get commit message
             commit_msg=$(git log -1 --pretty=%B)
             echo "Commit message: $commit_msg"
-            
+
             # Determine bump type based on conventional commits
             # Check for breaking changes first (highest priority)
             if echo "$commit_msg" | grep -qE "BREAKING CHANGE:"; then
@@ -99,7 +99,7 @@ jobs:
               exit 1
             fi
           fi
-          
+
           echo "bump=${bump}" >> $GITHUB_OUTPUT
           echo "**Version Bump Type:** \`${bump}\`" >> $GITHUB_STEP_SUMMARY
 
