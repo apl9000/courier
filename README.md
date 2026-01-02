@@ -23,29 +23,29 @@ notifications, and automated messages with minimal setup.
 
 ```bash
 # Add to your Deno project
-deno add @rivescloud/courier
+deno add @apl/courier
 
 # Or import directly from JSR
-import { Courier } from "jsr:@rivescloud/courier";
+import { Courier } from "jsr:@apl/courier";
 ```
 
 ### Using npm/Node.js
 
 ```bash
 # Using npm (installs from JSR)
-npx jsr add @rivescloud/courier
+npx jsr add @apl/courier
 
 # Or with yarn
-yarn dlx jsr add @rivescloud/courier
+yarn dlx jsr add @apl/courier
 
 # Or with pnpm
-pnpm dlx jsr add @rivescloud/courier
+pnpm dlx jsr add @apl/courier
 ```
 
 Then import in your Node.js/TypeScript project:
 
 ```typescript
-import { Courier, SMTPProviders } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@apl/courier";
 ```
 
 ## Quick Start
@@ -53,7 +53,7 @@ import { Courier, SMTPProviders } from "@rivescloud/courier";
 ### Basic Usage with iCloud
 
 ```typescript
-import { Courier, SMTPProviders } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@apl/courier";
 
 // Initialize with iCloud SMTP
 const courier = await Courier.initialize({
@@ -79,7 +79,7 @@ courier.close();
 ### Using Microsoft Outlook SMTP
 
 ```typescript
-import { Courier, SMTPProviders } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
@@ -179,7 +179,7 @@ interface CourierConfig {
 Customize email styles at runtime by providing a theme configuration:
 
 ```typescript
-import { Courier, SMTPProviders } from "@rivescloud/courier";
+import { Courier, SMTPProviders } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
@@ -368,7 +368,7 @@ the theme to match your brand using the `theme` option:
 Choose from built-in preset themes:
 
 ```typescript
-import { ColorfulTheme, Courier, DarkTheme, ProfessionalTheme } from "@rivescloud/courier";
+import { ColorfulTheme, Courier, DarkTheme, ProfessionalTheme } from "@apl/courier";
 
 const courier = await Courier.initialize({
   smtp: {
@@ -405,7 +405,7 @@ const courier = await Courier.initialize({
 Combine preset themes with custom overrides:
 
 ```typescript
-import { createTheme, ProfessionalTheme } from "@rivescloud/courier";
+import { createTheme, ProfessionalTheme } from "@apl/courier";
 
 const myTheme = createTheme(ProfessionalTheme, {
   colors: { accent: "#ff6b6b" },
@@ -472,13 +472,13 @@ import type {
   UnsubscribeData,
   // Template-specific types
   WelcomeEmailData,
-} from "@rivescloud/courier";
+} from "@apl/courier";
 ```
 
 ### SMTP Providers
 
 ```typescript
-import { SMTPProviders } from "@rivescloud/courier";
+import { SMTPProviders } from "@apl/courier";
 
 // Available providers:
 SMTPProviders.iCloud = {

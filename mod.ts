@@ -7,7 +7,7 @@
  *
  * @example
  * ```ts
- * import { Courier, SMTPProviders } from "@rivescloud/courier";
+ * import { Courier, SMTPProviders } from "@apl/courier";
  *
  * // Using iCloud SMTP
  * const courier = await Courier.initialize({

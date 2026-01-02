@@ -10,7 +10,7 @@ Courier is a Deno/Node.js email utility that provides:
 - Handlebars email templating system
 - Runtime CSS generation with preset themes and custom theme support
 - Type-safe email delivery with Nodemailer
-- Published to JSR (JavaScript Registry) as @rivescloud/courier
+- Published to JSR (JavaScript Registry) as @apl/courier
 
 **Tech Stack:**
 

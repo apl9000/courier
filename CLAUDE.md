@@ -6,7 +6,7 @@ repository.
 ## Project Overview
 
 Courier is a Deno email utility that integrates SMTP (iCloud and Microsoft Outlook), Nodemailer, and
-Handlebars templating. It's published to JSR as `@rivescloud/courier` and also available via npm.
+Handlebars templating. It's published to JSR as `@apl/courier` and also available via npm.
 
 ## Common Commands
 
