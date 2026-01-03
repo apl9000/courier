@@ -109,7 +109,7 @@ export const SMTPProviders = {
     port: 587,
     secure: false,
   },
-};
+} as const;
 
 /**
  * Email address with optional name
