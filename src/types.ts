@@ -1,66 +1,79 @@
 /**
- * Theme configuration for customizing email styles at runtime
+ * Deep partial type utility for nested objects
  */
-export interface ThemeConfig {
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
+/**
+ * Resolved theme with all required properties
+ * @internal
+ */
+export interface ResolvedTheme {
   /** Color palette */
-  colors?: {
-    text?: string;
-    textSecondary?: string;
-    textAlt?: string;
-    background?: string;
-    backgroundSubtle?: string;
-    backgroundAlt?: string;
-    border?: string;
-    borderSoft?: string;
-    accent?: string;
-    accentHover?: string;
-    accentMuted?: string;
+  colors: {
+    text: string;
+    textSecondary: string;
+    textAlt: string;
+    background: string;
+    backgroundSubtle: string;
+    backgroundAlt: string;
+    border: string;
+    borderSoft: string;
+    accent: string;
+    accentHover: string;
+    accentMuted: string;
   };
   /** Typography settings */
-  typography?: {
-    fontFamily?: string;
-    fontSize?: {
-      xs?: string;
-      sm?: string;
-      base?: string;
-      lg?: string;
-      xl?: string;
-      "2xl"?: string;
-      "3xl"?: string;
+  typography: {
+    fontFamily: string;
+    fontSize: {
+      xs: string;
+      sm: string;
+      base: string;
+      lg: string;
+      xl: string;
+      "2xl": string;
+      "3xl": string;
     };
-    fontWeight?: {
-      normal?: string;
-      medium?: string;
-      semibold?: string;
-      bold?: string;
-      black?: string;
+    fontWeight: {
+      normal: string;
+      medium: string;
+      semibold: string;
+      bold: string;
+      black: string;
     };
-    lineHeight?: string;
+    lineHeight: string;
   };
   /** Spacing and layout */
-  spacing?: {
-    xs?: string;
-    sm?: string;
-    base?: string;
-    md?: string;
-    lg?: string;
-    xl?: string;
-    "2xl"?: string;
-    line?: string;
-    containerPadding?: string;
+  spacing: {
+    xs: string;
+    sm: string;
+    base: string;
+    md: string;
+    lg: string;
+    xl: string;
+    "2xl": string;
+    line: string;
+    containerPadding: string;
   };
   /** Border styles */
-  borders?: {
-    widthThin?: string;
-    width?: string;
-    widthThick?: string;
-    widthDouble?: string;
+  borders: {
+    widthThin: string;
+    width: string;
+    widthThick: string;
+    widthDouble: string;
   };
   /** Container settings */
-  container?: {
-    maxWidth?: string;
+  container: {
+    maxWidth: string;
   };
 }
+
+/**
+ * Theme configuration for customizing email styles at runtime
+ */
+export type ThemeConfig = DeepPartial<ResolvedTheme>;
 
 /**
  * SMTP Provider configuration

@@ -25,7 +25,7 @@
  * @module
  */
 
-import type { ThemeConfig } from "./types.ts";
+import type { ResolvedTheme, ThemeConfig } from "./types.ts";
 
 /**
  * CSS class name constants for email styling
@@ -445,7 +445,7 @@ export const EmailStyles: {
  * Merge custom theme with default theme
  * @internal
  */
-export function mergeTheme(customTheme?: Partial<ThemeConfig>): ThemeConfig {
+export function mergeTheme(customTheme?: Partial<ThemeConfig>): ResolvedTheme {
   if (!customTheme) return DefaultTheme;
 
   return {
