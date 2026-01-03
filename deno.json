@@ -1,6 +1,6 @@
 {
   "name": "@apl/courier",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env mod.ts",
@@ -28,22 +28,31 @@
     "handlebars": "npm:handlebars@^4.7.8"
   },
   "compilerOptions": {
-    "lib": ["deno.window"],
+    "lib": [
+      "deno.window"
+    ],
     "strict": true
   },
   "lint": {
     "rules": {
-      "tags": ["recommended"]
+      "tags": [
+        "recommended"
+      ]
     }
   },
   "fmt": {
     "indentWidth": 2,
     "lineWidth": 100,
     "semiColons": true,
-    "exclude": ["tests/snapshots/"]
+    "exclude": [
+      "tests/snapshots/"
+    ]
   },
   "test": {
-    "include": ["src/**/*.spec.ts", "tests/**/*.spec.ts"]
+    "include": [
+      "src/**/*.spec.ts",
+      "tests/**/*.spec.ts"
+    ]
   },
   "publish": {
     "include": [
