@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@types/node@*": "24.2.0",
     "npm:@types/nodemailer@^6.4.14": "6.4.21",
     "npm:handlebars@^4.7.8": "4.7.8",
     "npm:nodemailer@^6.9.7": "6.10.1"
