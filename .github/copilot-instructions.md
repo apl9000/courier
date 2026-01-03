@@ -61,7 +61,7 @@ runtime CSS generation with theme support.
 - Update generate-snapshots.ts script
 - Regenerate snapshots to validate output
 - Update README.md with usage examples
-- Update CLAUDE.md and AGENTS.md if architecture changes
+- Update ARCHITECTURE.md if architecture changes
 
 ## Security
 
@@ -126,3 +126,28 @@ Available in src/email-styles.ts:
 - Keep email templates simple and compatible
 - Follow existing patterns for consistency
 - DarkTheme uses system background colors (#0d1117) for seamless integration
+
+## Commit Messages
+
+All commits must follow **[Conventional Commits](https://www.conventionalcommits.org/)** format:
+
+```
+<type>[optional scope][!]: <description>
+```
+
+**Valid types**: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`
+
+**Version bumps**:
+
+- Major (x.0.0): `feat!:`, `fix!:`, or `BREAKING CHANGE:` in body
+- Minor (0.x.0): `feat:`
+- Patch (0.0.x): `fix:`, `chore:`, `docs:`, etc.
+
+**Examples**:
+
+- `feat: add dark theme support`
+- `fix: resolve SMTP timeout issue`
+- `chore: update dependencies`
+- `feat!: redesign theme API` (breaking change)
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for full guidelines.

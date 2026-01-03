@@ -570,6 +570,24 @@ SMTPProviders.Microsoft = {
 Contributions are welcome! Please file an issue on the GitHub repository to discuss proposed
 changes.
 
+## Contributing
+
+Contributions are welcome! We use [Conventional Commits](https://www.conventionalcommits.org/) for
+automated versioning and releases.
+
+### Quick Start for Contributors
+
+1. Fork and clone the repository
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Make changes and commit using conventional format:
+   - `feat:` for new features (minor version bump)
+   - `fix:` for bug fixes (patch version bump)
+   - `feat!:` or `BREAKING CHANGE:` for breaking changes (major version bump)
+4. Run tests: `deno task test`
+5. Push and open a Pull Request
+
+For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Issues
 
 If you encounter any problems, please file an issue on the GitHub repository.
@@ -580,6 +598,7 @@ If you encounter any problems, please file an issue on the GitHub repository.
 - [Handlebars Documentation](https://handlebarsjs.com/)
 - [iCloud Mail Setup](https://support.apple.com/en-us/HT202304)
 - [JSR Registry](https://jsr.io/)
+- [Conventional Commits](https://www.conventionalcommits.org/)
 
 ## License
 
