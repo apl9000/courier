@@ -62,9 +62,29 @@ export class Courier {
     }
 
     const courier = new Courier(config);
+
+    // Load bundled default templates
+    try {
+      const defaultTemplatesPath = new URL("./emails", import.meta.url).pathname;
+      await courier.loadTemplatesFromDirectory(defaultTemplatesPath);
+    } catch (error) {
+      // If bundled templates aren't available (e.g., during development),
+      // try loading from the source directory
+      try {
+        const srcTemplatesPath = new URL("../emails", import.meta.url).pathname;
+        await courier.loadTemplatesFromDirectory(srcTemplatesPath);
+      } catch (fallbackError) {
+        if (config.debug) {
+          console.error("Warning: Could not load bundled default templates.", fallbackError);
+        }
+      }
+    }
+
+    // Load custom templates (these will merge with/override defaults)
     if (config.templatesDir) {
       await courier.loadTemplatesFromDirectory(config.templatesDir);
     }
+
     return courier;
   }
 
@@ -183,8 +203,8 @@ export class Courier {
 
   /**
    * Load all templates from a directory
-   * Templates in the custom directory take precedence over built-in templates
-   * Also registers partials and layouts with Handlebars
+   * Templates loaded will merge with (and override) any previously loaded templates
+   * with the same name. Also registers partials and layouts with Handlebars.
    * @param dirPath - Path to directory containing template files
    */
   async loadTemplatesFromDirectory(dirPath: string): Promise<void> {
