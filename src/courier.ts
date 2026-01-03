@@ -21,6 +21,66 @@ import {
 } from "./types.ts";
 
 /**
+ * Runtime detection and filesystem abstraction
+ */
+const isDeno = typeof Deno !== "undefined";
+
+/**
+ * Read a text file (cross-platform)
+ */
+async function readTextFile(filepath: string): Promise<string> {
+  if (isDeno) {
+    return await Deno.readTextFile(filepath);
+  } else {
+    // Node.js
+    const fs = await import("fs/promises");
+    return await fs.readFile(filepath, "utf-8");
+  }
+}
+
+/**
+ * Read directory entries (cross-platform)
+ */
+async function* readDir(
+  dirPath: string,
+): AsyncIterableIterator<{ name: string; isFile: boolean; isDirectory: boolean }> {
+  if (isDeno) {
+    for await (const entry of Deno.readDir(dirPath)) {
+      yield entry;
+    }
+  } else {
+    // Node.js
+    const fs = await import("fs/promises");
+    try {
+      const entries = await fs.readdir(dirPath, { withFileTypes: true });
+      for (const entry of entries) {
+        yield {
+          name: entry.name,
+          isFile: entry.isFile(),
+          isDirectory: entry.isDirectory(),
+        };
+      }
+    } catch (error) {
+      // Re-throw to match behavior
+      throw error;
+    }
+  }
+}
+
+/**
+ * Check if error is a "not found" error (cross-platform)
+ */
+function isNotFoundError(error: unknown): boolean {
+  if (isDeno) {
+    return error instanceof Deno.errors.NotFound;
+  } else {
+    // Node.js ENOENT error
+    return error instanceof Error && "code" in error &&
+      (error as { code?: string }).code === "ENOENT";
+  }
+}
+
+/**
  * Courier - Email utility for sending branded transactional emails
  * Supports iCloud SMTP and Microsoft Outlook SMTP with Handlebars templating
  *
@@ -126,7 +186,7 @@ export class Courier {
    * @param filepath - Path to template file
    */
   async loadTemplate(name: string, filepath: string): Promise<void> {
-    const template = await Deno.readTextFile(filepath);
+    const template = await readTextFile(filepath);
     this.registerTemplate(name, template);
   }
 
@@ -136,17 +196,17 @@ export class Courier {
    */
   private async loadPartials(dirPath: string): Promise<void> {
     try {
-      for await (const entry of Deno.readDir(dirPath)) {
+      for await (const entry of readDir(dirPath)) {
         if (entry.isFile) {
           const partialName = entry.name.split(".").slice(0, -1).join(".");
           const partialPath = `${dirPath}/${entry.name}`;
-          const partialContent = await Deno.readTextFile(partialPath);
+          const partialContent = await readTextFile(partialPath);
           Handlebars.registerPartial(partialName, partialContent);
         }
       }
     } catch (error) {
       // Silently ignore if partials directory doesn't exist
-      if (error instanceof Deno.errors.NotFound) {
+      if (isNotFoundError(error)) {
         return;
       }
       throw new Error(
@@ -163,17 +223,17 @@ export class Courier {
    */
   private async loadLayouts(dirPath: string): Promise<void> {
     try {
-      for await (const entry of Deno.readDir(dirPath)) {
+      for await (const entry of readDir(dirPath)) {
         if (entry.isFile) {
           const layoutName = entry.name.split(".").slice(0, -1).join(".");
           const layoutPath = `${dirPath}/${entry.name}`;
-          const layoutContent = await Deno.readTextFile(layoutPath);
+          const layoutContent = await readTextFile(layoutPath);
           Handlebars.registerPartial(`layouts-${layoutName}`, layoutContent);
         }
       }
     } catch (error) {
       // Silently ignore if layouts directory doesn't exist
-      if (error instanceof Deno.errors.NotFound) {
+      if (isNotFoundError(error)) {
         return;
       }
       throw new Error(
@@ -201,7 +261,7 @@ export class Courier {
       await this.loadLayouts(layoutsPath);
 
       // Load template files (typically in templates subdirectory or root)
-      for await (const entry of Deno.readDir(dirPath)) {
+      for await (const entry of readDir(dirPath)) {
         if (entry.isFile) {
           // Extract template name from filename (remove extension)
           const templateName = entry.name.split(".").slice(0, -1).join(".");
@@ -212,7 +272,7 @@ export class Courier {
         } else if (entry.isDirectory && entry.name === "templates") {
           // Load templates from templates subdirectory
           const templatesSubPath = `${dirPath}/templates`;
-          for await (const templateEntry of Deno.readDir(templatesSubPath)) {
+          for await (const templateEntry of readDir(templatesSubPath)) {
             if (templateEntry.isFile) {
               const templateName = templateEntry.name
                 .split(".")
