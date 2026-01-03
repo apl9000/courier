@@ -25,7 +25,7 @@
  * @module
  */
 
-import type { ThemeConfig } from "./types.ts";
+import type { ResolvedTheme, ThemeConfig } from "./types.ts";
 
 /**
  * CSS class name constants for email styling
@@ -361,7 +361,46 @@ export const ModernBrutalistTheme = {
 /**
  * Inline style objects for fallback compatibility
  */
-export const EmailStyles = {
+export const EmailStyles: {
+  container: {
+    maxWidth: string;
+    margin: string;
+    backgroundColor: string;
+    padding: string;
+    fontFamily: string;
+    fontSize: string;
+    lineHeight: string;
+    fontWeight: string;
+  };
+  heading: {
+    fontSize: string;
+    fontWeight: string;
+    color: string;
+    marginBottom: string;
+    marginTop: string;
+    textTransform: "uppercase";
+    lineHeight: string;
+  };
+  body: {
+    fontSize: string;
+    color: string;
+    lineHeight: string;
+    marginBottom: string;
+  };
+  button: {
+    display: string;
+    padding: string;
+    backgroundColor: string;
+    color: string;
+    fontWeight: string;
+    fontSize: string;
+    border: string;
+    textDecoration: string;
+    textTransform: "uppercase";
+    letterSpacing: string;
+    lineHeight: string;
+  };
+} = {
   container: {
     maxWidth: DefaultTheme.container.maxWidth,
     margin: "0 auto",
@@ -406,7 +445,7 @@ export const EmailStyles = {
  * Merge custom theme with default theme
  * @internal
  */
-export function mergeTheme(customTheme?: Partial<ThemeConfig>) {
+export function mergeTheme(customTheme?: Partial<ThemeConfig>): ResolvedTheme {
   if (!customTheme) return DefaultTheme;
 
   return {
