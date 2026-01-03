@@ -62,7 +62,7 @@
       "tailwind.config.js",
       "styles/**",
       "AGENTS.md",
-      "CLAUDE.md",
+      "CONTRIBUTING.md",
       ".env",
       ".vscode/**",
       "deno.lock"

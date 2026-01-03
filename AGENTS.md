@@ -1,6 +1,9 @@
 # AGENTS.md
 
-This file provides guidance for AI coding agents working on the Courier email utility project.
+This file provides guidance for AI coding agents (including Claude Code, GitHub Copilot, and other
+AI assistants) working on the Courier email utility project.
+
+**For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).**
 
 ## Project Overview
 
@@ -77,135 +80,50 @@ Courier is a Deno/Node.js email utility that provides:
    SMTP_TEST_TO=test-recipient@example.com
    ```
 
-### Development Commands
+### Common Commands
 
 ```bash
-# Development server
-deno task dev
+# Development
+deno task dev              # Run with required permissions
+deno task check            # Type check all files
 
-# Type checking
-deno task check
+# Testing
+deno task test             # All tests (unit + theme + snapshot tests)
+deno task test:unit        # Unit tests only
+deno task test:themes      # Theme-specific tests
+deno task test:snapshots   # Snapshot validation tests
+deno task test:integration # Integration tests (requires SMTP env vars)
+deno task snapshots        # Generate HTML snapshots for templates
+
+# Individual template tests
+deno task test:smtp        # Test SMTP connection
+deno task test:welcome     # Test welcome email
+deno task test:verification
+deno task test:password-reset
+deno task test:notification
+deno task test:newsletter
+deno task test:unsubscribe
+
+# Code quality
+deno task lint             # Lint code
+deno task fmt              # Format code
+deno task fmt:check        # Check formatting without modifying
+deno task coverage         # Generate code coverage report
 ```
 
-### Testing Commands
+## Design System Quick Reference
 
-```bash
-# Run all tests
-deno task test
+Courier uses a **monospace/brutalist aesthetic** by default. See [ARCHITECTURE.md](ARCHITECTURE.md)
+for complete design system documentation.
 
-# Unit tests only
-deno task test:unit
+**Quick Reference:**
 
-# Theme tests
-deno task test:themes
-
-# Snapshot tests
-deno task test:snapshots
-
-# Integration tests (requires SMTP credentials)
-deno task test:integration
-
-# Generate HTML snapshots
-deno task snapshots
-
-# Code coverage
-deno task coverage
-```
-
-### Linting & Formatting
-
-```bash
-# Lint code
-deno task lint
-
-# Format code
-deno task fmt
-
-# Check formatting without modifying
-deno task fmt:check
-```
-
-## Design System
-
-### Monospace/Brutalist Aesthetic
-
-The email templates follow a minimalist, monospace design system inspired by brutalist web design
-principles:
-
-**Typography:**
-
-- Font Stack:
-  `ui-monospace, SFMono-Regular, Monaco, Consolas, Liberation Mono, Courier New, monospace`
-- Base Size: 16px
-- Line Height: 1.20rem (consistent vertical rhythm)
-- Font Weights: 500 (normal), 600 (medium), 800 (bold)
-
-**Colors:**
-
-- Text: `#000000` (black), `#666666` (gray)
-- Background: `#ffffff` (white), `#eeeeee` (light gray)
-- No gradients, no shadows, no purple tones
-
-**Spacing:**
-
-- Base Unit: 1.20rem (line height)
-- Consistent grid-based spacing
-
-**Borders:**
-
-- Standard: 2px solid black
-- Thick: 3px (footer borders)
-- Double: 6px (dividers)
-
-### Email CSS Classes
-
-Generated at runtime from theme configuration in `src/email-styles.ts`:
-
-**Layout:**
-
-- `.email-container` - Main container (themed max-width, background, padding)
-
-**Typography:**
-
-- `.email-heading` - Main heading (themed font size, uppercase, bold)
-- `.email-subheading` - Section headings (themed size, uppercase, bold)
-- `.email-body` - Body text (themed size, line-height)
-- `.email-text-alt` - Alternative text (themed alt color)
-
-**Components:**
-
-- `.email-button` - CTA buttons (themed borders, backgroundAlt for contrast, hover state)
-- `.email-link` - Text links (themed underline thickness)
-- `.email-divider` - Section divider (themed double border)
-- `.email-divider-accent` - Left-aligned accent divider (60px, theme accent color)
-- `.email-box` - Bordered content box (themed border, padding)
-- `.email-box-alt` - Alt background box (themed background)
-- `.email-code` - Code display (themed monospace, background)
-- `.email-footer` - Footer section (themed thick border, alt text color)
-
-**Images:**
-
-- `.email-image-hero` - Full-width hero image (100%, bordered)
-- `.email-image-inline` - Square thumbnail (150x150px, object-fit cover)
-- `.email-section-image-left` - Section with image on left
-- `.email-section-image-right` - Section with image on right
-- `.email-image-cell` - Table cell for image positioning
-- `.email-content-cell` - Table cell for content positioning
-
-**Utilities:**
-
-- `.email-section` - Section spacing (themed margin)
-- `.email-section-bordered` - Bordered section (themed)
-- `.email-spacing-none` - Remove top margin
-- `.email-text-center` - Center text alignment
-
-### Runtime CSS Generation
-
-1. Theme configuration defined in `src/email-styles.ts` (DefaultTheme, DarkTheme, etc.)
-2. `mergeTheme()` merges custom theme with DefaultTheme
-3. `generateThemedCSS()` creates CSS from merged theme
-4. CSS inlined in `<style>` tags via `{{{emailStyles}}}` in layout
-5. No build step required - CSS generated on demand
+- **Font**: ui-monospace stack, 16px base, 1.20rem line-height
+- **Colors**: Black (#000), White (#fff), Gray (#666, #eee) - no gradients/shadows
+- **Borders**: 2px standard, 3px thick, 6px double
+- **CSS Classes**: Semantic `email-*` prefix (`.email-button`, `.email-heading`, etc.)
+- **Theme System**: Runtime CSS generation from `src/email-styles.ts` (no build step)
+- **Preset Themes**: DefaultTheme, DarkTheme, ProfessionalTheme, ColorfulTheme
 
 **Important:** Regenerate snapshots after modifying templates:
 
@@ -228,29 +146,29 @@ Each email template has:
 **Unit Tests:**
 
 ```typescript
-Deno.test("renders welcome email template", async () => {
+Deno.test('renders welcome email template', async () => {
   const courier = new Courier(config);
-  const html = await courier.renderTemplate("welcome", {
-    name: "Test User",
-    actionUrl: "https://example.com",
+  const html = await courier.renderTemplate('welcome', {
+    name: 'Test User',
+    actionUrl: 'https://example.com',
   });
-  assertStringIncludes(html, "Welcome");
+  assertStringIncludes(html, 'Welcome');
 });
 ```
 
 **Integration Tests:**
 
 ```typescript
-import { hasCredentials, smtpConfig } from "./test-utils.ts";
+import {hasCredentials, smtpConfig} from './test-utils.ts';
 
 Deno.test({
-  name: "sends welcome email via SMTP",
+  name: 'sends welcome email via SMTP',
   ignore: !hasCredentials,
   async fn() {
     const courier = new Courier(smtpConfig);
     await courier.sendWelcomeEmail({
-      to: "test@example.com",
-      name: "Test User",
+      to: 'test@example.com',
+      name: 'Test User',
     });
   },
 });
@@ -259,10 +177,10 @@ Deno.test({
 **Snapshot Tests:**
 
 ```typescript
-Deno.test("Welcome email has monospace styling", async () => {
-  const html = await Deno.readTextFile("./tests/snapshots/welcome.html");
-  assertStringIncludes(html, "ui-monospace");
-  assertStringIncludes(html, "email-button");
+Deno.test('Welcome email has monospace styling', async () => {
+  const html = await Deno.readTextFile('./tests/snapshots/welcome.html');
+  assertStringIncludes(html, 'ui-monospace');
+  assertStringIncludes(html, 'email-button');
 });
 ```
 
@@ -316,116 +234,47 @@ inspection.
 
 ## Handlebars Templates
 
-### Template Structure
+**Template Structure:**
 
-All templates inherit from `layouts/main.hbs`:
+- Layouts: `src/emails/layouts/main.hbs` (base HTML wrapper)
+- Partials: `src/emails/partials/` (header, footer, head)
+- Templates: `src/emails/templates/` (welcome, email-verification, etc.)
 
-```handlebars
-<!DOCTYPE html>
-<html lang="{{lang}}" style="height: 100%;">
-  <head>{{> head }}</head>
-  <body style="margin: 0; padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh;">
-    <!-- Email wrapper table for better client compatibility -->
-    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; height: 100%; min-height: 100vh; margin: 0; padding: 0; background-color: #ffffff;">
-      <tr style="height: 100%;">
-        <td align="center" style="padding: 0; background-color: #ffffff; height: 100%; min-height: 100vh; vertical-align: top;">
-          <!-- Content container -->
-          <div class="email-container">
-            {{!-- Main Content Slot --}}
-            {{{ body }}}
-
-            {{!-- Footer --}}
-            {{> footer }}
-          </div>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-```
-
-### Handlebars Helpers
-
-Registered in `Courier` constructor:
+**Handlebars Helpers:**
 
 - `eq` - Equality comparison: `{{#if (eq layout "hero")}}`
 
-### Partial Usage
+**Template Data Types** (defined in `src/types.ts`):
 
-```handlebars
-{{!-- Header partial with title --}}
-{{> header title="Welcome to Courier"}}
+- `WelcomeEmailData`, `EmailVerificationData`, `PasswordResetData`
+- `NotificationData`, `NewsletterData`, `UnsubscribeData`
 
-{{!-- Footer partial with company info --}}
-{{> footer companyName="Courier" year=2025 unsubscribeUrl="..."}}
+**Key Principles:**
 
-{{!-- Newsletter with image layouts --}}
-{{#if (eq image.layout "hero")}}
-  <img src="{{image.src}}" alt="{{image.alt}}" class="email-image-hero" />
-{{/if}}
-```
+- All text content from variables (no hard-coded copy in `.hbs` files)
+- Optional text override properties with sensible defaults
+- Newsletter supports image layouts: `left`, `right`, `hero`
+- Templates loaded via `Courier.initialize()` factory method
 
-### Template Data Types
-
-Defined in `src/types.ts`:
-
-- `WelcomeEmailData`
-- `EmailVerificationData`
-- `PasswordResetData`
-- `NotificationData`
-- `NewsletterData`
-- `UnsubscribeData`
-
-Always provide all required fields to ensure proper rendering.
-
-### Template Text Customization
-
-**All templates use variables for text content** - no hard-coded copy in `.hbs` files.
-
-Each template interface includes optional text override properties with sensible defaults:
-
-```typescript
-// Example: WelcomeEmailData
-interface WelcomeEmailData {
-  name: string; // Required
-  welcomeMessage?: string; // Optional, defaults to "Welcome to {companyName}!"
-  ctaLabel?: string; // Optional, defaults to "GET STARTED"
-  // ... more optional text overrides
-}
-```
-
-**Newsletter Image Support:**
-
-```typescript
-sections: Array<{
-  heading?: string;
-  content: string;
-  link?: string;
-  linkText?: string; // Optional, defaults to "Read more →"
-  image?: {
-    src: string;
-    alt: string;
-    layout?: "left" | "right" | "hero"; // Image positioning
-  };
-}>;
-```
+See [ARCHITECTURE.md](ARCHITECTURE.md) for complete template documentation.
 
 ## Email Client Compatibility
 
-### Best Practices
+**Best Practices:**
 
-1. **Inline CSS** - Always inline styles (handled automatically)
-2. **Table-based layouts** - Wrapper tables for client compatibility
-3. **Explicit dimensions** - Use `width="100%"` on tables
-4. **Background colors** - Set on body, table, and td for consistency
-5. **No external resources** - Embed all CSS in `<style>` tag
-6. **Test in multiple clients** - Gmail, Outlook, Apple Mail, etc.
+1. Table-based layouts (html → body → table → td height chain)
+2. Inline CSS in `<style>` tag (no external stylesheets)
+3. Explicit dimensions (`width="100%"`, explicit heights)
+4. Background colors on body, table, and td
+5. Test in Gmail, Outlook, Apple Mail
 
-### Known Issues
+**Known Limitations:**
 
-- **Outlook Desktop** - Limited CSS support, test thoroughly
-- **Gmail Mobile** - May strip some margin/padding
-- **Dark Mode** - Uses system colors, test both themes
+- Outlook Desktop: Limited CSS support
+- Gmail Mobile: May strip margin/padding
+- Dark Mode: Test with DarkTheme preset
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed compatibility strategy.
 
 ## Adding New Templates
 
@@ -560,6 +409,99 @@ deno publish
 - [ ] Security audit
 - [ ] Design system review
 
+## Git Workflow & Versioning
+
+### Conventional Commits
+
+Courier uses **[Conventional Commits](https://www.conventionalcommits.org/)** for automated semantic
+versioning. All commits to `main` must follow this format:
+
+```
+<type>[optional scope][!]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Version Bump Rules
+
+The release workflow automatically determines version bumps based on commit messages:
+
+- **Major version bump (x.0.0)**: Breaking changes
+
+  - `feat!:`, `fix!:`, `chore!:`, etc. (with `!` marker)
+  - `BREAKING CHANGE:` in commit body
+
+- **Minor version bump (0.x.0)**: New features
+
+  - `feat:` or `feat(scope):`
+
+- **Patch version bump (0.0.x)**: Fixes and maintenance
+  - `fix:`, `chore:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`
+
+### Valid Commit Types
+
+- `feat` - New features
+- `fix` - Bug fixes
+- `chore` - Maintenance tasks (deps, config, etc.)
+- `docs` - Documentation changes
+- `style` - Code style/formatting
+- `refactor` - Code refactoring
+- `perf` - Performance improvements
+- `test` - Test changes
+- `build` - Build system changes
+- `ci` - CI/CD changes
+
+### Examples
+
+**Feature (minor bump):**
+
+```
+feat: add dark theme support
+
+Implement DarkTheme preset with system background colors.
+```
+
+**Bug fix (patch bump):**
+
+```
+fix: resolve SMTP connection timeout
+
+Increase default timeout from 5s to 30s.
+```
+
+**Breaking change (major bump):**
+
+```
+feat!: redesign theme configuration API
+
+BREAKING CHANGE: ThemeConfig now uses nested structure.
+```
+
+### Branch Naming
+
+While not strictly enforced, we recommend:
+
+- Features: `feat/description`
+- Bug fixes: `fix/description`
+- Chores: `chore/description`
+- Documentation: `docs/description`
+
+### Release Process
+
+1. **Automatic releases**: Push to `main` triggers release workflow
+2. **Workflow analyzes** commit message for version bump type
+3. **Tests run**: Unit, integration, snapshots, coverage (90% threshold)
+4. **Version updated** in `deno.json`
+5. **Git tag created**: `v{version}`
+6. **GitHub release** published with auto-generated notes
+7. **JSR publish**: Package published to JavaScript Registry
+
+**Important**: Invalid commit format will cause the release workflow to fail.
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Resources
 
 - [Deno Documentation](https://deno.land/manual)
@@ -568,6 +510,7 @@ deno publish
 - [Handlebars Docs](https://handlebarsjs.com/)
 - [Tailwind CSS Docs](https://tailwindcss.com/)
 - [Email on Acid](https://www.emailonacid.com/blog/) - Email design best practices
+- [Conventional Commits](https://www.conventionalcommits.org/)
 
 ## Questions or Issues?
 
