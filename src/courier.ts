@@ -67,7 +67,7 @@ export class Courier {
     try {
       const defaultTemplatesPath = new URL("./emails", import.meta.url).pathname;
       await courier.loadTemplatesFromDirectory(defaultTemplatesPath);
-    } catch (error) {
+    } catch (_error) {
       // If bundled templates aren't available (e.g., during development),
       // try loading from the source directory
       try {
