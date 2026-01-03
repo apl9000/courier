@@ -63,24 +63,7 @@ export class Courier {
 
     const courier = new Courier(config);
 
-    // Load bundled default templates
-    try {
-      const defaultTemplatesPath = new URL("./emails", import.meta.url).pathname;
-      await courier.loadTemplatesFromDirectory(defaultTemplatesPath);
-    } catch (_error) {
-      // If bundled templates aren't available (e.g., during development),
-      // try loading from the source directory
-      try {
-        const srcTemplatesPath = new URL("../emails", import.meta.url).pathname;
-        await courier.loadTemplatesFromDirectory(srcTemplatesPath);
-      } catch (fallbackError) {
-        if (config.debug) {
-          console.warn("Warning: Could not load bundled default templates.", fallbackError);
-        }
-      }
-    }
-
-    // Load custom templates (these will merge with/override defaults)
+    // Load custom templates
     if (config.templatesDir) {
       await courier.loadTemplatesFromDirectory(config.templatesDir);
     }

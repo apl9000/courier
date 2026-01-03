@@ -15,6 +15,7 @@ Deno.test({
     const courier = await Courier.initialize({
       smtp: smtpConfig,
       defaultFrom: smtpFrom,
+      templatesDir: "./src/emails",
     });
 
     const result = await courier.sendNotification(

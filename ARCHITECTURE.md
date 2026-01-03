@@ -82,7 +82,7 @@ Central orchestrator for email operations:
 
 **Key Methods:**
 
-- `initialize()` - Factory method for async setup (loads templates)
+- `initialize()` - Factory method for async setup (loads templates if templatesDir provided)
 - `send()` - Core email sending
 - `sendWithTemplate()` - Render and send templated email
 - Template-specific methods: `sendWelcomeEmail()`, `sendPasswordReset()`, etc.
@@ -93,6 +93,7 @@ Central orchestrator for email operations:
 **Design Decisions:**
 
 - Factory pattern (`initialize()`) for async template loading
+- Requires explicit `templatesDir` in config for template methods (cross-platform compatibility)
 - Handlebars helpers registered in constructor (`eq` for conditionals)
 - Template directory auto-discovery for layouts and partials
 - Graceful error handling with descriptive messages
@@ -175,6 +176,7 @@ Runtime CSS generation without build steps:
 
 - Six built-in templates: welcome, email-verification, password-reset, notification, newsletter,
   unsubscribe
+- Loaded when `templatesDir` is specified in config (e.g., `"./src/emails"`)
 - All text content from variables (no hard-coded copy)
 - Optional text override properties in data interfaces
 - Image support with layout options (left, right, hero)
@@ -189,7 +191,7 @@ Runtime CSS generation without build steps:
 - Table-based layout for Outlook compatibility
 - All styles inline for email client support
 - Helpers registered in Courier constructor
-- Template loading via factory pattern
+- Explicit template loading (not bundled) for cross-platform compatibility with Node.js/Webpack
 
 ## Email Client Compatibility
 
@@ -220,12 +222,14 @@ Runtime CSS generation without build steps:
 ### Test Layers
 
 1. **Unit Tests** (`src/*.spec.ts`)
+
    - Template rendering
    - Theme generation
    - Type validation
    - No SMTP required
 
 2. **Integration Tests** (`tests/*.integration.spec.ts`)
+
    - Actual SMTP delivery
    - Multi-recipient testing
    - Error handling

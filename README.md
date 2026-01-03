@@ -93,9 +93,32 @@ const courier = await Courier.initialize({
 
 ### Using Default Email Templates
 
-Courier includes dedicated functions for common email templates with type-safe parameters:
+Courier includes six built-in email templates. To use them, you must specify the `templatesDir`
+configuration pointing to the templates directory:
 
 ```typescript
+// For Deno projects (development or direct usage)
+const courier = await Courier.initialize({
+  smtp: {
+    ...SMTPProviders.iCloud,
+    user: "your-email@icloud.com",
+    pass: "your-app-specific-password",
+  },
+  defaultFrom: "your-email@icloud.com",
+  templatesDir: "./src/emails", // Path to Courier's templates directory
+});
+
+// For Node.js/Next.js projects using Courier from node_modules
+const courier = await Courier.initialize({
+  smtp: {
+    ...SMTPProviders.iCloud,
+    user: "your-email@icloud.com",
+    pass: "your-app-specific-password",
+  },
+  defaultFrom: "your-email@icloud.com",
+  templatesDir: "./node_modules/@apl/courier/src/emails", // Path in node_modules
+});
+
 // Send a welcome email
 await courier.sendWelcomeEmail(
   {
@@ -141,6 +164,16 @@ await courier.sendNotification(
 );
 ```
 
+**Available Templates:**
+
+- `sendWelcomeEmail()` - Welcome new users
+- `sendEmailVerification()` - Verify email addresses
+- `sendPasswordReset()` - Password reset requests
+- `sendNotification()` - System notifications
+- `sendNewsletter()` - Newsletter campaigns
+- `sendUnsubscribeConfirmation()` - Unsubscribe confirmations
+
+````
 ## Configuration
 
 ### SMTP Setup
@@ -169,11 +202,19 @@ interface CourierConfig {
     secure?: boolean; // Enable SSL (defaults to false for STARTTLS)
   };
   defaultFrom?: string | { email: string; name?: string };
-  templatesDir?: string; // Optional template directory
+  templatesDir?: string; // Path to templates directory (required for template methods)
   theme?: ThemeConfig; // Optional runtime theme customization
+  debug?: boolean; // Enable debug logging
 }
-```
+````
 
+**Important:** The `templatesDir` option is required to use template methods like
+`sendWelcomeEmail()`, `sendPasswordReset()`, etc. Point it to:
+
+- `"./src/emails"` when using Courier directly in Deno projects
+- `"./node_modules/@apl/courier/src/emails"` when using Courier in Node.js/Next.js projects
+
+````
 ### Custom Theming
 
 Customize email styles at runtime by providing a theme configuration:
@@ -242,7 +283,7 @@ await courier.sendWelcomeEmail(
     subject: "Welcome!",
   },
 );
-```
+````
 
 **Note:** If no theme is provided, Courier uses the default monospace/brutalist design system.
 
@@ -440,13 +481,22 @@ Load and use your custom templates:
 // Load custom template directory
 const courier = await Courier.initialize({
   smtp: smtpConfig,
-  templatesDir: "./my-custom-templates",
+  templatesDir: "./my-custom-templates", // Your custom templates
 });
 
-// Or load individual templates
+// Or use built-in templates with custom templates merged in
+const courier = await Courier.initialize({
+  smtp: smtpConfig,
+  templatesDir: "./node_modules/@apl/courier/src/emails", // Use built-in templates first
+});
+
+// Then load additional custom templates
 await courier.loadTemplate("my-template", "./path/to/template.hbs");
 await courier.sendWithTemplate("my-template", data, message);
 ```
+
+**Note**: When specifying `templatesDir`, Courier loads all templates from that directory. Custom
+templates with the same name as built-in templates will override the built-in ones.
 
 **Note**: The default monospace/brutalist theme provides excellent email client compatibility and
 accessibility. Custom themes should be tested across multiple email clients (Gmail, Outlook, Apple
@@ -564,6 +614,45 @@ SMTPProviders.Microsoft = {
 - Store credentials in environment variables, not in code
 - Use HTTPS/TLS for secure email transmission
 - Validate and sanitize template data to prevent injection attacks
+
+## Troubleshooting
+
+### Templates Not Working in Node.js/Next.js
+
+If you're using Courier in a Node.js or Next.js project and template methods like
+`sendWelcomeEmail()` fail, make sure you've specified the `templatesDir` configuration:
+
+```typescript
+const courier = await Courier.initialize({
+  smtp: {
+    ...SMTPProviders.iCloud,
+    user: "your-email@icloud.com",
+    pass: "your-app-specific-password",
+  },
+  defaultFrom: "your-email@icloud.com",
+  // REQUIRED for template methods in Node.js/Next.js
+  templatesDir: "./node_modules/@apl/courier/src/emails",
+});
+```
+
+### Module Not Found Errors
+
+If you see errors like `Module not found: Can't resolve './emails'` during build:
+
+1. Ensure you're using the latest version of Courier (`0.0.6+`)
+2. Verify you have `templatesDir` configured in your initialization
+3. Clear your build cache and reinstall dependencies:
+   ```bash
+   rm -rf node_modules package-lock.json .next
+   npm install
+   ```
+
+### SMTP Connection Failures
+
+- **iCloud users:** Make sure you're using an app-specific password, not your main Apple ID password
+- **Outlook users:** Verify your account allows SMTP access (some accounts require enabling this in
+  settings)
+- Test your connection with `await courier.verify()` before sending emails
 
 ## Contributing
 
