@@ -149,4 +149,6 @@ vite.config.ts.timestamp-*
 src/styles.ts
 output.css
 
-
+# coverage reports
+coverage_report.txt
+coverage_profile/
