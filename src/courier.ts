@@ -32,8 +32,8 @@ async function readTextFile(filepath: string): Promise<string> {
   if (isDeno) {
     return await Deno.readTextFile(filepath);
   } else {
-    // Node.js
-    const fs = await import("fs/promises");
+    // Node.js - use node: prefix for built-in modules
+    const fs = await import("node:fs/promises");
     return await fs.readFile(filepath, "utf-8");
   }
 }
@@ -49,8 +49,8 @@ async function* readDir(
       yield entry;
     }
   } else {
-    // Node.js
-    const fs = await import("fs/promises");
+    // Node.js - use node: prefix for built-in modules
+    const fs = await import("node:fs/promises");
     try {
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
       for (const entry of entries) {
