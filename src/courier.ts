@@ -51,7 +51,6 @@ async function* readDir(
   } else {
     // Node.js
     const fs = await import("fs/promises");
-    const path = await import("path");
     try {
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
       for (const entry of entries) {
@@ -76,7 +75,8 @@ function isNotFoundError(error: unknown): boolean {
     return error instanceof Deno.errors.NotFound;
   } else {
     // Node.js ENOENT error
-    return error instanceof Error && "code" in error && (error as any).code === "ENOENT";
+    return error instanceof Error && "code" in error &&
+      (error as { code?: string }).code === "ENOENT";
   }
 }
 
