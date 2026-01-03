@@ -75,7 +75,7 @@ export class Courier {
         await courier.loadTemplatesFromDirectory(srcTemplatesPath);
       } catch (fallbackError) {
         if (config.debug) {
-          console.error("Warning: Could not load bundled default templates.", fallbackError);
+          console.warn("Warning: Could not load bundled default templates.", fallbackError);
         }
       }
     }
